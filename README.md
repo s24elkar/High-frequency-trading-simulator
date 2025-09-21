@@ -9,6 +9,7 @@ Peek under the hood of market microstructure without touching a live exchange. T
 - **Reproducible artefacts** — simulation outputs and figures tracked under `data/` and `docs/images/`.
 
 ## Quick Start
+Need more context? The step-by-step guide in `docs/USAGE.md` covers the full workflow.
 
 ### Prerequisites
 - CMake ≥ 3.15 and a C++17-capable compiler (Clang, GCC, or MSVC).
@@ -16,7 +17,7 @@ Peek under the hood of market microstructure without touching a live exchange. T
 
 ### Build the C++ Simulator
 ```bash
-cmake -S . -B build/release
+cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release
 cmake --build build/release --target hft_sim
 ./build/release/hft_sim
 ```
@@ -29,7 +30,7 @@ cmake --build build/release --target hawkes_example
 
 ### Execute Tests
 ```bash
-cmake -S . -B build/tests -DHFT_ENABLE_TESTS=ON
+cmake -S . -B build/tests -DHFT_ENABLE_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
 cmake --build build/tests --target order_tests
 ctest --test-dir build/tests --output-on-failure
 ```
@@ -39,10 +40,14 @@ ctest --test-dir build/tests --output-on-failure
 cd python
 python3 -m venv .venv
 source .venv/bin/activate            # Windows: .venv\Scripts\activate
-pip install -r requirements.txt      # create/update if additional deps are needed
+pip install -r requirements.txt
 MPLCONFIGDIR=.matplotlib python3 -m demo
 ```
 The demo prints branching ratios, generates intensity/ACF plots saved to `docs/images/`, and exports event streams to `data/runs/`.
+
+## Documentation
+- **Usage Guide** — `docs/USAGE.md` deep-dives into build configuration, OrderBook APIs, Hawkes simulators, Python tooling, and troubleshooting tips.
+- **Code comments** — inline notes mark the C++/Python APIs that are intended for reuse.
 
 ## Repository Layout
 - `src/` — C++ sources (`OrderBook`, Hawkes kernels, example apps).
