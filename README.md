@@ -63,6 +63,27 @@ The demo prints branching ratios, generates intensity/ACF plots saved to `docs/i
 - **Branching ratio** — expected offspring per event, `n = E[φ]`; keeping `n < 1` (subcritical regime) ensures the simulated process does not explode, mirroring stable market flows.
 - **Marks** — random volumes (log-normal or exponential in the demos) feed back into intensity, providing a simple stylized link between trade size and subsequent activity.
 
+## Example Simulation Results
+
+Below are sample outputs from the Hawkes simulator, comparing exponential and power-law kernels.
+
+### Intensity Paths
+- **Exponential kernel Hawkes**
+  ![Exponential kernel Hawkes Intensity](docs/images/exponential_kernel_hawkes_intensity.png)
+
+- **Power-law (rough) kernel Hawkes**
+  ![Power-law kernel Hawkes Intensity](docs/images/power-law_rough_kernel_hawkes_intesity.png)
+
+### Autocorrelation Functions
+- **Volume marks ACF**
+  ![Volume Marks ACF](docs/images/volume_marks_acf.png)
+
+- **Volume marks ACF (alt run)**
+  ![Volume Marks ACF bis](docs/images/volume_marks_acf_bis.png)
+
+- **Arrival process ACF**
+  ![Arrivals ACF](docs/images/arrivals_acf_bins_0.5.png)
+
 ## Development Notes
 - Keep commits focused (parameter tuning, new kernels, plotting tweaks).
 - Record RNG seeds alongside configuration in `data/runs/*.json` for reproducibility.
