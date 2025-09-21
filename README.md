@@ -56,6 +56,13 @@ The demo prints branching ratios, generates intensity/ACF plots saved to `docs/i
 - High-resolution figures are committed for convenience; consider Git LFS if you plan to add many binary assets.
 - `python/io.py` centralizes CSV/JSON serialization, making it easy to swap in alternative storage formats.
 
+## Theory Snapshot
+- **Limit-order dynamics** — the C++ core models submissions, cancellations, and executions with price-time priority, letting you observe queue evolution as a discrete-event system.
+- **Hawkes intensity** — arrivals follow `λ(t) = μ + \sum_i φ(t - T_i, V_i)`, capturing self-excitation where past trades raise the probability of near-future activity.
+- **Kernel choices** — the exponential kernel `φ(u,v)=α v e^{-βu}` yields Markovian state updates; the power-law alternative `φ(u,v)=α v (u+c)^{-γ}` captures longer memory but requires `γ>1` to stay integrable.
+- **Branching ratio** — expected offspring per event, `n = E[φ]`; keeping `n < 1` (subcritical regime) ensures the simulated process does not explode, mirroring stable market flows.
+- **Marks** — random volumes (log-normal or exponential in the demos) feed back into intensity, providing a simple stylized link between trade size and subsequent activity.
+
 ## Development Notes
 - Keep commits focused (parameter tuning, new kernels, plotting tweaks).
 - Record RNG seeds alongside configuration in `data/runs/*.json` for reproducibility.
