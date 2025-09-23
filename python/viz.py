@@ -2,12 +2,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import inspect
+from itertools import cycle
 
 _STEM_SUPPORTS_LINE_COLLECTION = 'use_line_collection' in inspect.signature(plt.stem).parameters
 
+_COLOUR_CYCLE = cycle([
+    "#f94144",
+    "#f3722c",
+    "#f8961e",
+    "#f9c74f",
+    "#90be6d",
+    "#43aa8b",
+    "#577590",
+])
+
+
 def _stem(x, y):
+    colour = next(_COLOUR_CYCLE)
     kwargs = {'use_line_collection': True} if _STEM_SUPPORTS_LINE_COLLECTION else {}
-    return plt.stem(x, y, **kwargs)
+    stem = plt.stem(x, y, **kwargs)
+    stem.markerline.set_color(colour)
+    stem.stemlines.set_color(colour)
+    stem.baseline.set_color("#4d4d4d")
+    return stem
 
 def intensity_on_grid(mu, kernel, times, marks, t_grid):
     lam = np.full_like(t_grid, mu, dtype=float)
@@ -31,7 +48,7 @@ def acf(x, max_lag):
 
 def plot_intensity(t_grid, lam_grid, title="Intensity over time"):
     plt.figure()
-    plt.plot(t_grid, lam_grid)
+    plt.plot(t_grid, lam_grid, color=next(_COLOUR_CYCLE), linewidth=1.6)
     plt.xlabel("Time")
     plt.ylabel("λ(t)")
     plt.title(title)
