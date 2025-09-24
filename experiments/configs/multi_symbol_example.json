@@ -1,0 +1,80 @@
+{
+  "experiments": [
+    {
+      "name": "btc_gru",
+      "seed": 123,
+      "num_types": 4,
+      "synthetic": {
+        "num_sequences": 150,
+        "num_events": 200,
+        "num_types": 4,
+        "seed": 123
+      },
+      "training": {
+        "window_size": 64,
+        "stride": 32,
+        "batch_size": 128,
+        "epochs": 5,
+        "lr": 0.001,
+        "delta_weight": 1.0,
+        "embed_dim": 32,
+        "hidden_dim": 64,
+        "backbone": "gru",
+        "mlp_layers": 2,
+        "measure_runtime": false,
+        "verbose": false
+      }
+    },
+    {
+      "name": "eth_mlp",
+      "seed": 456,
+      "num_types": 4,
+      "synthetic": {
+        "num_sequences": 150,
+        "num_events": 200,
+        "num_types": 4,
+        "seed": 456
+      },
+      "training": {
+        "window_size": 64,
+        "stride": 32,
+        "batch_size": 128,
+        "epochs": 5,
+        "lr": 0.001,
+        "delta_weight": 1.0,
+        "embed_dim": 32,
+        "hidden_dim": 64,
+        "backbone": "mlp",
+        "mlp_layers": 3,
+        "measure_runtime": false,
+        "verbose": false
+      }
+    }
+    ,
+    {
+      "name": "ltc_transformer",
+      "seed": 789,
+      "num_types": 4,
+      "synthetic": {
+        "num_sequences": 150,
+        "num_events": 200,
+        "num_types": 4,
+        "seed": 789
+      },
+      "training": {
+        "window_size": 64,
+        "stride": 32,
+        "batch_size": 128,
+        "epochs": 5,
+        "lr": 0.001,
+        "delta_weight": 1.0,
+        "embed_dim": 32,
+        "hidden_dim": 64,
+        "backbone": "transformer",
+        "mlp_layers": 2,
+        "measure_runtime": false,
+        "verbose": false
+      }
+    }
+  ]
+}

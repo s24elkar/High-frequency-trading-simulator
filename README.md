@@ -47,7 +47,15 @@ The demo prints branching ratios, generates intensity/ACF plots saved to `docs/i
 
 ## Documentation
 - **Usage Guide** — `docs/USAGE.md` deep-dives into build configuration, OrderBook APIs, Hawkes simulators, Python tooling, and troubleshooting tips.
+- **Research Primer** — `docs/research_primer.md` covers Hawkes theory, branching interpretation, and diagnostics for market microstructure.
+- **Benchmark Protocol** — `docs/benchmark_protocol.md` explains how to reproduce multi-symbol experiments and report comparable metrics.
+- **Notebooks** — `docs/notebooks/` contains ready-to-run calibration notebooks for synthetic and Binance datasets.
 - **Code comments** — inline notes mark the C++/Python APIs that are intended for reuse.
+
+## Research Benchmarks
+- `neural_hawkes.py` includes a JSON-driven `run_experiment` function, CLI logging (`--output`) and diagnostics (KS/QQ statistics, runtime).
+- `experiments/run_matrix.py` executes matrices of configs (see `experiments/configs/`); summarise with `experiments/aggregate_results.py`.
+- Diagnostics span time-rescaling QQ/KS plots, runtime comparisons, and branching statistics to support paper-grade benchmarking.
 
 ## Repository Layout
 - `src/` — C++ sources (`OrderBook`, Hawkes kernels, example apps).
