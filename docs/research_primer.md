@@ -53,7 +53,25 @@ For exponential kernels \(\phi(u) = \alpha e^{-\beta u}\), \(\eta = \alpha / \be
 3. Record runtime on CPU/GPU.
 4. Run ablations: input marks, backbone type, window size.
 
-## 8. Author Checklist for Publication
+## 8. Data Processing & Modelling Workflow
+- **Preprocessing**
+  - Convert trade timestamps to elapsed seconds from the start of each session so the intensity operates in a common time grid.
+  - Define marks as signed trade size (positive for buys, negative for sells) to encode order-flow direction and magnitude.
+  - Segment streams into rolling windows (e.g., 10-minute or 1-hour horizons) for stable estimation and for regime comparisons (day vs. night).
+- **Estimation**
+  - Fit exponential-kernel Hawkes processes by maximum likelihood (e.g., `tick.hawkes.HawkesExpKern`) to obtain baseline intensity `μ`, adjacency matrix `Ω`, and branching ratio `ρ(Ω)`.
+  - Compare against rough/power-law kernels (or log-convex sums of exponentials) to gauge long-memory effects.
+  - Report parameter tables per symbol/venue, including standard errors when available.
+- **Diagnostics**
+  - Apply the time-rescaling transform and generate QQ plots against the Exp(1) reference; run KS statistics and log-likelihood comparisons on held-out windows.
+  - Plot fitted vs. empirical intensities and cumulative counts to visualise goodness-of-fit.
+  - Document runtime (CPU/GPU) for calibration and inference.
+- **Interpretation**
+  - Discuss the magnitude of `ρ(Ω)`; values near 1 indicate near-critical behaviour and self-exciting cascades—a stylised fact in crypto/equity order flow.
+  - Contrast clustering in real BTC data with simulated baselines; relate findings to liquidity resilience and volatility clustering.
+  - Highlight venue or asset divergences (e.g., BTC vs. ETH, Binance vs. CME).
+
+## 9. Author Checklist for Publication
 - **Data appendix**: Summary statistics of each dataset (trade counts, volatility, tick size).
 - **Calibration notebook**: Step-by-step replicable pipeline for each model family.
 - **Aggregated benchmarks**: Tables comparing log-likelihood, KS statistics, and runtime.
