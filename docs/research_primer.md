@@ -53,7 +53,7 @@ For exponential kernels \(\phi(u) = \alpha e^{-\beta u}\), \(\eta = \alpha / \be
 3. Record runtime on CPU/GPU.
 4. Run ablations: input marks, backbone type, window size.
 
-## 8. Deliverables for Paper-Level Work
+## 8. Author Checklist for Publication
 - **Data appendix**: Summary statistics of each dataset (trade counts, volatility, tick size).
 - **Calibration notebook**: Step-by-step replicable pipeline for each model family.
 - **Aggregated benchmarks**: Tables comparing log-likelihood, KS statistics, and runtime.
