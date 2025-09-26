@@ -1,0 +1,11 @@
+{
+  "venue": "binance",
+  "symbol": "BTCUSDT",
+  "days": [
+    "2025-09-21"
+  ],
+  "num_sequences": 1,
+  "num_events": 945965,
+  "num_types": 2,
+  "created_by": "scripts/pack_binance_npz.py"
+}

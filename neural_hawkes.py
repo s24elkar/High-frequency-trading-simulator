@@ -657,6 +657,14 @@ def run_experiment(
         "device": device.type,
     }
 
+    result["metadata"] = {
+        "venue": config.get("venue"),
+        "symbol": config.get("symbol"),
+        "backbone": training_cfg.get("backbone", "gru"),
+        "num_types": num_types,
+        "dataset": str(dataset_cfg) if dataset_cfg else None,
+    }
+
     if output_path is not None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with output_path.open("w") as fh:
@@ -753,7 +761,7 @@ def create_argparser() -> argparse.ArgumentParser:
         "--backbone",
         type=str,
         default="gru",
-        choices=["gru", "lstm", "mlp"],
+        choices=["gru", "lstm", "mlp", "transformer"],
         help="Backbone architecture",
     )
     parser.add_argument(

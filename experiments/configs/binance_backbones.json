@@ -1,0 +1,46 @@
+{
+  "experiments": [
+    {
+      "name": "binance_gru",
+      "venue": "binance",
+      "symbol": "BTCUSDT",
+      "dataset": "data/runs/events/binance_btcusdt_2025-09-21.npz",
+      "num_types": 2,
+      "training": {
+        "window_size": 128,
+        "stride": 64,
+        "batch_size": 256,
+        "epochs": 5,
+        "lr": 0.001,
+        "delta_weight": 1.0,
+        "embed_dim": 64,
+        "hidden_dim": 128,
+        "backbone": "gru",
+        "mlp_layers": 2,
+        "measure_runtime": true,
+        "verbose": true
+      }
+    },
+    {
+      "name": "binance_transformer",
+      "venue": "binance",
+      "symbol": "BTCUSDT",
+      "dataset": "data/runs/events/binance_btcusdt_2025-09-21.npz",
+      "num_types": 2,
+      "training": {
+        "window_size": 128,
+        "stride": 64,
+        "batch_size": 256,
+        "epochs": 5,
+        "lr": 0.0008,
+        "delta_weight": 1.0,
+        "embed_dim": 64,
+        "hidden_dim": 128,
+        "backbone": "transformer",
+        "mlp_layers": 2,
+        "measure_runtime": true,
+        "verbose": true
+      }
+    }
+  ]
+}
