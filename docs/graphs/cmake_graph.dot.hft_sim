@@ -1,0 +1,8 @@
+digraph "hft_sim" {
+node [
+  fontsize = "12"
+];
+    "node3" [ label = "hft_sim", shape = egg ];
+    "node1" [ label = "hft_core", shape = octagon ];
+    "node3" -> "node1" [ style = dotted ] // hft_sim -> hft_core
+}

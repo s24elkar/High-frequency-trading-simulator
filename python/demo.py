@@ -2,6 +2,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from .bridge_utils import ensure_bridge_path
+
+
+ensure_bridge_path()
+
 try:
     from .kernels import ExpKernel, PowerLawKernel
     from .simulate import simulate_thinning_exp_fast, simulate_thinning_general

@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/sohaib/hft_sim
+CMAKE_SOURCE_DIR = /Users/sohaib/Desktop/High-frequency-trading-simulator-main
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/sohaib/hft_sim/build
+CMAKE_BINARY_DIR = /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sohaib/hft_sim/build/CMakeFiles /Users/sohaib/hft_sim/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sohaib/hft_sim/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,6 +117,32 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named hft_core
+
+# Build rule for target.
+hft_core: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hft_core
+.PHONY : hft_core
+
+# fast build rule for target.
+hft_core/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/build
+.PHONY : hft_core/fast
+
+#=============================================================================
+# Target rules for targets named hawkes_bridge
+
+# Build rule for target.
+hawkes_bridge: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hawkes_bridge
+.PHONY : hawkes_bridge
+
+# fast build rule for target.
+hawkes_bridge/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_bridge.dir/build.make CMakeFiles/hawkes_bridge.dir/build
+.PHONY : hawkes_bridge/fast
+
+#=============================================================================
 # Target rules for targets named hft_sim
 
 # Build rule for target.
@@ -128,6 +154,91 @@ hft_sim: cmake_check_build_system
 hft_sim/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_sim.dir/build.make CMakeFiles/hft_sim.dir/build
 .PHONY : hft_sim/fast
+
+#=============================================================================
+# Target rules for targets named hawkes_example
+
+# Build rule for target.
+hawkes_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hawkes_example
+.PHONY : hawkes_example
+
+# fast build rule for target.
+hawkes_example/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_example.dir/build.make CMakeFiles/hawkes_example.dir/build
+.PHONY : hawkes_example/fast
+
+src/OrderBook.o: src/OrderBook.cpp.o
+.PHONY : src/OrderBook.o
+
+# target to build an object file
+src/OrderBook.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/src/OrderBook.cpp.o
+.PHONY : src/OrderBook.cpp.o
+
+src/OrderBook.i: src/OrderBook.cpp.i
+.PHONY : src/OrderBook.i
+
+# target to preprocess a source file
+src/OrderBook.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/src/OrderBook.cpp.i
+.PHONY : src/OrderBook.cpp.i
+
+src/OrderBook.s: src/OrderBook.cpp.s
+.PHONY : src/OrderBook.s
+
+# target to generate assembly for a file
+src/OrderBook.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/src/OrderBook.cpp.s
+.PHONY : src/OrderBook.cpp.s
+
+src/hawkes_c_api.o: src/hawkes_c_api.cpp.o
+.PHONY : src/hawkes_c_api.o
+
+# target to build an object file
+src/hawkes_c_api.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_bridge.dir/build.make CMakeFiles/hawkes_bridge.dir/src/hawkes_c_api.cpp.o
+.PHONY : src/hawkes_c_api.cpp.o
+
+src/hawkes_c_api.i: src/hawkes_c_api.cpp.i
+.PHONY : src/hawkes_c_api.i
+
+# target to preprocess a source file
+src/hawkes_c_api.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_bridge.dir/build.make CMakeFiles/hawkes_bridge.dir/src/hawkes_c_api.cpp.i
+.PHONY : src/hawkes_c_api.cpp.i
+
+src/hawkes_c_api.s: src/hawkes_c_api.cpp.s
+.PHONY : src/hawkes_c_api.s
+
+# target to generate assembly for a file
+src/hawkes_c_api.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_bridge.dir/build.make CMakeFiles/hawkes_bridge.dir/src/hawkes_c_api.cpp.s
+.PHONY : src/hawkes_c_api.cpp.s
+
+src/hawkes_example.o: src/hawkes_example.cpp.o
+.PHONY : src/hawkes_example.o
+
+# target to build an object file
+src/hawkes_example.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_example.dir/build.make CMakeFiles/hawkes_example.dir/src/hawkes_example.cpp.o
+.PHONY : src/hawkes_example.cpp.o
+
+src/hawkes_example.i: src/hawkes_example.cpp.i
+.PHONY : src/hawkes_example.i
+
+# target to preprocess a source file
+src/hawkes_example.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_example.dir/build.make CMakeFiles/hawkes_example.dir/src/hawkes_example.cpp.i
+.PHONY : src/hawkes_example.cpp.i
+
+src/hawkes_example.s: src/hawkes_example.cpp.s
+.PHONY : src/hawkes_example.s
+
+# target to generate assembly for a file
+src/hawkes_example.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hawkes_example.dir/build.make CMakeFiles/hawkes_example.dir/src/hawkes_example.cpp.s
+.PHONY : src/hawkes_example.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -161,7 +272,19 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... hawkes_bridge"
+	@echo "... hawkes_example"
+	@echo "... hft_core"
 	@echo "... hft_sim"
+	@echo "... src/OrderBook.o"
+	@echo "... src/OrderBook.i"
+	@echo "... src/OrderBook.s"
+	@echo "... src/hawkes_c_api.o"
+	@echo "... src/hawkes_c_api.i"
+	@echo "... src/hawkes_c_api.s"
+	@echo "... src/hawkes_example.o"
+	@echo "... src/hawkes_example.i"
+	@echo "... src/hawkes_example.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

@@ -1,0 +1,12 @@
+digraph "hft_core" {
+node [
+  fontsize = "12"
+];
+    "node1" [ label = "hft_core", shape = octagon ];
+    "node0" [ label = "hawkes_bridge", shape = doubleoctagon ];
+    "node0" -> "node1" [ style = dotted ] // hawkes_bridge -> hft_core
+    "node2" [ label = "hawkes_example", shape = egg ];
+    "node2" -> "node1" [ style = dotted ] // hawkes_example -> hft_core
+    "node3" [ label = "hft_sim", shape = egg ];
+    "node3" -> "node1" [ style = dotted ] // hft_sim -> hft_core
+}

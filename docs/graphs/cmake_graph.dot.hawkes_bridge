@@ -1,0 +1,8 @@
+digraph "hawkes_bridge" {
+node [
+  fontsize = "12"
+];
+    "node0" [ label = "hawkes_bridge", shape = doubleoctagon ];
+    "node1" [ label = "hft_core", shape = octagon ];
+    "node0" -> "node1" [ style = dotted ] // hawkes_bridge -> hft_core
+}

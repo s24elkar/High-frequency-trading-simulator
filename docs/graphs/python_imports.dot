@@ -1,0 +1,20 @@
+digraph python_imports {  rankdir=LR;  "__init__" [label="__init__"];
+  "bridge_utils" [label="bridge_utils"];
+  "demo" [label="demo"];
+  "io" [label="io"];
+  "kernels" [label="kernels"];
+  "simulate" [label="simulate"];
+  "streamlit_app" [label="streamlit_app"];
+  "timeline_dashboard" [label="timeline_dashboard"];
+  "viz" [label="viz"];
+  "demo" -> "matplotlib.pyplot";
+  "demo" -> "numpy";
+  "kernels" -> "numpy";
+  "simulate" -> "numpy";
+  "streamlit_app" -> "numpy";
+  "streamlit_app" -> "streamlit";
+  "timeline_dashboard" -> "matplotlib.pyplot";
+  "timeline_dashboard" -> "numpy";
+  "viz" -> "matplotlib.pyplot";
+  "viz" -> "numpy";
+}

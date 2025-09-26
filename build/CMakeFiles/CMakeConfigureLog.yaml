@@ -20,10 +20,6 @@ events:
     names:
       - "uname"
     candidate_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/usr/bin/"
@@ -34,22 +30,20 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/uname"
-      - "/opt/homebrew/bin/uname"
-      - "/opt/homebrew/sbin/uname"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/uname"
       - "/usr/local/bin/uname"
       - "/System/Cryptexes/App/usr/bin/uname"
     found: "/usr/bin/uname"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -60,11 +54,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "message-v1"
     backtrace:
@@ -93,10 +90,6 @@ events:
       - "make"
       - "smake"
     candidate_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/usr/bin/"
@@ -107,13 +100,15 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/gmake"
-      - "/opt/homebrew/bin/gmake"
-      - "/opt/homebrew/sbin/gmake"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/gmake"
       - "/usr/local/bin/gmake"
       - "/System/Cryptexes/App/usr/bin/gmake"
       - "/usr/bin/gmake"
@@ -124,21 +119,19 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/gmake"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/gmake"
       - "/Library/TeX/texbin/gmake"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/gmake"
+      - "/Users/sohaib/.pyenv/shims/gmake"
+      - "/opt/homebrew/opt/openjdk@21/bin/gmake"
+      - "/opt/homebrew/bin/gmake"
+      - "/opt/homebrew/sbin/gmake"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/gmake"
       - "/Users/sohaib/.local/bin/gmake"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/gmake"
-      - "/opt/homebrew/opt/openjdk@21/bin/make"
-      - "/opt/homebrew/bin/make"
-      - "/opt/homebrew/sbin/make"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/make"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/gmake"
       - "/usr/local/bin/make"
       - "/System/Cryptexes/App/usr/bin/make"
     found: "/usr/bin/make"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -149,11 +142,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -180,10 +176,6 @@ events:
       - "icx"
       - "clang++"
     candidate_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/usr/bin/"
@@ -194,22 +186,20 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/c++"
-      - "/opt/homebrew/bin/c++"
-      - "/opt/homebrew/sbin/c++"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/c++"
       - "/usr/local/bin/c++"
       - "/System/Cryptexes/App/usr/bin/c++"
     found: "/usr/bin/c++"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -220,11 +210,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -252,10 +245,6 @@ events:
     found: "/opt/homebrew/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -266,11 +255,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "message-v1"
     backtrace:
@@ -291,7 +283,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
       
       The CXX compiler identification is AppleClang, found in:
-        /Users/sohaib/hft_sim/build/CMakeFiles/4.1.1/CompilerIdCXX/a.out
+        /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/4.1.1/CompilerIdCXX/a.out
       
   -
     kind: "message-v1"
@@ -355,10 +347,6 @@ events:
       - "ar"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -368,15 +356,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     found: "/usr/bin/ar"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -387,11 +377,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -413,10 +406,6 @@ events:
       - "ranlib"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -426,15 +415,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     found: "/usr/bin/ranlib"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -445,11 +436,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -471,10 +465,6 @@ events:
       - "strip"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -484,15 +474,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     found: "/usr/bin/strip"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -503,11 +495,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -529,10 +524,6 @@ events:
       - "ld"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -542,15 +533,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     found: "/usr/bin/ld"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -561,11 +554,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -587,10 +583,6 @@ events:
       - "nm"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -600,15 +592,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     found: "/usr/bin/nm"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -619,11 +613,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -645,10 +642,6 @@ events:
       - "objdump"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -658,15 +651,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     found: "/usr/bin/objdump"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -677,11 +672,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -703,10 +701,6 @@ events:
       - "objcopy"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -716,14 +710,16 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
       - "/usr/bin/objcopy"
-      - "/opt/homebrew/opt/openjdk@21/bin/objcopy"
-      - "/opt/homebrew/bin/objcopy"
-      - "/opt/homebrew/sbin/objcopy"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/objcopy"
       - "/usr/local/bin/objcopy"
       - "/System/Cryptexes/App/usr/bin/objcopy"
       - "/bin/objcopy"
@@ -733,15 +729,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/objcopy"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/objcopy"
       - "/Library/TeX/texbin/objcopy"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/objcopy"
+      - "/Users/sohaib/.pyenv/shims/objcopy"
+      - "/opt/homebrew/opt/openjdk@21/bin/objcopy"
+      - "/opt/homebrew/bin/objcopy"
+      - "/opt/homebrew/sbin/objcopy"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/objcopy"
       - "/Users/sohaib/.local/bin/objcopy"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/objcopy"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/objcopy"
     found: false
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -752,11 +750,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -778,10 +779,6 @@ events:
       - "readelf"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -791,14 +788,16 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
       - "/usr/bin/readelf"
-      - "/opt/homebrew/opt/openjdk@21/bin/readelf"
-      - "/opt/homebrew/bin/readelf"
-      - "/opt/homebrew/sbin/readelf"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/readelf"
       - "/usr/local/bin/readelf"
       - "/System/Cryptexes/App/usr/bin/readelf"
       - "/bin/readelf"
@@ -808,15 +807,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/readelf"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/readelf"
       - "/Library/TeX/texbin/readelf"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/readelf"
+      - "/Users/sohaib/.pyenv/shims/readelf"
+      - "/opt/homebrew/opt/openjdk@21/bin/readelf"
+      - "/opt/homebrew/bin/readelf"
+      - "/opt/homebrew/sbin/readelf"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/readelf"
       - "/Users/sohaib/.local/bin/readelf"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/readelf"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/readelf"
     found: false
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -827,11 +828,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -853,10 +857,6 @@ events:
       - "dlltool"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -866,14 +866,16 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
       - "/usr/bin/dlltool"
-      - "/opt/homebrew/opt/openjdk@21/bin/dlltool"
-      - "/opt/homebrew/bin/dlltool"
-      - "/opt/homebrew/sbin/dlltool"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/dlltool"
       - "/usr/local/bin/dlltool"
       - "/System/Cryptexes/App/usr/bin/dlltool"
       - "/bin/dlltool"
@@ -883,15 +885,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/dlltool"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/dlltool"
       - "/Library/TeX/texbin/dlltool"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/dlltool"
+      - "/Users/sohaib/.pyenv/shims/dlltool"
+      - "/opt/homebrew/opt/openjdk@21/bin/dlltool"
+      - "/opt/homebrew/bin/dlltool"
+      - "/opt/homebrew/sbin/dlltool"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/dlltool"
       - "/Users/sohaib/.local/bin/dlltool"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/dlltool"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/dlltool"
     found: false
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -902,11 +906,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -928,10 +935,6 @@ events:
       - "addr2line"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -941,14 +944,16 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
       - "/usr/bin/addr2line"
-      - "/opt/homebrew/opt/openjdk@21/bin/addr2line"
-      - "/opt/homebrew/bin/addr2line"
-      - "/opt/homebrew/sbin/addr2line"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/addr2line"
       - "/usr/local/bin/addr2line"
       - "/System/Cryptexes/App/usr/bin/addr2line"
       - "/bin/addr2line"
@@ -958,15 +963,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/addr2line"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/addr2line"
       - "/Library/TeX/texbin/addr2line"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/addr2line"
+      - "/Users/sohaib/.pyenv/shims/addr2line"
+      - "/opt/homebrew/opt/openjdk@21/bin/addr2line"
+      - "/opt/homebrew/bin/addr2line"
+      - "/opt/homebrew/sbin/addr2line"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/addr2line"
       - "/Users/sohaib/.local/bin/addr2line"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/addr2line"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/addr2line"
     found: false
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -977,11 +984,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -1003,10 +1013,6 @@ events:
       - "tapi"
     candidate_directories:
       - "/usr/bin/"
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/bin/"
@@ -1016,14 +1022,16 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
       - "/usr/bin/tapi"
-      - "/opt/homebrew/opt/openjdk@21/bin/tapi"
-      - "/opt/homebrew/bin/tapi"
-      - "/opt/homebrew/sbin/tapi"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/tapi"
       - "/usr/local/bin/tapi"
       - "/System/Cryptexes/App/usr/bin/tapi"
       - "/bin/tapi"
@@ -1033,15 +1041,17 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/tapi"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/tapi"
       - "/Library/TeX/texbin/tapi"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/tapi"
+      - "/Users/sohaib/.pyenv/shims/tapi"
+      - "/opt/homebrew/opt/openjdk@21/bin/tapi"
+      - "/opt/homebrew/bin/tapi"
+      - "/opt/homebrew/sbin/tapi"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/tapi"
       - "/Users/sohaib/.local/bin/tapi"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/tapi"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/tapi"
     found: false
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -1052,11 +1062,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
   -
     kind: "find-v1"
     backtrace:
@@ -1077,10 +1090,6 @@ events:
     names:
       - "install_name_tool"
     candidate_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/"
-      - "/opt/homebrew/bin/"
-      - "/opt/homebrew/sbin/"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/usr/local/bin/"
       - "/System/Cryptexes/App/usr/bin/"
       - "/usr/bin/"
@@ -1091,22 +1100,20 @@ events:
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
       - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
       - "/Library/TeX/texbin/"
+      - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt/"
+      - "/Users/sohaib/.pyenv/shims/"
+      - "/opt/homebrew/opt/openjdk@21/bin/"
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/"
       - "/Users/sohaib/.local/bin/"
-      - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64/"
     searched_directories:
-      - "/opt/homebrew/opt/openjdk@21/bin/install_name_tool"
-      - "/opt/homebrew/bin/install_name_tool"
-      - "/opt/homebrew/sbin/install_name_tool"
-      - "/Library/Frameworks/Python.framework/Versions/3.13/bin/install_name_tool"
       - "/usr/local/bin/install_name_tool"
       - "/System/Cryptexes/App/usr/bin/install_name_tool"
     found: "/usr/bin/install_name_tool"
     search_context:
       ENV{PATH}:
-        - "/opt/homebrew/opt/openjdk@21/bin"
-        - "/opt/homebrew/bin"
-        - "/opt/homebrew/sbin"
-        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/usr/local/bin"
         - "/System/Cryptexes/App/usr/bin"
         - "/usr/bin"
@@ -1117,11 +1124,14 @@ events:
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
         - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
         - "/Library/TeX/texbin"
+        - "/var/folders/kt/gbgwt_9548j5rlc2_wwbw6w80000gn/T/.tmp2jqgdt"
+        - "/Users/sohaib/.pyenv/shims"
         - "/opt/homebrew/opt/openjdk@21/bin"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Library/Frameworks/Python.framework/Versions/3.13/bin"
         - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand"
-        - "/Users/sohaib/.local/bin"
-        - "/Users/sohaib/.local/bin"
+        - "/Users/sohaib/.vscode/extensions/openai.chatgpt-0.4.14-darwin-arm64/bin/macos-aarch64"
       CMAKE_INSTALL_PREFIX: "/usr/local"
   -
     kind: "try_compile-v1"
@@ -1132,8 +1142,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN"
-      binary: "/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN"
+      source: "/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ"
+      binary: "/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -1146,19 +1156,19 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN'
+        Change Dir: '/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ'
         
-        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_63fdc/fast
-        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_63fdc.dir/build.make CMakeFiles/cmTC_63fdc.dir/build
-        Building CXX object CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o
-        /usr/bin/c++   -arch arm64   -v -Wl,-v -MD -MT CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -c /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_cbaa4/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_cbaa4.dir/build.make CMakeFiles/cmTC_cbaa4.dir/build
+        Building CXX object CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o
+        /usr/bin/c++   -v -Wl,-v -MD -MT CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -c /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp
         Apple clang version 17.0.0 (clang-1700.0.13.5)
         Target: arm64-apple-darwin25.0.0
         Thread model: posix
         InstalledDir: /Library/Developer/CommandLineTools/usr/bin
         clang++: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
         ignoring nonexistent directory "/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"
-         "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.5.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN -target-linker-version 1167.5 -v -fcoverage-compilation-dir=/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -x c++ /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+         "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.5.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ -target-linker-version 1167.5 -v -fcoverage-compilation-dir=/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -x c++ /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp
         clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin25.0.0
         ignoring nonexistent directory "/usr/local/include"
         ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/local/include"
@@ -1172,13 +1182,13 @@ events:
          /Library/Developer/CommandLineTools/usr/include
          /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks (framework directory)
         End of search list.
-        Linking CXX executable cmTC_63fdc
-        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_63fdc.dir/link.txt --verbose=1
+        Linking CXX executable cmTC_cbaa4
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cbaa4.dir/link.txt --verbose=1
         Apple clang version 17.0.0 (clang-1700.0.13.5)
         Target: arm64-apple-darwin25.0.0
         Thread model: posix
         InstalledDir: /Library/Developer/CommandLineTools/usr/bin
-         "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.5.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_63fdc -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a
+         "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.5.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_cbaa4 -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a
         @(#)PROGRAM:ld PROJECT:ld-1167.5
         BUILD 01:45:05 Apr 30 2025
         configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em
@@ -1190,7 +1200,7 @@ events:
         	/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/swift
         Framework search paths:
         	/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks
-        /usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_63fdc
+        /usr/bin/c++ -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_cbaa4
         
       exitCode: 0
   -
@@ -1234,19 +1244,19 @@ events:
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
-        ignore line: [Change Dir: '/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN']
+        ignore line: [Change Dir: '/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ']
         ignore line: []
-        ignore line: [Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_63fdc/fast]
-        ignore line: [/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_63fdc.dir/build.make CMakeFiles/cmTC_63fdc.dir/build]
-        ignore line: [Building CXX object CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o]
-        ignore line: [/usr/bin/c++   -arch arm64   -v -Wl -v -MD -MT CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -c /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_cbaa4/fast]
+        ignore line: [/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_cbaa4.dir/build.make CMakeFiles/cmTC_cbaa4.dir/build]
+        ignore line: [Building CXX object CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/usr/bin/c++   -v -Wl -v -MD -MT CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -c /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Apple clang version 17.0.0 (clang-1700.0.13.5)]
         ignore line: [Target: arm64-apple-darwin25.0.0]
         ignore line: [Thread model: posix]
         ignore line: [InstalledDir: /Library/Developer/CommandLineTools/usr/bin]
         ignore line: [clang++: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
         ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"]
-        ignore line: [ "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.5.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN -target-linker-version 1167.5 -v -fcoverage-compilation-dir=/Users/sohaib/hft_sim/build/CMakeFiles/CMakeScratch/TryCompile-RnprxN -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -x c++ /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [ "/Library/Developer/CommandLineTools/usr/bin/clang" -cc1 -triple arm64-apple-macosx15.5.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -target-sdk-version=15.5 -fvisibility-inlines-hidden-static-local-var -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -target-cpu apple-m1 -target-feature +zcm -target-feature +zcz -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ -target-linker-version 1167.5 -v -fcoverage-compilation-dir=/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles/CMakeScratch/TryCompile-Kfh8xQ -resource-dir /Library/Developer/CommandLineTools/usr/lib/clang/17 -dependency-file CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -internal-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Library/Developer/CommandLineTools/usr/lib/clang/17/include -internal-externc-isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Library/Developer/CommandLineTools/usr/include -Wno-reorder-init-list -Wno-implicit-int-float-conversion -Wno-c99-designator -Wno-final-dtor-non-final-class -Wno-extra-semi-stmt -Wno-misleading-indentation -Wno-quoted-include-in-framework-header -Wno-implicit-fallthrough -Wno-enum-enum-conversion -Wno-enum-float-conversion -Wno-elaborated-enum-base -Wno-reserved-identifier -Wno-gnu-folding-constant -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -x c++ /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [clang -cc1 version 17.0.0 (clang-1700.0.13.5) default target arm64-apple-darwin25.0.0]
         ignore line: [ignoring nonexistent directory "/usr/local/include"]
         ignore line: [ignoring nonexistent directory "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/local/include"]
@@ -1260,13 +1270,13 @@ events:
         ignore line: [ /Library/Developer/CommandLineTools/usr/include]
         ignore line: [ /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks (framework directory)]
         ignore line: [End of search list.]
-        ignore line: [Linking CXX executable cmTC_63fdc]
-        ignore line: [/opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_63fdc.dir/link.txt --verbose=1]
+        ignore line: [Linking CXX executable cmTC_cbaa4]
+        ignore line: [/opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cbaa4.dir/link.txt --verbose=1]
         ignore line: [Apple clang version 17.0.0 (clang-1700.0.13.5)]
         ignore line: [Target: arm64-apple-darwin25.0.0]
         ignore line: [Thread model: posix]
         ignore line: [InstalledDir: /Library/Developer/CommandLineTools/usr/bin]
-        link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.5.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_63fdc -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
+        link line: [ "/Library/Developer/CommandLineTools/usr/bin/ld" -demangle -lto_library /Library/Developer/CommandLineTools/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 15.5.0 15.5 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_cbaa4 -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]
           arg [/Library/Developer/CommandLineTools/usr/bin/ld] ==> ignore
           arg [-demangle] ==> ignore
           arg [-lto_library] ==> ignore, skip following value
@@ -1283,12 +1293,12 @@ events:
           arg [-mllvm] ==> ignore
           arg [-enable-linkonceodr-outlining] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_63fdc] ==> ignore
+          arg [cmTC_cbaa4] ==> ignore
           arg [-L/usr/local/lib] ==> dir [/usr/local/lib]
           arg [-search_paths_first] ==> ignore
           arg [-headerpad_max_install_names] ==> ignore
           arg [-v] ==> ignore
-          arg [CMakeFiles/cmTC_63fdc.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [CMakeFiles/cmTC_cbaa4.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
           arg [-lc++] ==> lib [c++]
           arg [-lSystem] ==> lib [System]
           arg [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a] ==> lib [/Library/Developer/CommandLineTools/usr/lib/clang/17/lib/darwin/libclang_rt.osx.a]

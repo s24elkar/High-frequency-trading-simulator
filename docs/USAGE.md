@@ -120,6 +120,8 @@ If Matplotlib needs a writable cache (common in read-only CI environments), run 
 
 ### Run the bundled demo
 ```bash
+cmake -S . -B build
+cmake --build build --target hawkes_bridge
 MPLCONFIGDIR=.matplotlib python -m demo
 ```
 
@@ -140,6 +142,20 @@ T = 500.0
 mark_sampler = lambda rng: float(rng.exponential(1.0))
 times, marks = simulate_thinning_exp_fast(mu, kernel, mark_sampler, T, seed=9001)
 ```
+
+`python.simulate` will automatically load the shared library compiled in `build/lib`.
+If you relocate the artefact, point the environment variable `HFT_HAWKES_BRIDGE`
+to the full path of the `hawkes_bridge` binary before importing the module.
+
+### Interactive Streamlit app
+```bash
+pip install -r python/requirements.txt
+streamlit run python/streamlit_app.py
+```
+
+Use the sidebar to adjust kernel parameters, mark distributions, and horizons.
+The app calls the native simulator via `python.simulate`, renders timeline
+dashboards, and lets you download the generated events as CSV.
 
 Additional helpers:
 - `python.viz.intensity_on_grid` — reconstruct λ(t) over any grid.

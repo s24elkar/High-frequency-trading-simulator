@@ -78,3 +78,11 @@ For exponential kernels \(\phi(u) = \alpha e^{-\beta u}\), \(\eta = \alpha / \be
 - **Interpretation section**: Plot branching ratios, cross-excitation matrices, and discuss market implications.
 
 Use this primer as a theoretical backdrop for writing the methodology section of your manuscript.
+
+## 10. Implementation Notes
+- **Core engine in C++**: `src/OrderBook.cpp` and `src/hawkes.hpp` now build into the `hft_core` static library. Real-time paths link against this target (e.g. `src/main.cpp`, `src/hawkes_example.cpp`).
+- **Hawkes simulator bridge**: The `hawkes_bridge` shared library (target added in `CMakeLists.txt`) wraps the exponential and power-law simulators behind a C API. Functions return raw arrays so that higher-level languages can consume them without duplicating logic.
+- **Python bindings**: `python/simulate.py` loads `hawkes_bridge` via `ctypes` and exposes the same `simulate_thinning_*` helpers as before. The heavy computation remains native; Python only supplies optional mark samplers and handles NumPy conversions for visualisation.
+- **Build workflow**: Run `cmake -S . -B build` followed by `cmake --build build` to produce the CLI binaries and the bridge shared library (emitted into `build/lib/`). Python utilities auto-discover the compiled artifact along common search paths.
+- **Data exchange**: Persisted event streams continue to flow through `python/io.py`, allowing offline analysis notebooks to operate on CSV/JSON outputs without reimplementing simulation or book mechanics.
+- **Visual index**: See `docs/visual_index.md` for dependency graphs, dashboards, and interactive tooling built on top of the core modules.

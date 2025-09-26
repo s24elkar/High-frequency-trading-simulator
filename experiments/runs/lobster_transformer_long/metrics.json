@@ -1,0 +1,33 @@
+{
+  "venue": "lobster",
+  "symbol": "AAPL",
+  "backbone": "transformer",
+  "seed": 2024,
+  "split_metrics": {
+    "train": {
+      "nll": 4.815249655151566,
+      "next_time_mae": 0.972565326792311,
+      "next_type_acc": 0.8537600662547539
+    },
+    "val": {
+      "nll": 4.68295431137085,
+      "next_time_mae": 0.9627342476698584,
+      "next_type_acc": 0.8560660079454009
+    },
+    "test": {
+      "nll": 4.42526388168335,
+      "next_time_mae": 0.8991551837270341,
+      "next_type_acc": 0.8577629719362003
+    }
+  },
+  "ks": {
+    "ks_stat": 0.5903517236234009,
+    "ks_pvalue": 0.0
+  },
+  "time_sec_train": 27.31160879135132,
+  "time_sec_epoch_avg": 1.8207739194234211,
+  "params_millions": 0.125443,
+  "runtime": {
+    "cpu_seconds": 0.057736873626708984
+  }
+}

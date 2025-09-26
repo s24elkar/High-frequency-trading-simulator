@@ -1,0 +1,33 @@
+{
+  "venue": "binance",
+  "symbol": "BTCUSDT",
+  "backbone": "gru",
+  "seed": 2024,
+  "split_metrics": {
+    "train": {
+      "nll": 0.25876768861923066,
+      "next_time_mae": 0.08290315169769152,
+      "next_type_acc": 0.895562373137543
+    },
+    "val": {
+      "nll": 0.24784711981927376,
+      "next_time_mae": 0.07928188348456718,
+      "next_type_acc": 0.9005750126971611
+    },
+    "test": {
+      "nll": 0.26539814745083984,
+      "next_time_mae": 0.08534058463046378,
+      "next_type_acc": 0.8923991064039863
+    }
+  },
+  "ks": {
+    "ks_stat": 0.7204031837021726,
+    "ks_pvalue": 0.0
+  },
+  "time_sec_train": 239.89080119132996,
+  "time_sec_epoch_avg": 15.992720079421996,
+  "params_millions": 0.091907,
+  "runtime": {
+    "cpu_seconds": 0.4856741428375244
+  }
+}

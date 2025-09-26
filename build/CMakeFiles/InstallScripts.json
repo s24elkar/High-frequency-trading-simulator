@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/Users/sohaib/hft_sim/build/cmake_install.cmake"
+		"/Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

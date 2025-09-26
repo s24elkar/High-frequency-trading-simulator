@@ -7,7 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "/Users/sohaib/hft_sim/CMakeLists.txt"
+  "/Users/sohaib/Desktop/High-frequency-trading-simulator-main/CMakeLists.txt"
   "CMakeFiles/4.1.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/4.1.1/CMakeSystem.cmake"
   "/opt/homebrew/share/cmake/Modules/CMakeCXXInformation.cmake"
@@ -48,5 +48,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/hft_core.dir/DependInfo.cmake"
+  "CMakeFiles/hawkes_bridge.dir/DependInfo.cmake"
   "CMakeFiles/hft_sim.dir/DependInfo.cmake"
+  "CMakeFiles/hawkes_example.dir/DependInfo.cmake"
   )

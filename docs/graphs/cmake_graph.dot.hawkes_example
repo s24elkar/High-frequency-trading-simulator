@@ -1,0 +1,8 @@
+digraph "hawkes_example" {
+node [
+  fontsize = "12"
+];
+    "node2" [ label = "hawkes_example", shape = egg ];
+    "node1" [ label = "hft_core", shape = octagon ];
+    "node2" -> "node1" [ style = dotted ] // hawkes_example -> hft_core
+}

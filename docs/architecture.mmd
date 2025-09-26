@@ -1,0 +1,29 @@
+graph TD
+    subgraph C++ Core
+        A[hft_core (OrderBook, Hawkes kernels)]
+        B[hawkes_bridge (C API)]
+    end
+
+    subgraph Python Analytics
+        C[python.simulate]
+        D[python.timeline_dashboard]
+        E[python.viz]
+        F[python.streamlit_app]
+    end
+
+    subgraph Experiments & Docs
+        G[docs/neural_hawkes_tutorial.ipynb]
+        H[docs/visual_index.md]
+        I[experiments/run_matrix.py]
+    end
+
+    A --> B
+    B --> C
+    C --> D
+    C --> E
+    D --> F
+    E --> F
+    C --> I
+    F --> H
+    D --> G
+    E --> G
