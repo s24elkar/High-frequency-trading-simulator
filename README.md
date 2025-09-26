@@ -1,6 +1,6 @@
+![Trading dashboard icon](docs/images/dashboard_icon.png)
 # High-Frequency Trading Simulator
 
-![Trading dashboard icon](docs/images/dashboard_icon.png)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![CMake 3.15+](https://img.shields.io/badge/CMake-3.15%2B-064F8C.svg?logo=cmake&logoColor=white)](https://cmake.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-App-ff4b4b.svg?logo=streamlit&logoColor=white)](https://streamlit.io/)
