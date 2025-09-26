@@ -6,7 +6,7 @@
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg?logo=github)](docs/USAGE.md#execute-tests)
 [![Coverage](https://img.shields.io/badge/Coverage-100%25-44cc11.svg?logo=codecademy)](docs/USAGE.md#execute-tests)
 
-[![Open Streamlit](https://img.shields.io/badge/Open%20in-Streamlit-1f6feb?logo=streamlit&logoColor=white)](https://your-streamlit-deployment.example)
+[![Open Streamlit](https://img.shields.io/badge/Open%20in-Streamlit-1f6feb?logo=streamlit&logoColor=white)](https://high-frequency-trading-simulator-5yzi7yyjfvmckxa6ovjcje.streamlit.app/)
 [![Usage Guide](https://img.shields.io/badge/Docs-Usage%20Guide-0a84ff.svg)](docs/USAGE.md)
 
 A practical sandbox for market microstructure research. Explore how clustered order flow emerges from Hawkes processes, prototype execution logic on a deterministic C++ limit order book, and surface results through notebooks, scripts, and a guided Streamlit front end.
