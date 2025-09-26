@@ -1,6 +1,6 @@
 # High-Frequency Trading Simulator
 
-![Trading dashboard icon](docs/images/trading_dashboard_icon.png)
+![Trading dashboard icon](docs/images/dashboard_icon.png)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![CMake 3.15+](https://img.shields.io/badge/CMake-3.15%2B-064F8C.svg?logo=cmake&logoColor=white)](https://cmake.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-App-ff4b4b.svg?logo=streamlit&logoColor=white)](https://streamlit.io/)
@@ -82,6 +82,10 @@ Inside the app you can:
 - Toggle between exponential and power-law kernels and overlay comparison runs.
 - Inspect branching ratios with criticality warnings and view order-size histograms.
 - Export simulated order flow as CSV or download calibration notebooks directly from the sidebar.
+
+<p align="center">
+  <img src="docs/images/dashboard_icon.png" width="200" alt="Streamlit Hawkes dashboard icon" />
+</p>
 
 The app bridges directly to the native C++ kernels via `bridge_utils.ensure_bridge_path`, so ensure build artefacts exist under `build/lib` (or set `HFT_HAWKES_BRIDGE`).
 
