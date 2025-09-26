@@ -59,7 +59,12 @@ def _bridge_name_candidates() -> Tuple[str, ...]:
 def _bridge_search_paths() -> Tuple[Path, ...]:
     here = Path(__file__).resolve().parent
     project_root = here.parent
-    candidates = [here, here / "lib", project_root]
+    candidates = [
+        here,
+        here / "lib",
+        here / "lib" / "linux",
+        project_root,
+    ]
     for build_dir in sorted(project_root.glob("build*")):
         candidates.append(build_dir)
         candidates.append(build_dir / "lib")
