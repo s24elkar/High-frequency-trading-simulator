@@ -11,8 +11,9 @@ from __future__ import annotations
 
 import ctypes
 import inspect
-import sys
 import os
+import sys
+import warnings
 from pathlib import Path
 from typing import Callable, Optional, Tuple
 
@@ -28,7 +29,9 @@ CallbackType = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_void_p)
 ERROR_SENTINEL = ctypes.c_size_t(-1).value
 
 _LIB: Optional[ctypes.CDLL] = None
+_BRIDGE_ERROR: Optional[str] = None
 _CALLBACK_REGISTRY = []  # keep references alive during native call
+_FALLBACK_WARNED = False
 
 
 def _load_from_env() -> Optional[ctypes.CDLL]:
@@ -68,10 +71,13 @@ def _bridge_search_paths() -> Tuple[Path, ...]:
     return tuple(seen)
 
 
-def _load_bridge() -> ctypes.CDLL:
+def _load_bridge() -> Optional[ctypes.CDLL]:
     global _LIB
+    global _BRIDGE_ERROR
     if _LIB is not None:
         return _LIB
+    if _BRIDGE_ERROR is not None:
+        return None
 
     env_lib = _load_from_env()
     if env_lib is not None:
@@ -88,11 +94,13 @@ def _load_bridge() -> ctypes.CDLL:
                 return _LIB
 
     searched = [str(p) for p in _bridge_search_paths()]
-    raise FileNotFoundError(
+    _BRIDGE_ERROR = (
         "hawkes_bridge shared library not found. "
-        "Build the C++ project (e.g. `cmake --build build`) before invoking simulations.\n"
+        "Falling back to the pure-Python simulator. Build the C++ project (e.g. `cmake --build build --target hawkes_bridge`) "
+        "or set HFT_HAWKES_BRIDGE to the compiled artifact to restore native performance.\n"
         f"Searched paths: {searched}"
     )
+    return None
 
 
 def _configure_signatures(lib: ctypes.CDLL) -> None:
@@ -180,8 +188,18 @@ def _release_registration(registration) -> None:
         pass
 
 
-def _run_simulation(func, params, mark_sampler, seed):
-    lib = _load_bridge()
+def _warn_fallback() -> None:
+    global _FALLBACK_WARNED
+    if _FALLBACK_WARNED:
+        return
+    _FALLBACK_WARNED = True
+    message = _BRIDGE_ERROR or (
+        "hawkes_bridge shared library unavailable; falling back to pure-Python simulation."
+    )
+    warnings.warn(message, RuntimeWarning)
+
+
+def _run_simulation(lib, func, params, mark_sampler, seed):
     callback = None
     callback_ptr = ctypes.c_void_p()
     ctx = ctypes.c_void_p()
@@ -215,6 +233,82 @@ def _run_simulation(func, params, mark_sampler, seed):
     return times, marks
 
 
+def _simulate_exp_python(mu: float,
+                         kernel: ExpKernel,
+                         mark_sampler: Optional[Callable[[np.random.Generator], float]],
+                         T: float,
+                         seed: int) -> Tuple[np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    sampler = _normalise_sampler(mark_sampler)
+    t = 0.0
+    S = 0.0
+    times: list[float] = []
+    marks: list[float] = []
+
+    while t < T:
+        lam_star = mu + S
+        if lam_star <= 0.0:
+            break
+        w = rng.exponential(1.0 / lam_star)
+        t_cand = t + w
+        if t_cand > T:
+            break
+        S_cand = kernel.decay_state(S, w)
+        lam_tc = mu + S_cand
+        if rng.uniform() <= lam_tc / lam_star:
+            v = sampler(rng)
+            times.append(t_cand)
+            marks.append(v)
+            S = S_cand + kernel.jump(v)
+            t = t_cand
+        else:
+            S = S_cand
+            t = t_cand
+
+    return np.asarray(times, dtype=float), np.asarray(marks, dtype=float)
+
+
+def _simulate_general_python(mu: float,
+                             kernel: PowerLawKernel,
+                             mark_sampler: Optional[Callable[[np.random.Generator], float]],
+                             T: float,
+                             seed: int) -> Tuple[np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    sampler = _normalise_sampler(mark_sampler)
+    t = 0.0
+    times: list[float] = []
+    marks: list[float] = []
+    S_cur = 0.0
+
+    def sum_phi(t_now: float) -> float:
+        total = 0.0
+        for ti, vi in zip(times, marks):
+            total += kernel.phi(t_now - ti, vi)
+        return total
+
+    while t < T:
+        lam_star = mu + S_cur
+        if lam_star <= 0.0:
+            break
+        w = rng.exponential(1.0 / lam_star)
+        t_cand = t + w
+        if t_cand > T:
+            break
+        S_tc = sum_phi(t_cand)
+        lam_tc = mu + S_tc
+        if rng.uniform() <= lam_tc / lam_star:
+            v = sampler(rng)
+            times.append(t_cand)
+            marks.append(v)
+            S_cur = S_tc + kernel.phi(0.0, v)
+            t = t_cand
+        else:
+            S_cur = S_tc
+            t = t_cand
+
+    return np.asarray(times, dtype=float), np.asarray(marks, dtype=float)
+
+
 def simulate_thinning_exp_fast(mu: float,
                                kernel: ExpKernel,
                                mark_sampler: Optional[Callable[[np.random.Generator], float]] = None,
@@ -222,8 +316,12 @@ def simulate_thinning_exp_fast(mu: float,
                                seed: int = 12345) -> Tuple[np.ndarray, np.ndarray]:
     if not isinstance(kernel, ExpKernel):
         raise TypeError("kernel must be an ExpKernel instance")
+    lib = _load_bridge()
+    if lib is None:
+        _warn_fallback()
+        return _simulate_exp_python(mu, kernel, mark_sampler, T, seed)
     params = (float(mu), float(kernel.alpha), float(kernel.beta), float(T), int(seed))
-    return _run_simulation(_load_bridge().hawkes_simulate_exp, params, mark_sampler, seed)
+    return _run_simulation(lib, lib.hawkes_simulate_exp, params, mark_sampler, seed)
 
 
 def simulate_thinning_general(mu: float,
@@ -233,6 +331,10 @@ def simulate_thinning_general(mu: float,
                               seed: int = 12345) -> Tuple[np.ndarray, np.ndarray]:
     if not isinstance(kernel, PowerLawKernel):
         raise TypeError("kernel must be a PowerLawKernel instance")
+    lib = _load_bridge()
+    if lib is None:
+        _warn_fallback()
+        return _simulate_general_python(mu, kernel, mark_sampler, T, seed)
     params = (
         float(mu),
         float(kernel.alpha),
@@ -240,7 +342,7 @@ def simulate_thinning_general(mu: float,
         float(kernel.gamma),
         int(seed),
     )
-    return _run_simulation(_load_bridge().hawkes_simulate_powerlaw, params, mark_sampler, seed)
+    return _run_simulation(lib, lib.hawkes_simulate_powerlaw, params, mark_sampler, seed)
 
 
 __all__ = [

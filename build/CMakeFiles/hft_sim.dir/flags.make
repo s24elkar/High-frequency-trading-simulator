@@ -6,7 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/Users/sohaib/Desktop/High-frequency-trading-simulator-main/src
 
-CXX_FLAGSarm64 = -std=gnu++17 -arch arm64 -fPIE
-
-CXX_FLAGS = -std=gnu++17 -arch arm64 -fPIE
+CXX_FLAGS = -std=gnu++17 -fPIE
 
