@@ -64,8 +64,8 @@ PYTHONPATH=. python experiments/run_matrix.py \
 For each experiment the runner logs deterministic seed/env info, writes the JSON result (`experiments/results/*.json`), and stores artefacts under `experiments/runs/<experiment>/`:
 
 - `metrics.json` — summary per split, KS stats, runtime, parameter counts.
-- `curves/loss_curve.csv` and `curves/calibration_next_time.csv` — epoch traces and calibration bins.
-- `figs/` — loss, calibration, QQ, and KS plots.
+- `curves/` — CSV traces for loss and next-time calibration bins.
+- `figs/` — paper-ready PNG plots (loss, calibration, Q–Q, KS).
 
 ## Aggregation
 
@@ -77,7 +77,7 @@ python scripts/collect_runs.py \
   --output experiments/summary/benchmarks.csv
 ```
 
-The CSV currently includes four rows (Binance/Lobster × GRU/Transformer). Update after additional experiments to keep the summary synchronized.
+The CSV currently includes four rows (Binance/Lobster × GRU/Transformer). Update after additional experiments to keep the summary synchronized. Running `python scripts/prepare_summary_assets.py` copies best figures into `experiments/summary/figs/` and regenerates `benchmarks.md`, `ablation.csv`, and related assets for the paper.
 
 ## Notes
 

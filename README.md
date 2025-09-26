@@ -51,6 +51,62 @@ The demo prints branching ratios, generates intensity/ACF plots saved to `docs/i
 - **Benchmark Protocol** — `docs/benchmark_protocol.md` explains how to reproduce multi-symbol experiments and report comparable metrics.
 - **Notebooks** — `docs/notebooks/` contains ready-to-run calibration notebooks for synthetic and Binance datasets.
 - **Code comments** — inline notes mark the C++/Python APIs that are intended for reuse.
+- **Paper snippets** — `docs/paper/results.tex` provides LaTeX-ready tables/figures plus a reproducibility checklist.
+
+## Reproducing the Neural Hawkes Benchmarks
+
+### Prepare Datasets
+- **Binance BTCUSDT (2025-09-21)**
+  ```bash
+  python scripts/pack_binance_npz.py \
+    --input-dir data/runs/events \
+    --symbol BTCUSDT \
+    --days 2025-09-21 \
+    --output data/runs/events/binance_btcusdt_2025-09-21.npz
+  ```
+  Produces the NPZ plus a companion metadata JSON describing symbol/day and preprocessing options.
+- **LOBSTER AAPL (2012-06-21)**
+  ```bash
+  python scripts/preprocess_lobster.py \
+    --messages data/lobster/LOBSTER_SampleFile_AAPL_2012-06-21_10/\\
+      AAPL_2012-06-21_34200000_57600000_message_10.csv \
+    --symbol AAPL \
+    --date 2012-06-21 \
+    --output data/runs/events/lobster_aapl_2012-06-21_sample.npz
+  ```
+  Adapt the path if you download additional sessions; a `.meta.json` file records the seed and filters used.
+
+### Train GRU and Transformer Backbones
+```bash
+export PYTHONPATH=.
+PYTHONPATH=. python experiments/run_matrix.py \
+  --config experiments/configs/binance_backbones.json \
+  --results-dir experiments/results \
+  --run-dir experiments/runs
+
+PYTHONPATH=. python experiments/run_matrix.py \
+  --config experiments/configs/lobster_backbones.json \
+  --results-dir experiments/results \
+  --run-dir experiments/runs
+```
+Each run logs deterministic seeds and checkpoints. Artefacts land in `experiments/runs/<experiment_id>/`:
+
+- `metrics.json` summarises Train/Val/Test NLL, MAE, accuracy, KS stats, runtime, and parameter count.
+- `curves/` stores CSVs for loss and calibration bins.
+- `figs/` holds paper-ready loss/QQ/KS/calibration plots (PNG, 300 dpi).
+
+### Aggregate & Summaries
+- Collect per-run metrics into a single CSV:
+  ```bash
+  python scripts/collect_runs.py \
+    --run-dir experiments/runs \
+    --output experiments/summary/benchmarks.csv
+  ```
+- Generate the markdown table, ablation figure, and copy best plots:
+  ```bash
+  python scripts/prepare_summary_assets.py
+  ```
+  Outputs appear under `experiments/summary/` and can be dropped straight into a paper.
 
 ## Research Benchmarks
 - `neural_hawkes.py` includes a JSON-driven `run_experiment` function, CLI logging (`--output`) and diagnostics (KS/QQ statistics, runtime).
