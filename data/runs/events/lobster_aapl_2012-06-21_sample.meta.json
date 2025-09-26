@@ -1,0 +1,13 @@
+{
+  "venue": "lobster",
+  "symbol": "AAPL",
+  "date": "2012-06-21",
+  "window_seconds": 3600,
+  "window_stride": 1800,
+  "min_events": 50,
+  "num_sequences": 13,
+  "num_events": 66777,
+  "num_types": 2,
+  "created_by": "scripts/preprocess_lobster.py",
+  "messages": "data/lobster/LOBSTER_SampleFile_AAPL_2012-06-21_10/AAPL_2012-06-21_34200000_57600000_message_10.csv"
+}

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import time
 from pathlib import Path
 
@@ -33,6 +34,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--prefix", type=str, default="", help="Optional prefix for result filenames"
     )
+    parser.add_argument(
+        "--run-dir",
+        type=str,
+        default="experiments/runs",
+        help="Directory to store per-run artefacts",
+    )
     return parser.parse_args()
 
 
@@ -51,19 +58,22 @@ def main() -> None:
 
     results_dir = Path(args.results_dir)
     results_dir.mkdir(parents=True, exist_ok=True)
+    run_root = Path(args.run_dir)
+    run_root.mkdir(parents=True, exist_ok=True)
 
     for exp in experiments:
         name = exp.get("name", f"experiment_{int(time.time())}")
         filename = f"{args.prefix + '_' if args.prefix else ''}{name}.json"
         result_path = results_dir / filename
+        run_dir = run_root / Path(filename).stem
         if result_path.exists() and not args.overwrite:
             print(f"Skipping {name} (result exists)")
             continue
+        if run_dir.exists() and args.overwrite:
+            shutil.rmtree(run_dir)
         print(f"\n=== Running experiment: {name} ===")
-        result = run_experiment(exp)
+        result = run_experiment(exp, output_path=result_path, artifact_dir=run_dir)
         result_path.parent.mkdir(parents=True, exist_ok=True)
-        with result_path.open("w") as fh:
-            json.dump(result, fh, indent=2)
         print(f"Saved results to {result_path}")
 
 

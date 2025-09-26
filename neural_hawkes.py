@@ -23,9 +23,12 @@ Workflow
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
+import platform
 import random
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
@@ -37,6 +40,30 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
+
+
+def set_all_seeds(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():  # pragma: no cover - CUDA optional in CI
+        torch.cuda.manual_seed_all(seed)
+        try:
+            torch.backends.cudnn.deterministic = True
+            torch.backends.cudnn.benchmark = False
+        except RuntimeError:
+            pass
+
+
+def log_environment() -> None:
+    cuda_version = getattr(torch.version, "cuda", None)
+    info = {
+        "python": sys.version.split()[0],
+        "torch": torch.__version__,
+        "cuda": cuda_version,
+        "platform": platform.platform(),
+    }
+    print(info)
 
 # -----------------------------------------------------------------------------
 # Dataset utilities
@@ -519,10 +546,209 @@ def build_model_from_config(
     )
 
 
+def _summary_block(metrics: Optional[Dict[str, float]]) -> Dict[str, float]:
+    if not metrics:
+        return {}
+    summary = {}
+    for key, target in (("loss", "nll"), ("mae", "next_time_mae"), ("acc", "next_type_acc")):
+        if key in metrics:
+            summary[target] = float(metrics[key])
+    return summary
+
+
+def _calibration_rows(
+    predictions: Optional[np.ndarray],
+    targets: Optional[np.ndarray],
+    mask: Optional[np.ndarray],
+    quantiles: Optional[List[float]] = None,
+) -> List[Tuple[int, float, float]]:
+    if predictions is None or targets is None or mask is None:
+        return []
+    valid = mask.astype(bool)
+    if not np.any(valid):
+        return []
+    pred = predictions[valid]
+    true = targets[valid]
+    if pred.size == 0:
+        return []
+    if quantiles is None:
+        quantiles = [q / 10.0 for q in range(1, 10)]
+    rows: List[Tuple[int, float, float]] = []
+    for idx, q in enumerate(quantiles, start=1):
+        rows.append(
+            (
+                idx,
+                float(np.quantile(pred, q)),
+                float(np.quantile(true, q)),
+            )
+        )
+    return rows
+
+
+def save_run_artifacts(
+    artifact_dir: Path,
+    *,
+    config: Dict[str, Any],
+    seed_value: int,
+    train_history: List[Dict[str, float]],
+    val_history: List[Dict[str, float]],
+    test_metrics: Dict[str, float],
+    rescaling: Dict[str, Any],
+    runtime: Dict[str, Any],
+    duration: float,
+    epochs: int,
+    param_count: int,
+    predictions: Optional[np.ndarray],
+    targets: Optional[np.ndarray],
+    mask: Optional[np.ndarray],
+) -> None:
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+
+    split_metrics = {
+        "train": _summary_block(train_history[-1] if train_history else None),
+        "val": _summary_block(val_history[-1] if val_history else None),
+        "test": _summary_block(test_metrics),
+    }
+    ks_block = {"ks_stat": None, "ks_pvalue": None}
+    if isinstance(rescaling, dict):
+        if "ks_statistic" in rescaling:
+            ks_block["ks_stat"] = float(rescaling["ks_statistic"])
+        if "ks_pvalue" in rescaling:
+            ks_block["ks_pvalue"] = float(rescaling["ks_pvalue"])
+
+    metrics_payload = {
+        "venue": config.get("venue"),
+        "symbol": config.get("symbol"),
+        "backbone": config.get("training", {}).get("backbone"),
+        "seed": seed_value,
+        "split_metrics": split_metrics,
+        "ks": ks_block,
+        "time_sec_train": float(duration),
+        "time_sec_epoch_avg": float(duration / max(epochs, 1)),
+        "params_millions": float(param_count / 1_000_000.0),
+        "runtime": runtime,
+    }
+    with (artifact_dir / "metrics.json").open("w") as fh:
+        json.dump(metrics_payload, fh, indent=2)
+
+    curves_dir = artifact_dir / "curves"
+    curves_dir.mkdir(exist_ok=True)
+
+    with (curves_dir / "loss_curve.csv").open("w", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(
+            [
+                "epoch",
+                "train_nll",
+                "train_acc",
+                "train_mae",
+                "val_nll",
+                "val_acc",
+                "val_mae",
+            ]
+        )
+        epochs_logged = max(len(train_history), len(val_history))
+        for idx in range(epochs_logged):
+            train_metrics = train_history[idx] if idx < len(train_history) else {}
+            val_metrics = val_history[idx] if idx < len(val_history) else {}
+            writer.writerow(
+                [
+                    idx + 1,
+                    train_metrics.get("loss"),
+                    train_metrics.get("acc"),
+                    train_metrics.get("mae"),
+                    val_metrics.get("loss"),
+                    val_metrics.get("acc"),
+                    val_metrics.get("mae"),
+                ]
+            )
+
+    calibration_rows = _calibration_rows(predictions, targets, mask)
+    with (curves_dir / "calibration_next_time.csv").open("w", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["bin", "pred_quantile", "empirical_quantile"])
+        for row in calibration_rows:
+            writer.writerow(row)
+
+    try:
+        import matplotlib.pyplot as plt  # type: ignore
+    except ModuleNotFoundError:  # pragma: no cover - matplotlib optional
+        return
+
+    figs_dir = artifact_dir / "figs"
+    figs_dir.mkdir(exist_ok=True)
+
+    # Loss curve figure
+    if train_history or val_history:
+        epochs_axis = range(1, max(len(train_history), len(val_history)) + 1)
+        plt.figure()
+        if train_history:
+            plt.plot(epochs_axis, [m["loss"] for m in train_history], label="train")
+        if val_history:
+            plt.plot(epochs_axis, [m["loss"] for m in val_history], label="val")
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.title("Loss Curve")
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(figs_dir / "loss_curve.png", dpi=200)
+        plt.close()
+
+    if calibration_rows:
+        plt.figure()
+        xs = [row[1] for row in calibration_rows]
+        ys = [row[2] for row in calibration_rows]
+        plt.plot(xs, ys, marker="o")
+        low, high = min(xs + ys), max(xs + ys)
+        plt.plot([low, high], [low, high], linestyle="--", color="gray")
+        plt.xlabel("Predicted quantile")
+        plt.ylabel("Empirical quantile")
+        plt.title("Next-time Calibration")
+        plt.tight_layout()
+        plt.savefig(figs_dir / "calibration.png", dpi=200)
+        plt.close()
+
+    if predictions is not None and targets is not None and mask is not None:
+        valid = mask.astype(bool)
+        if np.any(valid):
+            eps = 1e-6
+            rescaled = targets[valid] / np.clip(predictions[valid], eps, None)
+            rescaled = rescaled[rescaled >= 0]
+            if rescaled.size:
+                sorted_vals = np.sort(rescaled)
+                empirical_cdf = np.arange(1, sorted_vals.size + 1) / sorted_vals.size
+                theoretical_cdf = 1.0 - np.exp(-sorted_vals)
+
+                qq_theoretical = rescaling.get("qq_theoretical", []) if isinstance(rescaling, dict) else []
+                qq_empirical = rescaling.get("qq_empirical", []) if isinstance(rescaling, dict) else []
+                plt.figure()
+                plt.plot(qq_theoretical, qq_empirical, marker="o")
+                diag = qq_theoretical
+                plt.plot(diag, diag, linestyle="--", color="gray")
+                plt.xlabel("Theoretical quantiles")
+                plt.ylabel("Empirical quantiles")
+                plt.title("Time-rescaling QQ")
+                plt.tight_layout()
+                plt.savefig(figs_dir / "qq_rescaled.png", dpi=200)
+                plt.close()
+
+                plt.figure()
+                plt.plot(sorted_vals, empirical_cdf, label="Empirical")
+                plt.plot(sorted_vals, theoretical_cdf, label="Exponential(1)")
+                plt.xlabel("Rescaled time")
+                plt.ylabel("CDF")
+                plt.title("KS Diagnostic")
+                plt.legend()
+                plt.tight_layout()
+                plt.savefig(figs_dir / "ks_cdf.png", dpi=200)
+                plt.close()
+
+
 def run_experiment(
     config: Dict[str, Any],
     device: Optional[torch.device] = None,
     output_path: Optional[Path] = None,
+    artifact_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     config = json.loads(json.dumps(config))
     training_cfg = config.setdefault("training", {})
@@ -530,15 +756,16 @@ def run_experiment(
     synthetic_cfg = config.get("synthetic", {})
     seed = config.get("seed", training_cfg.get("seed", 2024))
 
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
+    set_all_seeds(seed)
+    config.setdefault("seed", seed)
 
     if device is None:
         use_gpu = torch.cuda.is_available() and not config.get("force_cpu", False) and not training_cfg.get("force_cpu", False)
         device = torch.device("cuda" if use_gpu else "cpu")
     else:
         use_gpu = device.type == "cuda"
+
+    log_environment()
 
     sequences: List[EventSequence] = []
     num_types = int(config.get("num_types", synthetic_cfg.get("num_types", training_cfg.get("num_types", 4))))
@@ -605,6 +832,7 @@ def run_experiment(
     optimizer = torch.optim.Adam(model.parameters(), lr=training_cfg.get("lr", 1e-3))
     epochs = int(training_cfg.get("epochs", 10))
     delta_weight = training_cfg.get("delta_weight", 1.0)
+    param_count = sum(p.numel() for p in model.parameters())
 
     train_history: List[Dict[str, float]] = []
     val_history: List[Dict[str, float]] = []
@@ -626,6 +854,9 @@ def run_experiment(
     test_metrics = evaluate(model, test_loader, device, delta_weight)
 
     rescaling: Dict[str, Any]
+    pred_deltas: Optional[np.ndarray] = None
+    true_deltas: Optional[np.ndarray] = None
+    mask: Optional[np.ndarray] = None
     try:
         pred_deltas, true_deltas, mask = collect_predictions(model, test_loader, device)
         rescaling = time_rescaling_diagnostics(pred_deltas, true_deltas, mask)
@@ -655,6 +886,7 @@ def run_experiment(
         "rescaling": rescaling,
         "runtime": runtime_stats,
         "device": device.type,
+        "params": param_count,
     }
 
     result["metadata"] = {
@@ -663,7 +895,29 @@ def run_experiment(
         "backbone": training_cfg.get("backbone", "gru"),
         "num_types": num_types,
         "dataset": str(dataset_cfg) if dataset_cfg else None,
+        "seed": seed,
     }
+
+    if artifact_dir is not None:
+        try:
+            save_run_artifacts(
+                artifact_dir,
+                config=result["config"],
+                seed_value=seed,
+                train_history=train_history,
+                val_history=val_history,
+                test_metrics=test_metrics,
+                rescaling=rescaling,
+                runtime=runtime_stats,
+                duration=duration,
+                epochs=epochs,
+                param_count=param_count,
+                predictions=pred_deltas,
+                targets=true_deltas,
+                mask=mask,
+            )
+        except Exception as exc:  # pragma: no cover
+            print(f"Failed to write artifacts: {exc}")
 
     if output_path is not None:
         output_path.parent.mkdir(parents=True, exist_ok=True)

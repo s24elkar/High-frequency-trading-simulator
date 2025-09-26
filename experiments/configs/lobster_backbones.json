@@ -1,0 +1,48 @@
+{
+  "experiments": [
+    {
+      "name": "lobster_gru",
+      "venue": "lobster",
+      "symbol": "AAPL",
+      "dataset": "data/runs/events/lobster_aapl_2012-06-21_sample.npz",
+      "num_types": 2,
+      "seed": 2024,
+      "training": {
+        "window_size": 128,
+        "stride": 64,
+        "batch_size": 256,
+        "epochs": 5,
+        "lr": 0.001,
+        "delta_weight": 1.0,
+        "embed_dim": 64,
+        "hidden_dim": 128,
+        "backbone": "gru",
+        "mlp_layers": 2,
+        "measure_runtime": true,
+        "verbose": true
+      }
+    },
+    {
+      "name": "lobster_transformer",
+      "venue": "lobster",
+      "symbol": "AAPL",
+      "dataset": "data/runs/events/lobster_aapl_2012-06-21_sample.npz",
+      "num_types": 2,
+      "seed": 2024,
+      "training": {
+        "window_size": 128,
+        "stride": 64,
+        "batch_size": 256,
+        "epochs": 5,
+        "lr": 0.0008,
+        "delta_weight": 1.0,
+        "embed_dim": 64,
+        "hidden_dim": 128,
+        "backbone": "transformer",
+        "mlp_layers": 2,
+        "measure_runtime": true,
+        "verbose": true
+      }
+    }
+  ]
+}
