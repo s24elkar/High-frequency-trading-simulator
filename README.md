@@ -37,6 +37,7 @@ A practical sandbox for market microstructure research. Explore how clustered or
 - **Deterministic order book core** – Modern C++17 engine with price-time priority kept intentionally readable for experimentation.
 - **Shared Hawkes kernels** – Exponential and power-law intensity implementations exposed to both C++ and Python.
 - **Analytics & visualization** – Python package with thinning simulators, diagnostics, plots, and export utilities.
+- **Deterministic backtester** – C++ order book bridged into Python for reproducible order/fill replays and structured metrics.
 - **Interactive Streamlit app** – Visualise timelines, compare kernels, and download simulated order flow without touching a compiler.
 - **Reproducible artefacts** – Synthetic datasets, plots, and experiment outputs tracked under `data/` and `docs/`.
 
@@ -89,6 +90,12 @@ MPLCONFIGDIR=.matplotlib python3 -m demo
 ```
 The demo prints branching ratios, generates intensity/ACF plots saved to `docs/images/`, and exports event streams to `data/runs/`.
 
+### Run the Backtester
+```bash
+python -m backtester.run --config configs/backtest_demo.json
+```
+Logs land under `logs/` (JSONL + optional SQLite) and drive the Streamlit diagnostics in `python/streamlit_app_backtest.py`.
+
 ## Interactive Streamlit App
 
 Launch the pedagogy-first Streamlit interface to experiment with Hawkes processes visually:
@@ -112,6 +119,7 @@ The app bridges directly to the native C++ kernels via `bridge_utils.ensure_brid
 
 ## Documentation
 - **Usage Guide** — `docs/USAGE.md` deep-dives into build configuration, order book APIs, Hawkes simulators, Python tooling, and troubleshooting tips.
+- **Backtester design notes** — `docs/backtester/pnl.md` derive PnL formulas and risk settings for deterministic replays.
 - **Research Primer** — `docs/research_primer.md` covers Hawkes theory, branching interpretation, and diagnostics for market microstructure.
 - **Benchmark Protocol** — `docs/benchmark_protocol.md` explains how to reproduce multi-symbol experiments and report comparable metrics.
 - **Notebooks** — `docs/notebooks/` contains ready-to-run calibration notebooks for synthetic and Binance datasets.

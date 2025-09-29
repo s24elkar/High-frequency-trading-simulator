@@ -1,0 +1,14 @@
+{
+  "symbol": "TEST",
+  "message_file": "tests/data/itch_sample.csv",
+  "log_jsonl": "logs/demo_run.jsonl",
+  "risk": {
+    "max_long": 100.0,
+    "max_short": -100.0
+  },
+  "strategy": {
+    "spread_ticks": 1,
+    "quote_size": 5,
+    "update_interval_ns": 1000000
+  }
+}
