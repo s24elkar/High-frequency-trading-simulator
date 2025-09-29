@@ -41,12 +41,16 @@ except (ImportError, ValueError):
     save_csv = _io_mod.save_csv
     save_json = _io_mod.save_json
 
+
 def exp_demo():
     T = 200.0
     mu = 0.2
     kernel = ExpKernel(alpha=0.8, beta=1.2)  # tune α/β; ensure branching ratio < 1
+
     # marks: e.g., LogNormal volumes with mean ~ 1
-    def mark_sampler(rng): return float(np.exp(rng.normal(0.0, 0.5)))
+    def mark_sampler(rng):
+        return float(np.exp(rng.normal(0.0, 0.5)))
+
     EV = np.exp(0.5**2 / 2)  # mean of LogNormal(0,0.5^2)
     n = kernel.branching_ratio(EV)
     print(f"[EXP] Branching ratio n = {n:.3f} (must be < 1)")
@@ -61,8 +65,14 @@ def exp_demo():
     plot_mark_acf(marks, max_lag=40, title="Volume Marks ACF")
 
     save_csv("data/runs/exp_events.csv", times, marks)
-    meta = {"kernel": "exponential", "params": {"alpha": kernel.alpha, "beta": kernel.beta},
-            "mu": mu, "T": T, "branching_ratio": n, "mark": "LogNormal(0,0.5)"}
+    meta = {
+        "kernel": "exponential",
+        "params": {"alpha": kernel.alpha, "beta": kernel.beta},
+        "mu": mu,
+        "T": T,
+        "branching_ratio": n,
+        "mark": "LogNormal(0,0.5)",
+    }
     save_json("data/runs/exp_events.json", meta, times, marks)
 
 
@@ -71,7 +81,10 @@ def power_demo():
     mu = 0.15
     # Opt for parameters that keep the power-law process subcritical (n<1)
     kernel = PowerLawKernel(alpha=0.12, c=0.1, gamma=1.4)  # γ>1
-    def mark_sampler(rng): return float(rng.exponential(1.0))  # mean 1
+
+    def mark_sampler(rng):
+        return float(rng.exponential(1.0))  # mean 1
+
     EV = 1.0
     n = kernel.branching_ratio(EV)
     print(f"[PL]  Branching ratio n = {n:.3f} (must be < 1; requires γ>1)")
@@ -85,9 +98,16 @@ def power_demo():
     plot_mark_acf(marks, max_lag=40, title="Volume Marks ACF")
 
     save_csv("data/runs/power_events.csv", times, marks)
-    meta = {"kernel": "powerlaw", "params": {"alpha": kernel.alpha, "c": kernel.c, "gamma": kernel.gamma},
-            "mu": mu, "T": T, "branching_ratio": n, "mark": "Exponential(mean=1)"}
+    meta = {
+        "kernel": "powerlaw",
+        "params": {"alpha": kernel.alpha, "c": kernel.c, "gamma": kernel.gamma},
+        "mu": mu,
+        "T": T,
+        "branching_ratio": n,
+        "mark": "Exponential(mean=1)",
+    }
     save_json("data/runs/power_events.json", meta, times, marks)
+
 
 if __name__ == "__main__":
     exp_demo()

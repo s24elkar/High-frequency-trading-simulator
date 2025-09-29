@@ -44,29 +44,40 @@ class SimulationTimeline:
     bin_counts: np.ndarray
 
 
-def _prepare_timeline(times: np.ndarray, marks: np.ndarray, mu: float, kernel, horizon: float, bins: int = 100) -> SimulationTimeline:
+def _prepare_timeline(
+    times: np.ndarray,
+    marks: np.ndarray,
+    mu: float,
+    kernel,
+    horizon: float,
+    bins: int = 100,
+) -> SimulationTimeline:
     grid = np.linspace(0.0, horizon, max(bins * 2, 200))
     lam = intensity_on_grid(mu, kernel, times, marks, grid)
     centres, counts = binned_counts(times, horizon, horizon / bins)
     return SimulationTimeline(times, marks, lam, grid, centres, counts)
 
 
-def simulate_exp_timeline(mu: float,
-                          kernel: ExpKernel,
-                          T: float,
-                          mark_sampler: MarkSampler = None,
-                          seed: int = 12345,
-                          bins: int = 80) -> SimulationTimeline:
+def simulate_exp_timeline(
+    mu: float,
+    kernel: ExpKernel,
+    T: float,
+    mark_sampler: MarkSampler = None,
+    seed: int = 12345,
+    bins: int = 80,
+) -> SimulationTimeline:
     times, marks = simulate_thinning_exp_fast(mu, kernel, mark_sampler, T, seed)
     return _prepare_timeline(times, marks, mu, kernel, T, bins)
 
 
-def simulate_powerlaw_timeline(mu: float,
-                               kernel: PowerLawKernel,
-                               T: float,
-                               mark_sampler: MarkSampler = None,
-                               seed: int = 12345,
-                               bins: int = 80) -> SimulationTimeline:
+def simulate_powerlaw_timeline(
+    mu: float,
+    kernel: PowerLawKernel,
+    T: float,
+    mark_sampler: MarkSampler = None,
+    seed: int = 12345,
+    bins: int = 80,
+) -> SimulationTimeline:
     times, marks = simulate_thinning_general(mu, kernel, mark_sampler, T, seed)
     return _prepare_timeline(times, marks, mu, kernel, T, bins)
 

@@ -124,7 +124,9 @@ def _exp_controls(key_prefix: str = "") -> Dict[str, float]:
         "α — self-excitation strength",
         0.01,
         2.0,
-        value=float(st.session_state.get(f"{key_prefix}exp_alpha", DEFAULTS["exp_alpha"])),
+        value=float(
+            st.session_state.get(f"{key_prefix}exp_alpha", DEFAULTS["exp_alpha"])
+        ),
         step=0.01,
         key=f"{key_prefix}exp_alpha",
         help="Higher α means each trade boosts the intensity of follow-on trades more strongly.",
@@ -133,7 +135,9 @@ def _exp_controls(key_prefix: str = "") -> Dict[str, float]:
         "β — memory decay",
         0.1,
         5.0,
-        value=float(st.session_state.get(f"{key_prefix}exp_beta", DEFAULTS["exp_beta"])),
+        value=float(
+            st.session_state.get(f"{key_prefix}exp_beta", DEFAULTS["exp_beta"])
+        ),
         step=0.01,
         key=f"{key_prefix}exp_beta",
         help="Controls how quickly the excitement fades. Larger β means the market cools off faster.",
@@ -146,7 +150,9 @@ def _powerlaw_controls(key_prefix: str = "") -> Dict[str, float]:
         "α — clustering strength",
         0.01,
         1.0,
-        value=float(st.session_state.get(f"{key_prefix}power_alpha", DEFAULTS["power_alpha"])),
+        value=float(
+            st.session_state.get(f"{key_prefix}power_alpha", DEFAULTS["power_alpha"])
+        ),
         step=0.01,
         key=f"{key_prefix}power_alpha",
         help="Higher α makes bursts of activity more intense.",
@@ -164,7 +170,9 @@ def _powerlaw_controls(key_prefix: str = "") -> Dict[str, float]:
         "γ — memory tail",
         1.01,
         3.5,
-        value=float(st.session_state.get(f"{key_prefix}power_gamma", DEFAULTS["power_gamma"])),
+        value=float(
+            st.session_state.get(f"{key_prefix}power_gamma", DEFAULTS["power_gamma"])
+        ),
         step=0.01,
         key=f"{key_prefix}power_gamma",
         help="Lower γ keeps memory longer, creating drawn-out cascades of activity.",
@@ -184,7 +192,9 @@ def _mark_sampler_controls() -> Callable[[np.random.Generator], float]:
             "Log-mean",
             -1.0,
             1.0,
-            value=float(st.session_state.get("mark_lognorm_mean", DEFAULTS["mark_lognorm_mean"])),
+            value=float(
+                st.session_state.get("mark_lognorm_mean", DEFAULTS["mark_lognorm_mean"])
+            ),
             step=0.05,
             key="mark_lognorm_mean",
             help="Sets the typical log-size of trades during bursts.",
@@ -193,7 +203,11 @@ def _mark_sampler_controls() -> Callable[[np.random.Generator], float]:
             "Log-sigma",
             0.1,
             1.5,
-            value=float(st.session_state.get("mark_lognorm_sigma", DEFAULTS["mark_lognorm_sigma"])),
+            value=float(
+                st.session_state.get(
+                    "mark_lognorm_sigma", DEFAULTS["mark_lognorm_sigma"]
+                )
+            ),
             step=0.05,
             key="mark_lognorm_sigma",
             help="Controls how varied the trade sizes are (higher means more spread).",
@@ -207,7 +221,11 @@ def _mark_sampler_controls() -> Callable[[np.random.Generator], float]:
             "Scale",
             0.1,
             5.0,
-            value=float(st.session_state.get("mark_exponential_scale", DEFAULTS["mark_exponential_scale"])),
+            value=float(
+                st.session_state.get(
+                    "mark_exponential_scale", DEFAULTS["mark_exponential_scale"]
+                )
+            ),
             step=0.1,
             key="mark_exponential_scale",
             help="Average order size. Higher scale = larger trades on average.",
@@ -241,7 +259,7 @@ def main() -> None:
     st.title("High-Frequency Order Flow Simulator")
     st.caption("Visualizing clustered order arrivals with Hawkes processes")
     st.markdown(
-        "This app simulates how trades in a market can \"snowball\", where one trade nudges the next."
+        'This app simulates how trades in a market can "snowball", where one trade nudges the next.'
     )
 
     with st.expander("Learn more"):
@@ -264,7 +282,8 @@ def main() -> None:
         help="Pick a canned market regime to auto-fill parameters or stay on Custom to explore freely.",
     )
     if preset_name != "Custom" and st.sidebar.button(
-        f"Load '{preset_name}'", help="Apply the preset values and rerun the simulation."
+        f"Load '{preset_name}'",
+        help="Apply the preset values and rerun the simulation.",
     ):
         _apply_preset(PRESET_SCENARIOS[preset_name])
     if preset_name in PRESET_DESCRIPTIONS:
@@ -320,21 +339,30 @@ def main() -> None:
             "kernel": kernel_choice,
             "alpha": params["alpha"],
             "beta": params["beta"],
-            "branching_ratio": kernel.branching_ratio(np.mean(timeline.marks) if timeline.marks.size else 0.0),
+            "branching_ratio": kernel.branching_ratio(
+                np.mean(timeline.marks) if timeline.marks.size else 0.0
+            ),
         }
     else:
         params = _powerlaw_controls()
         kernel = PowerLawKernel(**params)
-        timeline = simulate_powerlaw_timeline(mu, kernel, horizon, mark_sampler, seed, bins)
+        timeline = simulate_powerlaw_timeline(
+            mu, kernel, horizon, mark_sampler, seed, bins
+        )
         summary = {
             "kernel": kernel_choice,
             **params,
-            "branching_ratio": kernel.branching_ratio(np.mean(timeline.marks) if timeline.marks.size else 0.0),
+            "branching_ratio": kernel.branching_ratio(
+                np.mean(timeline.marks) if timeline.marks.size else 0.0
+            ),
         }
 
     comparison_timeline = None
     comparison_label = None
-    with st.sidebar.expander("Comparison overlay", expanded=bool(st.session_state.get("compare_enabled", False))):
+    with st.sidebar.expander(
+        "Comparison overlay",
+        expanded=bool(st.session_state.get("compare_enabled", False)),
+    ):
         compare_enabled = st.checkbox(
             "Overlay a second kernel",
             value=bool(st.session_state.get("compare_enabled", False)),
@@ -377,8 +405,16 @@ def main() -> None:
         st.subheader("Summary")
         st.json(summary)
         st.metric("Events", int(timeline.times.size))
-        st.metric("Average mark", float(np.mean(timeline.marks) if timeline.marks.size else 0.0))
-        st.metric("Max intensity", float(timeline.intensity_grid.max() if timeline.intensity_grid.size else mu))
+        st.metric(
+            "Average mark",
+            float(np.mean(timeline.marks) if timeline.marks.size else 0.0),
+        )
+        st.metric(
+            "Max intensity",
+            float(
+                timeline.intensity_grid.max() if timeline.intensity_grid.size else mu
+            ),
+        )
 
         branching_ratio = summary.get("branching_ratio")
         if branching_ratio is not None and not np.isnan(branching_ratio):
@@ -407,7 +443,10 @@ def main() -> None:
 
         st.download_button(
             "Export simulated order flow (CSV)",
-            data="time,mark\n" + "\n".join(f"{t:.6f},{m:.6f}" for t, m in zip(timeline.times, timeline.marks)),
+            data="time,mark\n"
+            + "\n".join(
+                f"{t:.6f},{m:.6f}" for t, m in zip(timeline.times, timeline.marks)
+            ),
             file_name="hawkes_events.csv",
             mime="text/csv",
         )

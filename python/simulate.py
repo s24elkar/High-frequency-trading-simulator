@@ -142,8 +142,11 @@ def _configure_signatures(lib: ctypes.CDLL) -> None:
     lib.hawkes_last_error.restype = ctypes.c_char_p
 
 
-def _normalise_sampler(mark_sampler: Optional[Callable[[np.random.Generator], float]]) -> Callable[[np.random.Generator], float]:
+def _normalise_sampler(
+    mark_sampler: Optional[Callable[[np.random.Generator], float]],
+) -> Callable[[np.random.Generator], float]:
     if mark_sampler is None:
+
         def _default_sampler(rng: np.random.Generator) -> float:
             return float(rng.exponential(1.0))
 
@@ -156,6 +159,7 @@ def _normalise_sampler(mark_sampler: Optional[Callable[[np.random.Generator], fl
         arity = 1
 
     if arity == 0:
+
         def _wrapper(rng: np.random.Generator) -> float:
             return float(mark_sampler())
 
@@ -217,7 +221,9 @@ def _run_simulation(lib, func, params, mark_sampler, seed):
     marks_ptr = ctypes.POINTER(ctypes.c_double)()
 
     try:
-        count = func(*params, callback_ptr, ctx, ctypes.byref(times_ptr), ctypes.byref(marks_ptr))
+        count = func(
+            *params, callback_ptr, ctx, ctypes.byref(times_ptr), ctypes.byref(marks_ptr)
+        )
     finally:
         if registration is not None:
             _release_registration(registration)
@@ -238,11 +244,13 @@ def _run_simulation(lib, func, params, mark_sampler, seed):
     return times, marks
 
 
-def _simulate_exp_python(mu: float,
-                         kernel: ExpKernel,
-                         mark_sampler: Optional[Callable[[np.random.Generator], float]],
-                         T: float,
-                         seed: int) -> Tuple[np.ndarray, np.ndarray]:
+def _simulate_exp_python(
+    mu: float,
+    kernel: ExpKernel,
+    mark_sampler: Optional[Callable[[np.random.Generator], float]],
+    T: float,
+    seed: int,
+) -> Tuple[np.ndarray, np.ndarray]:
     rng = np.random.default_rng(seed)
     sampler = _normalise_sampler(mark_sampler)
     t = 0.0
@@ -273,11 +281,13 @@ def _simulate_exp_python(mu: float,
     return np.asarray(times, dtype=float), np.asarray(marks, dtype=float)
 
 
-def _simulate_general_python(mu: float,
-                             kernel: PowerLawKernel,
-                             mark_sampler: Optional[Callable[[np.random.Generator], float]],
-                             T: float,
-                             seed: int) -> Tuple[np.ndarray, np.ndarray]:
+def _simulate_general_python(
+    mu: float,
+    kernel: PowerLawKernel,
+    mark_sampler: Optional[Callable[[np.random.Generator], float]],
+    T: float,
+    seed: int,
+) -> Tuple[np.ndarray, np.ndarray]:
     rng = np.random.default_rng(seed)
     sampler = _normalise_sampler(mark_sampler)
     t = 0.0
@@ -314,11 +324,13 @@ def _simulate_general_python(mu: float,
     return np.asarray(times, dtype=float), np.asarray(marks, dtype=float)
 
 
-def simulate_thinning_exp_fast(mu: float,
-                               kernel: ExpKernel,
-                               mark_sampler: Optional[Callable[[np.random.Generator], float]] = None,
-                               T: float = 1.0,
-                               seed: int = 12345) -> Tuple[np.ndarray, np.ndarray]:
+def simulate_thinning_exp_fast(
+    mu: float,
+    kernel: ExpKernel,
+    mark_sampler: Optional[Callable[[np.random.Generator], float]] = None,
+    T: float = 1.0,
+    seed: int = 12345,
+) -> Tuple[np.ndarray, np.ndarray]:
     if not isinstance(kernel, ExpKernel):
         raise TypeError("kernel must be an ExpKernel instance")
     lib = _load_bridge()
@@ -329,11 +341,13 @@ def simulate_thinning_exp_fast(mu: float,
     return _run_simulation(lib, lib.hawkes_simulate_exp, params, mark_sampler, seed)
 
 
-def simulate_thinning_general(mu: float,
-                              kernel: PowerLawKernel,
-                              mark_sampler: Optional[Callable[[np.random.Generator], float]] = None,
-                              T: float = 1.0,
-                              seed: int = 12345) -> Tuple[np.ndarray, np.ndarray]:
+def simulate_thinning_general(
+    mu: float,
+    kernel: PowerLawKernel,
+    mark_sampler: Optional[Callable[[np.random.Generator], float]] = None,
+    T: float = 1.0,
+    seed: int = 12345,
+) -> Tuple[np.ndarray, np.ndarray]:
     if not isinstance(kernel, PowerLawKernel):
         raise TypeError("kernel must be a PowerLawKernel instance")
     lib = _load_bridge()
@@ -347,7 +361,9 @@ def simulate_thinning_general(mu: float,
         float(kernel.gamma),
         int(seed),
     )
-    return _run_simulation(lib, lib.hawkes_simulate_powerlaw, params, mark_sampler, seed)
+    return _run_simulation(
+        lib, lib.hawkes_simulate_powerlaw, params, mark_sampler, seed
+    )
 
 
 __all__ = [

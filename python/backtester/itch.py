@@ -35,10 +35,13 @@ class LOBSTERMessage:
 
 class ITCHEvent(MarketEvent):
     """Structured ITCH event passed to the backtester."""
+
     pass
 
 
-def load_lobster_csv(path: str | Path, symbol: str, time_scale: float = 1e9) -> Iterator[LOBSTERMessage]:
+def load_lobster_csv(
+    path: str | Path, symbol: str, time_scale: float = 1e9
+) -> Iterator[LOBSTERMessage]:
     """Yield `LOBSTERMessage` instances from the canonical message CSV.
 
     The default `time_scale` converts seconds to nanoseconds. Adjust if your
@@ -76,7 +79,11 @@ def to_market_event(message: LOBSTERMessage) -> ITCHEvent:
         "side": message.side,
         "symbol": message.symbol,
     }
-    return ITCHEvent(timestamp_ns=message.timestamp_ns, event_type=message.event_type, payload=payload)
+    return ITCHEvent(
+        timestamp_ns=message.timestamp_ns,
+        event_type=message.event_type,
+        payload=payload,
+    )
 
 
 def replay_from_lobster(messages: Iterable[LOBSTERMessage]) -> Iterator[ITCHEvent]:

@@ -37,7 +37,7 @@ class RiskEngine:
         self.strategy_halted = False
         self.warnings: List[str] = []
 
-    def update_on_fill(self, fill: 'FillEvent') -> None:
+    def update_on_fill(self, fill: "FillEvent") -> None:
         symbol = fill.symbol
         direction = 1.0 if fill.side == "BUY" else -1.0
         signed_size = direction * fill.size
@@ -67,7 +67,7 @@ class RiskEngine:
             self.realized_pnl[symbol] += pnl
         self._check_limits(symbol)
 
-    def update_on_tick(self, snapshot: 'MarketSnapshot') -> None:
+    def update_on_tick(self, snapshot: "MarketSnapshot") -> None:
         symbol = self.config.symbol
         mid = snapshot.midprice
         self.last_mid[symbol] = mid
@@ -91,7 +91,9 @@ class RiskEngine:
 
     def _check_limits(self, symbol: str) -> None:
         inventory = self.inventory.get(symbol, 0.0)
-        warn_level = self.config.warn_fraction * max(self.config.max_long, abs(self.config.max_short))
+        warn_level = self.config.warn_fraction * max(
+            self.config.max_long, abs(self.config.max_short)
+        )
         if abs(inventory) >= warn_level:
             message = f"Inventory warning: {inventory} units on {symbol}"
             if not self.warnings or self.warnings[-1] != message:

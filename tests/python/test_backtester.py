@@ -21,7 +21,9 @@ class CollectingStrategy:
     def __init__(self) -> None:
         self.snapshots = []
 
-    def on_tick(self, snapshot, backtester) -> None:  # pragma: no cover - simple container
+    def on_tick(
+        self, snapshot, backtester
+    ) -> None:  # pragma: no cover - simple container
         self.snapshots.append(snapshot)
 
 
@@ -55,7 +57,7 @@ def test_backtester_digest_deterministic(tmp_path: Path) -> None:
 
 
 def test_metrics_logger_jsonl(tmp_path: Path) -> None:
-    logger_path = tmp_path / 'metrics.jsonl'
+    logger_path = tmp_path / "metrics.jsonl"
     with MetricsLogger(json_path=logger_path):
         pass
     assert logger_path.exists()

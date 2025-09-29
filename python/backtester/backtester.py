@@ -24,24 +24,19 @@ log = logging.getLogger(__name__)
 class Strategy(Protocol):
     """Strategy interface invoked by the backtester on each market snapshot."""
 
-    def on_tick(self, snapshot: "MarketSnapshot", backtester: "Backtester") -> None:
-        ...
+    def on_tick(self, snapshot: "MarketSnapshot", backtester: "Backtester") -> None: ...
 
 
 class LimitOrderBook(Protocol):
     """Protocol the concrete (C++-backed) order book wrapper must honour."""
 
-    def enqueue(self, order: "OrderRequest") -> None:
-        ...
+    def enqueue(self, order: "OrderRequest") -> None: ...
 
-    def cancel(self, order_id: int) -> None:
-        ...
+    def cancel(self, order_id: int) -> None: ...
 
-    def apply_event(self, event: "MarketEvent") -> Optional["MarketSnapshot"]:
-        ...
+    def apply_event(self, event: "MarketEvent") -> Optional["MarketSnapshot"]: ...
 
-    def snapshot(self, depth: int = 1) -> "MarketSnapshot":
-        ...
+    def snapshot(self, depth: int = 1) -> "MarketSnapshot": ...
 
 
 @dataclass(slots=True)
@@ -132,7 +127,13 @@ class Backtester:
 
         return self._digest.hexdigest()
 
-    def submit_order(self, side: str, price: float, size: float, metadata: Optional[Dict[str, float | int | str]] = None) -> int:
+    def submit_order(
+        self,
+        side: str,
+        price: float,
+        size: float,
+        metadata: Optional[Dict[str, float | int | str]] = None,
+    ) -> int:
         order_id = self._id_counter
         self._id_counter += 1
         order = OrderRequest(

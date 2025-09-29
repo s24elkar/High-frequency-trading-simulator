@@ -58,7 +58,9 @@ class PythonOrderBook:
         size = float(event.payload.get("size", 0.0))
         if etype == "add_order":
             order_id = int(event.payload["order_id"])
-            order = OrderRequest(order_id, event.payload["symbol"], side, price, size, event.timestamp_ns)
+            order = OrderRequest(
+                order_id, event.payload["symbol"], side, price, size, event.timestamp_ns
+            )
             self.enqueue(order)
         elif etype == "delete_order":
             self.cancel(int(event.payload["order_id"]))
@@ -93,8 +95,16 @@ class PythonOrderBook:
     def snapshot(self, depth: int = 1) -> MarketSnapshot:
         best_bid = max(self.bids.keys(), default=None)
         best_ask = min(self.asks.keys(), default=None)
-        bid_size = sum(o.size for o in self.bids.get(best_bid, [])) if best_bid is not None else None
-        ask_size = sum(o.size for o in self.asks.get(best_ask, [])) if best_ask is not None else None
+        bid_size = (
+            sum(o.size for o in self.bids.get(best_bid, []))
+            if best_bid is not None
+            else None
+        )
+        ask_size = (
+            sum(o.size for o in self.asks.get(best_ask, []))
+            if best_ask is not None
+            else None
+        )
         depth_entries: List[Dict[str, float]] = []
         for idx, price in enumerate(sorted(self.bids.keys(), reverse=True)):
             if idx >= depth:
@@ -126,7 +136,9 @@ def load_order_book(depth: int = 5) -> PythonOrderBook:
     if _order_book_bridge is None:
         log.info("Using PythonOrderBook fallback (C++ bridge not available)")
         return PythonOrderBook(depth=depth)
-    return _order_book_bridge.OrderBook(depth)  # pragma: no cover - requires compiled bridge
+    return _order_book_bridge.OrderBook(
+        depth
+    )  # pragma: no cover - requires compiled bridge
 
 
 __all__ = ["PythonOrderBook", "load_order_book", "DepthLevel"]

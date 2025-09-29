@@ -39,7 +39,9 @@ def load_config(path: str | Path) -> RunConfig:
 
 
 def run(config: RunConfig) -> None:
-    messages = load_lobster_csv(config.message_file, config.symbol, time_scale=config.time_scale)
+    messages = load_lobster_csv(
+        config.message_file, config.symbol, time_scale=config.time_scale
+    )
     replay = replay_from_lobster(messages)
     order_book = load_order_book(depth=5)
     logger = MetricsLogger(json_path=config.log_jsonl, sqlite_path=config.log_sqlite)
@@ -76,7 +78,9 @@ def run(config: RunConfig) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run Hawkes simulator backtests")
-    parser.add_argument("--config", required=True, help="Path to JSON run configuration")
+    parser.add_argument(
+        "--config", required=True, help="Path to JSON run configuration"
+    )
     args = parser.parse_args()
     run(load_config(args.config))
 

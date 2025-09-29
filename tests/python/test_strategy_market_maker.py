@@ -26,7 +26,9 @@ def _run_strategy(seed: int):
     with MetricsLogger() as metrics:
         risk = RiskEngine(RiskConfig(symbol="TEST"))
         strategy = MarketMakingStrategy(
-            MarketMakingConfig(spread_ticks=1, quote_size=1.0, tick_size=0.1, update_interval_ns=0),
+            MarketMakingConfig(
+                spread_ticks=1, quote_size=1.0, tick_size=0.1, update_interval_ns=0
+            ),
             risk_engine=risk,
             seed=seed,
         )
@@ -40,7 +42,11 @@ def _run_strategy(seed: int):
         )
         backtester.clock_ns = snapshot.timestamp_ns
         strategy.on_tick(snapshot, backtester)
-        return tuple(sorted((order.side, order.price) for order in backtester.active_orders.values()))
+        return tuple(
+            sorted(
+                (order.side, order.price) for order in backtester.active_orders.values()
+            )
+        )
 
 
 def test_strategy_reproducible() -> None:

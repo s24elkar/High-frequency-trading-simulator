@@ -61,7 +61,7 @@ class MetricsLogger:
             self._conn.close()
             self._conn = None
 
-    def log_order(self, order: 'OrderRequest') -> None:
+    def log_order(self, order: "OrderRequest") -> None:
         record = LogRecord(order.timestamp_ns, "order", asdict(order))
         self._write(record)
 
@@ -69,16 +69,20 @@ class MetricsLogger:
         record = LogRecord(timestamp_ns, "cancel", {"order_id": order_id})
         self._write(record)
 
-    def log_fill(self, fill: 'FillEvent') -> None:
+    def log_fill(self, fill: "FillEvent") -> None:
         record = LogRecord(fill.timestamp_ns, "fill", asdict(fill))
         self._write(record)
 
-    def log_snapshot(self, snapshot: 'MarketSnapshot') -> None:
+    def log_snapshot(self, snapshot: "MarketSnapshot") -> None:
         record = LogRecord(snapshot.timestamp_ns, "snapshot", asdict(snapshot))
         self._write(record)
 
     def _write(self, record: LogRecord) -> None:
-        payload = {"timestamp_ns": record.timestamp_ns, "event_type": record.event_type, "payload": record.payload}
+        payload = {
+            "timestamp_ns": record.timestamp_ns,
+            "event_type": record.event_type,
+            "payload": record.payload,
+        }
         if self._json_handle:
             self._json_handle.write(json.dumps(payload) + "\n")
             self._json_handle.flush()
@@ -130,8 +134,16 @@ class MetricsAggregator:
             if record.event_type == "fill":
                 realised = float(record.payload.get("liquidity_flag", 0))  # placeholder
             elif record.event_type == "snapshot":
-                unrealised = float(record.payload.get("imbalance", 0))  # placeholder until pnl stored
-            curve.append({"timestamp_ns": record.timestamp_ns, "realized": realised, "unrealized": unrealised})
+                unrealised = float(
+                    record.payload.get("imbalance", 0)
+                )  # placeholder until pnl stored
+            curve.append(
+                {
+                    "timestamp_ns": record.timestamp_ns,
+                    "realized": realised,
+                    "unrealized": unrealised,
+                }
+            )
         return curve
 
 

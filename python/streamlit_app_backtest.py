@@ -49,7 +49,9 @@ replay = replay_from_lobster(messages)
 book = load_order_book(depth=5)
 log_path = Path("docs/images/backtests/streamlit_run.jsonl")
 metrics = MetricsLogger(json_path=log_path)
-risk_engine = RiskEngine(RiskConfig(symbol=symbol, max_long=risk_limit, max_short=-risk_limit))
+risk_engine = RiskEngine(
+    RiskConfig(symbol=symbol, max_long=risk_limit, max_short=-risk_limit)
+)
 strategy = MarketMakingStrategy(
     MarketMakingConfig(
         spread_ticks=spread_ticks,
@@ -93,7 +95,9 @@ if snapshots:
         {
             "timestamp_ns": [row["timestamp_ns"] for row in snapshots],
             "mid": mids,
-            "imbalance": [row["payload"].get("imbalance", 0.0) or 0.0 for row in snapshots],
+            "imbalance": [
+                row["payload"].get("imbalance", 0.0) or 0.0 for row in snapshots
+            ],
         }
     ).set_index("timestamp_ns")
     st.line_chart(mid_df)

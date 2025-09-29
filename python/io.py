@@ -2,6 +2,7 @@
 import json, csv, os
 from dataclasses import asdict
 
+
 def save_csv(path, times, marks):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", newline="") as f:
@@ -9,6 +10,7 @@ def save_csv(path, times, marks):
         w.writerow(["time", "mark"])
         for t, v in zip(times, marks):
             w.writerow([f"{t:.12g}", f"{v:.12g}"])
+
 
 def save_json(path, meta: dict, times, marks):
     os.makedirs(os.path.dirname(path), exist_ok=True)
