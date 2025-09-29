@@ -74,7 +74,9 @@ def build_windows(cfg: WindowConfig) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build Hawkes calibration windows")
-    parser.add_argument("--config", required=True, help="Path to day14_binance YAML config")
+    parser.add_argument(
+        "--config", required=True, help="Path to day14_binance YAML config"
+    )
     args = parser.parse_args()
     cfg = load_config(args.config)
     build_windows(cfg)
