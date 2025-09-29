@@ -1,0 +1,82 @@
+# Rolling bivariate Hawkes calibration for Binance BTCUSDT (2025-09-19 21:00 UTC)
+
+dataset: data/binance/binance_btcusdt_trades_2025-09-19_21.parquet
+output_dir: data/runs/binance/day14_btcusdt_bivar
+logs_dir: data/runs/binance/day14_btcusdt_bivar/logs
+windows_dir: data/runs/binance/day14_btcusdt_bivar/windows
+figs_dir: data/runs/binance/day14_btcusdt_bivar/figs
+results_dir: data/runs/binance/day14_btcusdt_bivar/results
+notebook: notebooks/day14_binance_setup.ipynb
+
+timezone: UTC
+side_column: is_buyer_maker
+time_column: ts_ms
+qty_column: qty
+price_column: price
+burn_in_seconds: 900
+window_seconds: 3600
+window_overlap: 0.5
+min_window_coverage: 0.7
+
+kernel_family: [exponential, powerlaw]
+
+init:
+  exponential:
+    mu_b: 0.3
+    mu_s: 0.3
+    alpha_bb: 0.4
+    beta_bb: 2.0
+    alpha_bs: 0.2
+    beta_bs: 2.0
+    alpha_sb: 0.2
+    beta_sb: 2.0
+    alpha_ss: 0.4
+    beta_ss: 2.0
+  powerlaw:
+    mu_b: 0.25
+    mu_s: 0.25
+    eta_bb: 0.3
+    c_bb: 0.1
+    gamma_bb: 0.7
+    eta_bs: 0.2
+    c_bs: 0.1
+    gamma_bs: 0.7
+    eta_sb: 0.2
+    c_sb: 0.1
+    gamma_sb: 0.7
+    eta_ss: 0.3
+    c_ss: 0.1
+    gamma_ss: 0.7
+
+bounds:
+  exponential:
+    mu: [1.0e-6, 5.0]
+    alpha: [0.0, 5.0]
+    beta: [1.0e-3, 100.0]
+  powerlaw:
+    mu: [1.0e-6, 5.0]
+    eta: [0.0, 5.0]
+    c: [1.0e-4, 10.0]
+    gamma: [0.1, 1.9]
+
+optim:
+  method: L-BFGS-B
+  maxiter: 500
+  tol: 1.0e-6
+  gradient_tol: 1.0e-5
+  penalty_lambda: 1.0
+
+powerlaw:
+  truncation_window: 5000.0
+  truncation_eps: 1.0e-6
+
+diagnostics:
+  qq_points: 200
+  ks_alpha: 0.05
+  ks_min_pass_rate: 0.6
+  intensity_plot_window: 0
+
+summary:
+  output_prefix: day14_btcusdt_bivar
+  aggregate_stats: [median, iqr]
+

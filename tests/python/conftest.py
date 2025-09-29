@@ -7,5 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_DIR = ROOT / "python"
-if str(PACKAGE_DIR) not in sys.path:
-    sys.path.insert(0, str(PACKAGE_DIR))
+SRC_DIR = ROOT / "src"
+for candidate in (PACKAGE_DIR, SRC_DIR):
+    if str(candidate) not in sys.path:
+        sys.path.insert(0, str(candidate))
