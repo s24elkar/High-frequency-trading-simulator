@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List
 
 from typing import TYPE_CHECKING
@@ -40,7 +40,6 @@ class RiskEngine:
     def update_on_fill(self, fill: "FillEvent") -> None:
         symbol = fill.symbol
         direction = 1.0 if fill.side == "BUY" else -1.0
-        signed_size = direction * fill.size
         lots = self.lots.setdefault(symbol, [])
         inventory = self.inventory.setdefault(symbol, 0.0)
 

@@ -1,6 +1,7 @@
 # io.py
-import json, csv, os
-from dataclasses import asdict
+import csv
+import json
+import os
 
 
 def save_csv(path, times, marks):

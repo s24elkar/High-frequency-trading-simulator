@@ -11,7 +11,7 @@ from __future__ import annotations
 import hashlib
 import logging
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, Iterator, List, Optional, Protocol
+from typing import Dict, Iterable, List, Optional, Protocol
 
 import numpy as np
 

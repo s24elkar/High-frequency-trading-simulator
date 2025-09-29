@@ -101,8 +101,9 @@ def _load_bridge() -> Optional[ctypes.CDLL]:
     searched = [str(p) for p in _bridge_search_paths()]
     _BRIDGE_ERROR = (
         "hawkes_bridge shared library not found. "
-        "Falling back to the pure-Python simulator. Build the C++ project (e.g. `cmake --build build --target hawkes_bridge`) "
-        "or set HFT_HAWKES_BRIDGE to the compiled artifact to restore native performance.\n"
+        "Falling back to the pure-Python simulator. Build the C++ project "
+        "(e.g. `cmake --build build --target hawkes_bridge`) or set HFT_HAWKES_BRIDGE "
+        "to the compiled artifact to restore native performance.\n"
         f"Searched paths: {searched}"
     )
     return None

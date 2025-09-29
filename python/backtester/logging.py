@@ -6,7 +6,7 @@ import json
 import sqlite3
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, Optional
+from typing import Dict, Iterable, List, Optional
 
 from typing import TYPE_CHECKING
 

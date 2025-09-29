@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import functools
 from pathlib import Path
 from typing import Callable, Dict
 
