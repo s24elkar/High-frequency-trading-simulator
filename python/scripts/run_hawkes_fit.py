@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from hawkes.fit import window_pipeline
 from hawkes.io import load_config
 
 

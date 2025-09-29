@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from typing import Dict
 import pandas as pd
 
 from hawkes.io import WindowConfig, iter_windows, load_config
@@ -59,7 +60,7 @@ def build_windows(cfg: WindowConfig) -> None:
     coverage_threshold = cfg.min_window_coverage
     logs = []
     for idx, start, end, arrays in iter_windows(df, cfg):
-        buy, sell = arrays[2], arrays[3]
+        buy = arrays[2]
         window_total = cfg.window_seconds
         observed_span = (buy[-1] - buy[0]) if buy.size > 1 else 0.0
         if coverage_threshold and observed_span < coverage_threshold * window_total:
