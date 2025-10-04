@@ -66,12 +66,14 @@ def test_dashboard_renders_metrics() -> None:
     fill = _fill_event(1, "BUY", price=100.0, size=2.0, ts=1_500)
     risk_engine.update_on_fill(fill)
     logger.log_fill(fill)
+    logger.record_latency(market_to_decision_ns=1_000, decision_to_submit_ns=500)
 
     dashboard.update(timestamp_ns=2_000)
     output = stream.getvalue()
     assert "Inventory: 2.00" in output
     assert "PnL (real/unreal/total)" in output
     assert "Latency ns" in output
+    assert "Latency us (m->d / d->s / total): 1.00 / 0.50 / 1.50" in output
 
 
 def test_market_maker_dashboard_alerts() -> None:
@@ -137,3 +139,4 @@ def test_market_maker_dashboard_alerts() -> None:
     assert "Strategy halted: YES" in output
     assert "Exposure limit breached" in output
     assert "Loss limit breached" in output
+    assert "Latency us (m->d / d->s / total):" in output

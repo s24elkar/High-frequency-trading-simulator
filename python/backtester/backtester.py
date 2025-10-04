@@ -9,10 +9,11 @@ in tests)."""
 from __future__ import annotations
 
 import hashlib
+import time
 import logging
 from dataclasses import dataclass, field
 import heapq
-from typing import Any, Dict, Iterable, List, Optional, Protocol, TYPE_CHECKING
+from typing import Any, Callable, Dict, Iterable, List, Optional, Protocol, TYPE_CHECKING
 
 import numpy as np
 
@@ -160,6 +161,7 @@ class Backtester:
         strategy: Optional[Strategy] = None,
         dashboard: Optional["RiskDashboard"] = None,
         seed: int = 0,
+        time_source: Optional[Callable[[], int]] = None,
     ) -> None:
         self.config = config
         self.limit_book = limit_book
@@ -183,6 +185,9 @@ class Backtester:
         self._next_timer_id = 1
         self._timer_heap: List[tuple[int, int, TimerToken]] = []
         self._active_timers: Dict[int, TimerToken] = {}
+        self._time_source = time_source or time.perf_counter_ns
+        self._rt_last_market_ns: Optional[int] = None
+        self._rt_last_decision_ns: Optional[int] = None
 
         if self.dashboard is not None:
             self.dashboard.bind(
@@ -204,6 +209,8 @@ class Backtester:
         size: float,
         metadata: Optional[Dict[str, float | int | str]] = None,
     ) -> int:
+        decision_perf = self._time_source()
+        self._rt_last_decision_ns = decision_perf
         order_id = self._id_counter
         self._id_counter += 1
         order = OrderRequest(
@@ -221,8 +228,13 @@ class Backtester:
         self.active_orders[order_id] = order
         log.debug("Submitting order %s", order)
         self.limit_book.enqueue(order)
+        submit_perf = self._time_source()
         latency_ns = max(order.timestamp_ns - decision_ns, 0)
         self.metrics_logger.log_order(order, latency_ns=latency_ns)
+        if self._rt_last_market_ns is not None:
+            market_to_decision = max(decision_perf - self._rt_last_market_ns, 0)
+            decision_to_submit = max(submit_perf - decision_perf, 0)
+            self.metrics_logger.record_latency(market_to_decision, decision_to_submit)
         self._update_digest("ORDER", order)
         self._strategy_call("on_order_accepted", order, self._context)
         return order_id
@@ -256,6 +268,8 @@ class Backtester:
 
     def on_market_data(self, snapshot: MarketSnapshot) -> None:
         self._last_snapshot_ns = snapshot.timestamp_ns
+        self._rt_last_market_ns = self._time_source()
+        self._rt_last_decision_ns = None
         if self.risk_engine is not None:
             self.risk_engine.update_on_tick(snapshot)
             if self.risk_engine.strategy_halted:

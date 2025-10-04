@@ -51,6 +51,17 @@ class MetricsSnapshot:
     avg_latency_ns: Optional[float]
     p95_latency_ns: Optional[int]
     max_latency_ns: Optional[int]
+    latency_breakdown: "LatencyBreakdown"
+
+
+@dataclass(slots=True)
+class LatencyBreakdown:
+    last_market_to_decision_us: Optional[float]
+    last_decision_to_submit_us: Optional[float]
+    last_market_to_submit_us: Optional[float]
+    avg_market_to_decision_us: Optional[float]
+    avg_decision_to_submit_us: Optional[float]
+    avg_market_to_submit_us: Optional[float]
 
 
 class MetricsLogger:
@@ -78,6 +89,9 @@ class MetricsLogger:
         self._run_start_ns: Optional[int] = None
         self._run_end_ns: Optional[int] = None
         self._summary_logged = False
+        self._latency_market_to_decision_ns: List[int] = []
+        self._latency_decision_to_submit_ns: List[int] = []
+        self._latency_market_to_submit_ns: List[int] = []
 
     def _initialise_sqlite(self) -> None:
         assert self._conn is not None
@@ -170,6 +184,32 @@ class MetricsLogger:
             )
             self._conn.commit()
 
+    def record_latency(self, market_to_decision_ns: int, decision_to_submit_ns: int) -> None:
+        total = market_to_decision_ns + decision_to_submit_ns
+        self._latency_market_to_decision_ns.append(market_to_decision_ns)
+        self._latency_decision_to_submit_ns.append(decision_to_submit_ns)
+        self._latency_market_to_submit_ns.append(total)
+
+    def _latency_snapshot(self) -> LatencyBreakdown:
+        def _stats(samples: List[int]) -> tuple[Optional[float], Optional[float]]:
+            if not samples:
+                return None, None
+            last = samples[-1] / 1_000.0
+            avg = sum(samples) / len(samples) / 1_000.0
+            return last, avg
+
+        last_md, avg_md = _stats(self._latency_market_to_decision_ns)
+        last_ds, avg_ds = _stats(self._latency_decision_to_submit_ns)
+        last_total, avg_total = _stats(self._latency_market_to_submit_ns)
+        return LatencyBreakdown(
+            last_market_to_decision_us=last_md,
+            last_decision_to_submit_us=last_ds,
+            last_market_to_submit_us=last_total,
+            avg_market_to_decision_us=avg_md,
+            avg_decision_to_submit_us=avg_ds,
+            avg_market_to_submit_us=avg_total,
+        )
+
     def snapshot(self) -> MetricsSnapshot:
         avg_latency = (
             sum(self._latencies) / len(self._latencies)
@@ -183,6 +223,7 @@ class MetricsLogger:
             index = int(round(0.95 * (len(sorted_lat) - 1)))
             p95_latency = sorted_lat[index]
             max_latency = sorted_lat[-1]
+        latency_breakdown = self._latency_snapshot()
         return MetricsSnapshot(
             order_count=self._order_count,
             fill_count=self._fill_count,
@@ -191,6 +232,7 @@ class MetricsLogger:
             avg_latency_ns=avg_latency,
             p95_latency_ns=p95_latency,
             max_latency_ns=max_latency,
+            latency_breakdown=latency_breakdown,
         )
 
     def _build_summary(
@@ -313,4 +355,5 @@ __all__ = [
     "LogRecord",
     "RunSummary",
     "MetricsSnapshot",
+    "LatencyBreakdown",
 ]

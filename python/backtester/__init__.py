@@ -14,7 +14,13 @@ from .backtester import (
 )
 from .itch import LOBSTERMessage, ITCHEvent, load_lobster_csv, replay_from_lobster
 from .risk import RiskConfig, RiskEngine, RiskSnapshot
-from .logging import MetricsLogger, MetricsAggregator, RunSummary, MetricsSnapshot
+from .logging import (
+    MetricsLogger,
+    MetricsAggregator,
+    RunSummary,
+    MetricsSnapshot,
+    LatencyBreakdown,
+)
 from .dashboard import RiskDashboard, DashboardConfig
 from .strategy import StrategySandbox, StrategyError
 from .reports import (
@@ -49,6 +55,7 @@ __all__ = [
     "MetricsAggregator",
     "RunSummary",
     "MetricsSnapshot",
+    "LatencyBreakdown",
     "RiskDashboard",
     "DashboardConfig",
     "StrategySandbox",

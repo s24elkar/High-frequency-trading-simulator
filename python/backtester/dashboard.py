@@ -134,6 +134,25 @@ class RiskDashboard:
             ]
         )
 
+        latency = metrics_snapshot.latency_breakdown
+        if latency.last_market_to_submit_us is None:
+            lines.append(
+                "Latency us (m->d / d->s / total): N/A"
+            )
+        else:
+            lines.append(
+                "Latency us (m->d / d->s / total): "
+                f"{latency.last_market_to_decision_us:.2f} / "
+                f"{latency.last_decision_to_submit_us:.2f} / "
+                f"{latency.last_market_to_submit_us:.2f}"
+            )
+            lines.append(
+                "Avg latency us (m->d / d->s / total): "
+                f"{latency.avg_market_to_decision_us:.2f} / "
+                f"{latency.avg_decision_to_submit_us:.2f} / "
+                f"{latency.avg_market_to_submit_us:.2f}"
+            )
+
         return "\n".join(lines) + "\n"
 
 
