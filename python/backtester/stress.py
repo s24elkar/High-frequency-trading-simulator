@@ -11,7 +11,7 @@ import time
 import tracemalloc
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 from .backtester import MarketEvent, MarketSnapshot
 from .order_book import PythonOrderBook
