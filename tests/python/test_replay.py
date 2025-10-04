@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import time
-
 from python.backtester import ReplayConfig, ReplayEngine
 from python.backtester.backtester import MarketEvent
 
@@ -20,14 +18,27 @@ def test_replay_engine_preserves_order_and_limits_events() -> None:
 
 def test_replay_engine_real_time_delay(monkeypatch) -> None:
     events = [_event(0), _event(1_000_000)]
-    timestamps = []
+    sleep_calls = []
 
-    def fake_sleep(duration: float) -> None:
-        timestamps.append(duration)
+    class FakeClock:
+        def __init__(self) -> None:
+            self.now = 0.0
 
-    monkeypatch.setattr(time, "sleep", fake_sleep)
-    engine = ReplayEngine(ReplayConfig(speed=2.0, real_time=True))
+        def time(self) -> float:
+            return self.now
+
+        def sleep(self, duration: float) -> None:
+            sleep_calls.append(duration)
+            self.now += duration
+
+    fake = FakeClock()
+
+    engine = ReplayEngine(
+        ReplayConfig(speed=2.0, real_time=True),
+        time_source=fake.time,
+        sleeper=fake.sleep,
+    )
     list(engine.stream(events))
-    assert timestamps
+    assert sleep_calls
     expected = 0.0005  # 1e6 ns = 0.001 s / speed 2.0
-    assert abs(timestamps[0] - expected) < 0.0004
+    assert abs(sleep_calls[0] - expected) < 1e-6
