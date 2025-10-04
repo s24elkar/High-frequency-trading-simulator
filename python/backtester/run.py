@@ -31,6 +31,7 @@ class RunConfig:
     seed: int = 0
     risk: Dict[str, Any] | None = None
     strategy: Dict[str, Any] | None = None
+    replay: Dict[str, Any] | None = None
 
 
 def load_config(path: str | Path) -> RunConfig:
@@ -42,7 +43,17 @@ def run(config: RunConfig) -> None:
     messages = load_lobster_csv(
         config.message_file, config.symbol, time_scale=config.time_scale
     )
-    replay = replay_from_lobster(messages)
+    replay_events = replay_from_lobster(messages)
+    replay_cfg = config.replay or {}
+    if replay_cfg:
+        from .replay import ReplayConfig, ReplayEngine
+
+        cfg = ReplayConfig(
+            speed=float(replay_cfg.get("speed", 1.0)),
+            real_time=bool(replay_cfg.get("real_time", True)),
+            max_events=replay_cfg.get("max_events"),
+        )
+        replay_events = ReplayEngine(cfg).stream(replay_events)
     order_book = load_order_book(depth=5)
     logger = MetricsLogger(json_path=config.log_jsonl, sqlite_path=config.log_sqlite)
     risk_cfg = config.risk or {}
@@ -72,7 +83,7 @@ def run(config: RunConfig) -> None:
         strategy=strategy,
         seed=config.seed,
     )
-    backtester.run(replay)
+    backtester.run(replay_events)
     logger.close()
 
 

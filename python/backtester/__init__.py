@@ -25,6 +25,7 @@ from .dashboard import RiskDashboard, DashboardConfig
 from .strategy import StrategySandbox, StrategyError
 from .concurrent import ConcurrentBacktester, ConcurrentStrategyContext
 from .stress import StressConfig, StressMetrics, Hotspot, run_order_book_stress
+from .replay import ReplayConfig, ReplayEngine, replay
 from .reports import (
     BacktestRun,
     BacktestSummary,
@@ -50,6 +51,9 @@ __all__ = [
     "ITCHEvent",
     "load_lobster_csv",
     "replay_from_lobster",
+    "ReplayConfig",
+    "ReplayEngine",
+    "replay",
     "RiskConfig",
     "RiskEngine",
     "RiskSnapshot",

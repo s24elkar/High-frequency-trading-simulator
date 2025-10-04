@@ -5,6 +5,8 @@ from backtester import (
     Backtester,
     BacktesterConfig,
     MetricsLogger,
+    ReplayConfig,
+    ReplayEngine,
     RiskConfig,
     RiskEngine,
     StrategyCallbacks,
@@ -99,6 +101,32 @@ def test_market_maker_replay_deterministic(tmp_path: Path) -> None:
     assert summary1 == summary2
     assert summary1["order_count"] > 0
     assert summary1["order_volume"] > 0.0
+
+
+def test_replay_engine_fast_mode(tmp_path: Path) -> None:
+    messages = list(load_lobster_csv("tests/data/itch_sample.csv", symbol="TEST"))
+    base_events = list(replay_from_lobster(messages))
+
+    replay_fast = ReplayEngine(ReplayConfig(speed=0.0, real_time=False)).stream(base_events)
+
+    def run_stream(stream, path: Path) -> str:
+        with MetricsLogger(json_path=path) as metrics:
+            risk = RiskEngine(RiskConfig(symbol="TEST"))
+            backtester = Backtester(
+                config=BacktesterConfig(symbol="TEST"),
+                limit_book=PythonOrderBook(depth=5),
+                metrics_logger=metrics,
+                risk_engine=risk,
+                strategy=CollectingStrategy(),
+                seed=1,
+            )
+            backtester.run(stream)
+            return backtester.digest
+
+    fast_digest = run_stream(replay_fast, tmp_path / "fast.jsonl")
+    baseline_digest = run_stream(replay_from_lobster(messages), tmp_path / "baseline.jsonl")
+
+    assert fast_digest == baseline_digest
 
 
 def test_metrics_logger_jsonl(tmp_path: Path) -> None:
