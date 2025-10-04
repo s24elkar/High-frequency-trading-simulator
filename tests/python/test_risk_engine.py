@@ -84,3 +84,37 @@ def test_inventory_limits_raise_warnings_and_halt() -> None:
 
     engine_short.update_on_fill(_fill("SELL", price=99.0, size=3.0, order_id=21))
     assert engine_short.strategy_halted is True
+
+
+def test_notional_and_loss_limits_trigger_alerts() -> None:
+    exposure_cfg = RiskConfig(
+        symbol="XYZ",
+        max_long=10.0,
+        max_short=-10.0,
+        max_notional_exposure=120.0,
+        warn_fraction=0.5,
+    )
+    exposure_engine = RiskEngine(exposure_cfg)
+    exposure_engine.update_on_tick(_snapshot(99.5, 100.5))  # mid ≈ 100
+    exposure_engine.update_on_fill(_fill("BUY", price=100.0, size=1.0, order_id=30))
+    exposure_engine.update_on_tick(_snapshot(200.0, 200.2))  # mid ≈ 200.1
+    assert exposure_engine.strategy_halted is True
+    assert any(
+        "Exposure limit breached" in message for message in exposure_engine.alerts
+    )
+
+    loss_cfg = RiskConfig(
+        symbol="XYZ",
+        max_long=10.0,
+        max_short=-10.0,
+        loss_limit=-5.0,
+        warn_fraction=0.8,
+    )
+    loss_engine = RiskEngine(loss_cfg)
+    loss_engine.update_on_tick(_snapshot(100.0, 100.2))
+    loss_engine.update_on_fill(_fill("BUY", price=100.0, size=1.0, order_id=40))
+    loss_engine.update_on_tick(_snapshot(95.0, 95.2))  # total pnl ≈ -5 -> warn
+    assert any("Loss warning" in msg for msg in loss_engine.warnings)
+    loss_engine.update_on_tick(_snapshot(94.0, 94.2))  # total pnl ≈ -6 -> breach
+    assert loss_engine.strategy_halted is True
+    assert any("Loss limit breached" in msg for msg in loss_engine.alerts)

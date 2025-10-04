@@ -10,10 +10,13 @@ from .backtester import (
     OrderBookUpdate,
     StrategyCallbacks,
     StrategyContext,
+    TimerToken,
 )
 from .itch import LOBSTERMessage, ITCHEvent, load_lobster_csv, replay_from_lobster
-from .risk import RiskConfig, RiskEngine
-from .logging import MetricsLogger, MetricsAggregator, RunSummary
+from .risk import RiskConfig, RiskEngine, RiskSnapshot
+from .logging import MetricsLogger, MetricsAggregator, RunSummary, MetricsSnapshot
+from .dashboard import RiskDashboard, DashboardConfig
+from .strategy import StrategySandbox, StrategyError
 from .reports import (
     BacktestRun,
     BacktestSummary,
@@ -34,15 +37,22 @@ __all__ = [
     "OrderBookUpdate",
     "StrategyCallbacks",
     "StrategyContext",
+    "TimerToken",
     "LOBSTERMessage",
     "ITCHEvent",
     "load_lobster_csv",
     "replay_from_lobster",
     "RiskConfig",
     "RiskEngine",
+    "RiskSnapshot",
     "MetricsLogger",
     "MetricsAggregator",
     "RunSummary",
+    "MetricsSnapshot",
+    "RiskDashboard",
+    "DashboardConfig",
+    "StrategySandbox",
+    "StrategyError",
     "BacktestRun",
     "BacktestSummary",
     "SnapshotPoint",

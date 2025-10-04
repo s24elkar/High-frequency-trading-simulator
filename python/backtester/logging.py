@@ -42,6 +42,17 @@ class LogRecord:
     payload: Dict[str, object]
 
 
+@dataclass(slots=True)
+class MetricsSnapshot:
+    order_count: int
+    fill_count: int
+    order_volume: float
+    fill_volume: float
+    avg_latency_ns: Optional[float]
+    p95_latency_ns: Optional[int]
+    max_latency_ns: Optional[int]
+
+
 class MetricsLogger:
     def __init__(
         self,
@@ -159,6 +170,29 @@ class MetricsLogger:
             )
             self._conn.commit()
 
+    def snapshot(self) -> MetricsSnapshot:
+        avg_latency = (
+            sum(self._latencies) / len(self._latencies)
+            if self._latencies
+            else None
+        )
+        p95_latency = None
+        max_latency = None
+        if self._latencies:
+            sorted_lat = sorted(self._latencies)
+            index = int(round(0.95 * (len(sorted_lat) - 1)))
+            p95_latency = sorted_lat[index]
+            max_latency = sorted_lat[-1]
+        return MetricsSnapshot(
+            order_count=self._order_count,
+            fill_count=self._fill_count,
+            order_volume=self._order_volume,
+            fill_volume=self._fill_volume,
+            avg_latency_ns=avg_latency,
+            p95_latency_ns=p95_latency,
+            max_latency_ns=max_latency,
+        )
+
     def _build_summary(
         self,
         *,
@@ -273,4 +307,10 @@ class MetricsAggregator:
         return curve
 
 
-__all__ = ["MetricsLogger", "MetricsAggregator", "LogRecord", "RunSummary"]
+__all__ = [
+    "MetricsLogger",
+    "MetricsAggregator",
+    "LogRecord",
+    "RunSummary",
+    "MetricsSnapshot",
+]

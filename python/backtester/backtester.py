@@ -11,12 +11,17 @@ from __future__ import annotations
 import hashlib
 import logging
 from dataclasses import dataclass, field
-from typing import Dict, Iterable, List, Optional, Protocol
+import heapq
+from typing import Any, Dict, Iterable, List, Optional, Protocol, TYPE_CHECKING
 
 import numpy as np
 
 from .logging import MetricsLogger
 from .risk import RiskEngine
+from .strategy import StrategyCallbacks, StrategySandbox, StrategyError, TimerToken
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .dashboard import RiskDashboard
 
 log = logging.getLogger(__name__)
 
@@ -95,25 +100,6 @@ class OrderBookUpdate:
     latency_ns: Optional[int] = None
 
 
-class StrategyCallbacks:
-    """Base strategy callbacks with sensible no-op defaults."""
-
-    def on_start(self, ctx: "StrategyContext") -> None:  # pragma: no cover - default hook
-        return None
-
-    def on_stop(self, ctx: "StrategyContext") -> None:  # pragma: no cover - default hook
-        return None
-
-    def on_market_data(self, snapshot: MarketSnapshot, ctx: "StrategyContext") -> None:
-        return None
-
-    def on_fill(self, fill: FillEvent, ctx: "StrategyContext") -> None:
-        return None
-
-    def on_order_accepted(self, order: OrderRequest, ctx: "StrategyContext") -> None:
-        return None
-
-
 Strategy = StrategyCallbacks
 
 
@@ -150,6 +136,17 @@ class StrategyContext:
     def active_orders(self) -> Dict[int, OrderRequest]:
         return dict(self._backtester.active_orders)
 
+    def schedule_timer(
+        self,
+        key: str,
+        delay_ns: int,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> TimerToken:
+        return self._backtester.schedule_timer(key, delay_ns, metadata)
+
+    def cancel_timer(self, token: TimerToken) -> bool:
+        return self._backtester.cancel_timer(token)
+
 
 class Backtester:
     """Coordinates event replay, strategy decisions, and bookkeeping."""
@@ -161,6 +158,7 @@ class Backtester:
         metrics_logger: MetricsLogger,
         risk_engine: Optional[RiskEngine] = None,
         strategy: Optional[Strategy] = None,
+        dashboard: Optional["RiskDashboard"] = None,
         seed: int = 0,
     ) -> None:
         self.config = config
@@ -168,6 +166,8 @@ class Backtester:
         self.metrics_logger = metrics_logger
         self.risk_engine = risk_engine
         self.strategy = strategy
+        self.strategy_error: Optional[str] = None
+        self.dashboard = dashboard
         self.seed = seed
 
         self._rng = np.random.default_rng(seed)
@@ -179,6 +179,17 @@ class Backtester:
         self._digest = hashlib.sha256()
         self._context = StrategyContext(self)
         self._last_snapshot_ns: Optional[int] = None
+        self._sandbox = StrategySandbox(strategy) if strategy is not None else None
+        self._next_timer_id = 1
+        self._timer_heap: List[tuple[int, int, TimerToken]] = []
+        self._active_timers: Dict[int, TimerToken] = {}
+
+        if self.dashboard is not None:
+            self.dashboard.bind(
+                symbol=self.config.symbol,
+                risk_engine=self.risk_engine,
+                metrics_logger=self.metrics_logger,
+            )
 
     @property
     def digest(self) -> str:
@@ -213,8 +224,7 @@ class Backtester:
         latency_ns = max(order.timestamp_ns - decision_ns, 0)
         self.metrics_logger.log_order(order, latency_ns=latency_ns)
         self._update_digest("ORDER", order)
-        if self.strategy is not None:
-            self.strategy.on_order_accepted(order, self._context)
+        self._strategy_call("on_order_accepted", order, self._context)
         return order_id
 
     def cancel_order(self, order_id: int) -> None:
@@ -241,8 +251,8 @@ class Backtester:
                 self.strategy_halted = True
         self.metrics_logger.log_fill(fill)
         self._update_digest("FILL", fill)
-        if self.strategy is not None:
-            self.strategy.on_fill(fill, self._context)
+        self._strategy_call("on_fill", fill, self._context)
+        self._render_dashboard()
 
     def on_market_data(self, snapshot: MarketSnapshot) -> None:
         self._last_snapshot_ns = snapshot.timestamp_ns
@@ -252,28 +262,36 @@ class Backtester:
                 self.strategy_halted = True
         if self.strategy_halted:
             log.debug("Strategy halted; skipping market-data callback")
+            self._render_dashboard()
             return
         if self.strategy is None:
+            self._render_dashboard()
+            self._fire_due_timers(self.clock_ns)
             return
-        self.strategy.on_market_data(snapshot, self._context)
+        self._strategy_call("on_market_data", snapshot, self._context)
+        self._render_dashboard()
+        self._fire_due_timers(self.clock_ns)
 
     def run(self, replay_session: Iterable[MarketEvent]) -> None:
         if self.strategy is not None:
-            self.strategy.on_start(self._context)
+            self._strategy_call("on_start", self._context)
         for event in replay_session:
             self.clock_ns = event.timestamp_ns
+            self._fire_due_timers(self.clock_ns)
             update = self._dispatch_event(event)
             for fill in update.fills:
                 self.process_fill(fill)
+                self._fire_due_timers(self.clock_ns)
             snapshot = update.snapshot
             if snapshot is None:
+                self._fire_due_timers(self.clock_ns)
                 continue
             if self.config.record_snapshots:
                 self.metrics_logger.log_snapshot(snapshot)
             self._update_digest("SNAPSHOT", snapshot)
             self.on_market_data(snapshot)
         if self.strategy is not None:
-            self.strategy.on_stop(self._context)
+            self._strategy_call("on_stop", self._context)
         realized = 0.0
         unrealized = 0.0
         inventory = 0.0
@@ -289,6 +307,8 @@ class Backtester:
             inventory=inventory,
             digest=self.digest,
         )
+        self._render_dashboard()
+        self._fire_due_timers(self.clock_ns)
 
     def _dispatch_event(self, event: MarketEvent) -> OrderBookUpdate:
         update = self.limit_book.apply_event(event)
@@ -301,6 +321,57 @@ class Backtester:
         self._digest.update(tag.encode("ascii"))
         self._digest.update(repr(payload).encode("ascii"))
 
+    def _render_dashboard(self) -> None:
+        if self.dashboard is None:
+            return
+        self.dashboard.update(self.clock_ns)
+
+    def _strategy_call(self, method: str, *args) -> None:
+        if self._sandbox is None:
+            return
+        try:
+            self._sandbox.invoke(method, *args)
+        except StrategyError as exc:
+            self.strategy_halted = True
+            self.strategy_error = str(exc)
+            log.error("Strategy error triggered halt: %s", exc)
+
+    def schedule_timer(
+        self,
+        key: str,
+        delay_ns: int,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> TimerToken:
+        if delay_ns < 0:
+            raise ValueError("delay_ns must be non-negative")
+        due_ns = self.clock_ns + delay_ns
+        token = TimerToken(
+            timer_id=self._next_timer_id,
+            key=key,
+            due_ns=due_ns,
+            metadata=None if metadata is None else dict(metadata),
+        )
+        self._next_timer_id += 1
+        heapq.heappush(self._timer_heap, (token.due_ns, token.timer_id, token))
+        self._active_timers[token.timer_id] = token
+        return token
+
+    def cancel_timer(self, token: TimerToken) -> bool:
+        return self._active_timers.pop(token.timer_id, None) is not None
+
+    def _fire_due_timers(self, current_ns: int) -> None:
+        if self._sandbox is None or self.strategy_halted:
+            return
+        while self._timer_heap and self._timer_heap[0][0] <= current_ns:
+            _, _, token = heapq.heappop(self._timer_heap)
+            active = self._active_timers.pop(token.timer_id, None)
+            if active is None:
+                continue
+            self._strategy_call("on_timer", token, self._context)
+            self._render_dashboard()
+            if self.strategy_halted:
+                break
+
 
 __all__ = [
     "Backtester",
@@ -312,4 +383,5 @@ __all__ = [
     "OrderBookUpdate",
     "StrategyCallbacks",
     "StrategyContext",
+    "TimerToken",
 ]
