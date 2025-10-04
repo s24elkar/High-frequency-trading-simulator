@@ -7,7 +7,7 @@ import threading
 from concurrent.futures import Future
 from typing import Iterable, Optional
 
-from .backtester import Backtester, MarketEvent, StrategyContext, FillEvent
+from .backtester import Backtester, MarketEvent, StrategyContext
 
 
 class ConcurrentStrategyContext(StrategyContext):
@@ -22,9 +22,25 @@ class ConcurrentStrategyContext(StrategyContext):
         side: str,
         price: float,
         size: float,
+        *,
+        order_type: str = "LIMIT",
+        display_size: Optional[float] = None,
+        stop_price: Optional[float] = None,
+        peg_reference: Optional[str] = None,
+        peg_offset: float = 0.0,
         metadata: Optional[dict] = None,
     ) -> int:
-        return self._runner.submit_order(side, price, size, metadata)
+        return self._runner.submit_order(
+            side,
+            price,
+            size,
+            order_type=order_type,
+            display_size=display_size,
+            stop_price=stop_price,
+            peg_reference=peg_reference,
+            peg_offset=peg_offset,
+            metadata=metadata,
+        )
 
     def cancel_order(self, order_id: int) -> None:
         self._runner.cancel_order(order_id)
@@ -90,10 +106,26 @@ class ConcurrentBacktester:
         side: str,
         price: float,
         size: float,
+        *,
+        order_type: str = "LIMIT",
+        display_size: Optional[float] = None,
+        stop_price: Optional[float] = None,
+        peg_reference: Optional[str] = None,
+        peg_offset: float = 0.0,
         metadata: Optional[dict] = None,
     ) -> int:
         future: Future[int] = Future()
-        payload = (side, price, size, metadata)
+        payload = {
+            "side": side,
+            "price": price,
+            "size": size,
+            "order_type": order_type,
+            "display_size": display_size,
+            "stop_price": stop_price,
+            "peg_reference": peg_reference,
+            "peg_offset": peg_offset,
+            "metadata": metadata,
+        }
         self._order_queue.put(("submit", payload, future))
         return future.result()
 
@@ -135,8 +167,7 @@ class ConcurrentBacktester:
                 return
             try:
                 if command == "submit":
-                    side, price, size, metadata = payload  # type: ignore[misc]
-                    result = self._submit_with_lock(side, price, size, metadata)
+                    result = self._submit_with_lock(**payload)  # type: ignore[arg-type]
                     if future is not None:
                         future.set_result(result)
                 elif command == "cancel":
@@ -155,10 +186,30 @@ class ConcurrentBacktester:
                 self._order_queue.task_done()
 
     def _submit_with_lock(
-        self, side: str, price: float, size: float, metadata: Optional[dict]
+        self,
+        *,
+        side: str,
+        price: float,
+        size: float,
+        order_type: str = "LIMIT",
+        display_size: Optional[float] = None,
+        stop_price: Optional[float] = None,
+        peg_reference: Optional[str] = None,
+        peg_offset: float = 0.0,
+        metadata: Optional[dict] = None,
     ) -> int:
         with self._lock:
-            return self.backtester.submit_order(side, price, size, metadata)
+            return self.backtester.submit_order(
+                side,
+                price,
+                size,
+                order_type=order_type,
+                display_size=display_size,
+                stop_price=stop_price,
+                peg_reference=peg_reference,
+                peg_offset=peg_offset,
+                metadata=metadata,
+            )
 
     def _cancel_with_lock(self, order_id: int) -> None:
         with self._lock:
@@ -169,40 +220,19 @@ class ConcurrentBacktester:
             self.backtester.clock_ns = event.timestamp_ns
             self.backtester._fire_due_timers(self.backtester.clock_ns)
             update = self.backtester._dispatch_event(event)
-
         for fill in update.fills:
-            self._handle_fill(fill)
-
+            with self._lock:
+                self.backtester.process_fill(fill)
         snapshot = update.snapshot
         if snapshot is None:
             with self._lock:
                 self.backtester._fire_due_timers(self.backtester.clock_ns)
             return
-
         with self._lock:
             if self.backtester.config.record_snapshots:
                 self.backtester.metrics_logger.log_snapshot(snapshot)
             self.backtester._update_digest("SNAPSHOT", snapshot)
-
         self.backtester.on_market_data(snapshot)
-
-    def _handle_fill(self, fill: FillEvent) -> None:
-        with self._lock:
-            resting = self.backtester.active_orders.get(fill.order_id)
-            if resting:
-                remaining = resting.size - fill.size
-                if remaining <= 0:
-                    self.backtester.active_orders.pop(fill.order_id, None)
-                else:
-                    resting.size = remaining
-            if self.backtester.risk_engine is not None:
-                self.backtester.risk_engine.update_on_fill(fill)
-                if self.backtester.risk_engine.strategy_halted:
-                    self.backtester.strategy_halted = True
-            self.backtester.metrics_logger.log_fill(fill)
-            self.backtester._update_digest("FILL", fill)
-        self.backtester._strategy_call("on_fill", fill, self.backtester._context)
-        self.backtester._render_dashboard()
 
 
 __all__ = ["ConcurrentBacktester", "ConcurrentStrategyContext"]

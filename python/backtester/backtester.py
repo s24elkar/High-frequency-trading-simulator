@@ -54,6 +54,12 @@ class OrderRequest:
     price: float
     size: float
     timestamp_ns: int
+    order_type: str = "LIMIT"
+    display_size: Optional[float] = None
+    stop_price: Optional[float] = None
+    peg_reference: Optional[str] = None
+    peg_offset: float = 0.0
+    total_size: Optional[float] = None
     metadata: Dict[str, float | int | str] = field(default_factory=dict)
 
 
@@ -127,9 +133,25 @@ class StrategyContext:
         side: str,
         price: float,
         size: float,
+        *,
+        order_type: str = "LIMIT",
+        display_size: Optional[float] = None,
+        stop_price: Optional[float] = None,
+        peg_reference: Optional[str] = None,
+        peg_offset: float = 0.0,
         metadata: Optional[Dict[str, float | int | str]] = None,
     ) -> int:
-        return self._backtester.submit_order(side, price, size, metadata)
+        return self._backtester.submit_order(
+            side,
+            price,
+            size,
+            order_type=order_type,
+            display_size=display_size,
+            stop_price=stop_price,
+            peg_reference=peg_reference,
+            peg_offset=peg_offset,
+            metadata=metadata,
+        )
 
     def cancel_order(self, order_id: int) -> None:
         self._backtester.cancel_order(order_id)
@@ -207,6 +229,12 @@ class Backtester:
         side: str,
         price: float,
         size: float,
+        *,
+        order_type: str = "LIMIT",
+        display_size: Optional[float] = None,
+        stop_price: Optional[float] = None,
+        peg_reference: Optional[str] = None,
+        peg_offset: float = 0.0,
         metadata: Optional[Dict[str, float | int | str]] = None,
     ) -> int:
         decision_perf = self._time_source()
@@ -220,6 +248,12 @@ class Backtester:
             price=price,
             size=size,
             timestamp_ns=self.clock_ns,
+            order_type=order_type.upper(),
+            display_size=display_size,
+            stop_price=stop_price,
+            peg_reference=peg_reference.upper() if peg_reference else None,
+            peg_offset=peg_offset,
+            total_size=size,
             metadata={} if metadata is None else dict(metadata),
         )
         decision_ns = self._last_snapshot_ns if self._last_snapshot_ns is not None else self.clock_ns

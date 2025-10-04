@@ -26,6 +26,11 @@ class MarketMakingConfig:
     quote_size: float = 10.0
     inventory_skew: float = 0.0
     update_interval_ns: int = 5_000_000_000  # 5 ms default
+    order_type: str = "LIMIT"
+    iceberg_display: Optional[float] = None
+    stop_price_offset: Optional[float] = None
+    peg_reference: Optional[str] = None
+    peg_offset: float = 0.0
 
 
 class MarketMakingStrategy(StrategyCallbacks):
@@ -59,8 +64,48 @@ class MarketMakingStrategy(StrategyCallbacks):
         ask_price = mid + spread / 2.0 - inventory_adjust * self.config.tick_size
         bid_size = self.config.quote_size
         ask_size = self.config.quote_size
-        bid_id = ctx.submit_order("BUY", round(bid_price, 8), bid_size)
-        ask_id = ctx.submit_order("SELL", round(ask_price, 8), ask_size)
+        order_type = self.config.order_type.upper()
+        common_kwargs: Dict[str, float | str | None] = {"order_type": order_type}
+        if order_type == "ICEBERG":
+            display = self.config.iceberg_display or max(bid_size / 3.0, 1.0)
+            common_kwargs["display_size"] = display
+        if order_type == "PEGGED":
+            common_kwargs["peg_offset"] = self.config.peg_offset
+
+        bid_kwargs = dict(common_kwargs)
+        ask_kwargs = dict(common_kwargs)
+        if order_type == "STOP":
+            offset = self.config.stop_price_offset or spread
+            bid_kwargs["stop_price"] = bid_price + offset
+            ask_kwargs["stop_price"] = ask_price - offset
+        if order_type == "PEGGED":
+            bid_kwargs["peg_reference"] = (
+                self.config.peg_reference or "BID"
+            )
+            ask_kwargs["peg_reference"] = (
+                self.config.peg_reference or "ASK"
+            )
+
+        bid_id = ctx.submit_order(
+            "BUY",
+            round(bid_price, 8),
+            bid_size,
+            order_type=bid_kwargs.get("order_type", "LIMIT"),
+            display_size=bid_kwargs.get("display_size"),
+            stop_price=bid_kwargs.get("stop_price"),
+            peg_reference=bid_kwargs.get("peg_reference"),
+            peg_offset=float(bid_kwargs.get("peg_offset", 0.0)),
+        )
+        ask_id = ctx.submit_order(
+            "SELL",
+            round(ask_price, 8),
+            ask_size,
+            order_type=ask_kwargs.get("order_type", "LIMIT"),
+            display_size=ask_kwargs.get("display_size"),
+            stop_price=ask_kwargs.get("stop_price"),
+            peg_reference=ask_kwargs.get("peg_reference"),
+            peg_offset=float(ask_kwargs.get("peg_offset", 0.0)),
+        )
         self.working_orders["bid"] = bid_id
         self.working_orders["ask"] = ask_id
         self.last_quote_ns = snapshot.timestamp_ns
