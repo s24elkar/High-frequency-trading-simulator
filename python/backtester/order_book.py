@@ -10,7 +10,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-from .backtester import MarketEvent, MarketSnapshot, OrderRequest
+from .backtester import FillEvent, MarketEvent, MarketSnapshot, OrderBookUpdate, OrderRequest
 
 log = logging.getLogger(__name__)
 
@@ -51,11 +51,12 @@ class PythonOrderBook:
                 if not book[price]:
                     book.pop(price)
 
-    def apply_event(self, event: MarketEvent) -> Optional[MarketSnapshot]:
+    def apply_event(self, event: MarketEvent) -> OrderBookUpdate:
         etype = event.event_type
         side = event.payload.get("side")
         price = float(event.payload.get("price", 0.0))
         size = float(event.payload.get("size", 0.0))
+        fills: List[FillEvent] = []
         if etype == "add_order":
             order_id = int(event.payload["order_id"])
             order = OrderRequest(
@@ -65,32 +66,56 @@ class PythonOrderBook:
         elif etype == "delete_order":
             self.cancel(int(event.payload["order_id"]))
         elif etype == "execute_order":
-            self._execute(size, side, price)
+            fills = self._execute(size, side, price, event.timestamp_ns)
         elif etype == "trade":
             self.last_trade_price = price
             self.last_trade_size = size
         self.last_timestamp_ns = event.timestamp_ns
-        return self.snapshot(self.depth)
+        snapshot = self.snapshot(self.depth)
+        return OrderBookUpdate(snapshot=snapshot, fills=fills)
 
-    def _execute(self, size: float, side: str, price: float) -> None:
+    def _execute(
+        self, size: float, side: str, price: float, timestamp_ns: int
+    ) -> List[FillEvent]:
         book = self.bids if side == "SELL" else self.asks
         remaining = size
-        for level_price in sorted(book.keys(), reverse=(side == "SELL")):
-            queue = book[level_price]
+        fills: List[FillEvent] = []
+        levels = sorted(book.keys(), reverse=(side == "SELL"))
+        for level_price in levels:
+            if remaining <= 0:
+                break
+            queue = book.get(level_price)
+            if not queue:
+                continue
             for order in list(queue):
+                if remaining <= 0:
+                    break
                 take = min(order.size, remaining)
+                if take <= 0:
+                    continue
+                fill_price = price if price > 0 else level_price
+                fills.append(
+                    FillEvent(
+                        order_id=order.order_id,
+                        symbol=order.symbol,
+                        side=order.side,
+                        price=fill_price,
+                        size=take,
+                        timestamp_ns=timestamp_ns,
+                        liquidity_flag="MAKER",
+                    )
+                )
                 order.size -= take
                 remaining -= take
                 if order.size <= 1e-9:
                     queue.remove(order)
-                if remaining <= 0:
-                    break
             if not queue:
                 book.pop(level_price, None)
-            if remaining <= 0:
-                break
-        self.last_trade_price = price
-        self.last_trade_size = size - remaining
+        executed_size = size - remaining
+        if executed_size > 0:
+            self.last_trade_price = price if price > 0 else (levels[0] if levels else price)
+            self.last_trade_size = executed_size
+        return fills
 
     def snapshot(self, depth: int = 1) -> MarketSnapshot:
         best_bid = max(self.bids.keys(), default=None)

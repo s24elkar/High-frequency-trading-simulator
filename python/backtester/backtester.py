@@ -21,12 +21,6 @@ from .risk import RiskEngine
 log = logging.getLogger(__name__)
 
 
-class Strategy(Protocol):
-    """Strategy interface invoked by the backtester on each market snapshot."""
-
-    def on_tick(self, snapshot: "MarketSnapshot", backtester: "Backtester") -> None: ...
-
-
 class LimitOrderBook(Protocol):
     """Protocol the concrete (C++-backed) order book wrapper must honour."""
 
@@ -34,7 +28,7 @@ class LimitOrderBook(Protocol):
 
     def cancel(self, order_id: int) -> None: ...
 
-    def apply_event(self, event: "MarketEvent") -> Optional["MarketSnapshot"]: ...
+    def apply_event(self, event: "MarketEvent") -> "OrderBookUpdate": ...
 
     def snapshot(self, depth: int = 1) -> "MarketSnapshot": ...
 
@@ -94,6 +88,69 @@ class MarketSnapshot:
         return (self.best_bid + self.best_ask) / 2.0
 
 
+@dataclass(slots=True)
+class OrderBookUpdate:
+    snapshot: Optional[MarketSnapshot]
+    fills: List[FillEvent] = field(default_factory=list)
+    latency_ns: Optional[int] = None
+
+
+class StrategyCallbacks:
+    """Base strategy callbacks with sensible no-op defaults."""
+
+    def on_start(self, ctx: "StrategyContext") -> None:  # pragma: no cover - default hook
+        return None
+
+    def on_stop(self, ctx: "StrategyContext") -> None:  # pragma: no cover - default hook
+        return None
+
+    def on_market_data(self, snapshot: MarketSnapshot, ctx: "StrategyContext") -> None:
+        return None
+
+    def on_fill(self, fill: FillEvent, ctx: "StrategyContext") -> None:
+        return None
+
+    def on_order_accepted(self, order: OrderRequest, ctx: "StrategyContext") -> None:
+        return None
+
+
+Strategy = StrategyCallbacks
+
+
+class StrategyContext:
+    """Narrow context object exposed to strategies during backtests."""
+
+    def __init__(self, backtester: "Backtester") -> None:
+        self._backtester = backtester
+
+    @property
+    def clock_ns(self) -> int:
+        return self._backtester.clock_ns
+
+    @property
+    def config(self) -> BacktesterConfig:
+        return self._backtester.config
+
+    @property
+    def risk_engine(self) -> Optional[RiskEngine]:
+        return self._backtester.risk_engine
+
+    def submit_order(
+        self,
+        side: str,
+        price: float,
+        size: float,
+        metadata: Optional[Dict[str, float | int | str]] = None,
+    ) -> int:
+        return self._backtester.submit_order(side, price, size, metadata)
+
+    def cancel_order(self, order_id: int) -> None:
+        self._backtester.cancel_order(order_id)
+
+    def active_orders(self) -> Dict[int, OrderRequest]:
+        return dict(self._backtester.active_orders)
+
+
 class Backtester:
     """Coordinates event replay, strategy decisions, and bookkeeping."""
 
@@ -120,6 +177,8 @@ class Backtester:
         self.pending_cancels: set[int] = set()
         self.strategy_halted = False
         self._digest = hashlib.sha256()
+        self._context = StrategyContext(self)
+        self._last_snapshot_ns: Optional[int] = None
 
     @property
     def digest(self) -> str:
@@ -145,11 +204,17 @@ class Backtester:
             timestamp_ns=self.clock_ns,
             metadata={} if metadata is None else dict(metadata),
         )
+        decision_ns = self._last_snapshot_ns if self._last_snapshot_ns is not None else self.clock_ns
+        order.metadata.setdefault("source", "strategy")
+        order.metadata.setdefault("decision_ns", decision_ns)
         self.active_orders[order_id] = order
         log.debug("Submitting order %s", order)
         self.limit_book.enqueue(order)
-        self.metrics_logger.log_order(order)
+        latency_ns = max(order.timestamp_ns - decision_ns, 0)
+        self.metrics_logger.log_order(order, latency_ns=latency_ns)
         self._update_digest("ORDER", order)
+        if self.strategy is not None:
+            self.strategy.on_order_accepted(order, self._context)
         return order_id
 
     def cancel_order(self, order_id: int) -> None:
@@ -176,36 +241,61 @@ class Backtester:
                 self.strategy_halted = True
         self.metrics_logger.log_fill(fill)
         self._update_digest("FILL", fill)
+        if self.strategy is not None:
+            self.strategy.on_fill(fill, self._context)
 
-    def on_tick(self, snapshot: MarketSnapshot) -> None:
+    def on_market_data(self, snapshot: MarketSnapshot) -> None:
+        self._last_snapshot_ns = snapshot.timestamp_ns
         if self.risk_engine is not None:
             self.risk_engine.update_on_tick(snapshot)
             if self.risk_engine.strategy_halted:
                 self.strategy_halted = True
         if self.strategy_halted:
-            log.debug("Strategy halted; skipping on_tick")
+            log.debug("Strategy halted; skipping market-data callback")
             return
         if self.strategy is None:
             return
-        self.strategy.on_tick(snapshot, self)
+        self.strategy.on_market_data(snapshot, self._context)
 
     def run(self, replay_session: Iterable[MarketEvent]) -> None:
+        if self.strategy is not None:
+            self.strategy.on_start(self._context)
         for event in replay_session:
             self.clock_ns = event.timestamp_ns
-            snapshot = self._dispatch_event(event)
+            update = self._dispatch_event(event)
+            for fill in update.fills:
+                self.process_fill(fill)
+            snapshot = update.snapshot
             if snapshot is None:
                 continue
             if self.config.record_snapshots:
                 self.metrics_logger.log_snapshot(snapshot)
             self._update_digest("SNAPSHOT", snapshot)
-            self.on_tick(snapshot)
+            self.on_market_data(snapshot)
+        if self.strategy is not None:
+            self.strategy.on_stop(self._context)
+        realized = 0.0
+        unrealized = 0.0
+        inventory = 0.0
+        if self.risk_engine is not None:
+            symbol = self.config.symbol
+            realized = float(self.risk_engine.realized_pnl.get(symbol, 0.0))
+            unrealized = float(self.risk_engine.unrealized_pnl.get(symbol, 0.0))
+            inventory = float(self.risk_engine.inventory.get(symbol, 0.0))
+        self.metrics_logger.log_run_summary(
+            symbol=self.config.symbol,
+            realized_pnl=realized,
+            unrealized_pnl=unrealized,
+            inventory=inventory,
+            digest=self.digest,
+        )
 
-    def _dispatch_event(self, event: MarketEvent) -> Optional[MarketSnapshot]:
-        snapshot = self.limit_book.apply_event(event)
-        if snapshot is None:
+    def _dispatch_event(self, event: MarketEvent) -> OrderBookUpdate:
+        update = self.limit_book.apply_event(event)
+        if update.snapshot is None:
             # Some events (trading status, imbalance) may not yield a new snapshot
-            snapshot = self.limit_book.snapshot(self.config.book_depth)
-        return snapshot
+            update.snapshot = self.limit_book.snapshot(self.config.book_depth)
+        return update
 
     def _update_digest(self, tag: str, payload: object) -> None:
         self._digest.update(tag.encode("ascii"))
@@ -219,4 +309,7 @@ __all__ = [
     "FillEvent",
     "MarketEvent",
     "MarketSnapshot",
+    "OrderBookUpdate",
+    "StrategyCallbacks",
+    "StrategyContext",
 ]

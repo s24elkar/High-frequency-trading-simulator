@@ -35,7 +35,7 @@ def _run_strategy(seed: int):
             seed=seed,
         )
         backtester.clock_ns = snapshot.timestamp_ns
-        strategy.on_tick(snapshot, backtester)
+        backtester.on_market_data(snapshot)
         return tuple(
             sorted(
                 (order.side, order.price) for order in backtester.active_orders.values()

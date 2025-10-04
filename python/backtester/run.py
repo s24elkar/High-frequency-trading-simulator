@@ -18,7 +18,7 @@ from . import (
     replay_from_lobster,
 )
 from .order_book import load_order_book
-from strategies import MarketMakingConfig, MarketMakingStrategy
+from ..strategies import MarketMakingConfig, MarketMakingStrategy
 
 
 @dataclass(slots=True)
