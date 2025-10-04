@@ -39,31 +39,30 @@ class RiskEngine:
 
     def update_on_fill(self, fill: "FillEvent") -> None:
         symbol = fill.symbol
-        direction = 1.0 if fill.side == "BUY" else -1.0
+        signed_qty = fill.size if fill.side == "BUY" else -fill.size
         lots = self.lots.setdefault(symbol, [])
-        inventory = self.inventory.setdefault(symbol, 0.0)
+        self.inventory.setdefault(symbol, 0.0)
+        self.realized_pnl.setdefault(symbol, 0.0)
+        pnl = 0.0
 
-        if direction > 0:  # buy increases inventory
-            lots.append(PositionLot(size=fill.size, price=fill.price))
-            self.inventory[symbol] = inventory + fill.size
-        else:  # sell reduces inventory and realises pnl
-            remaining = fill.size
-            pnl = 0.0
-            while remaining > 0 and lots:
-                lot = lots[0]
-                matched = min(lot.size, remaining)
-                pnl += matched * (fill.price - lot.price)
-                lot.size -= matched
-                remaining -= matched
-                if lot.size <= 1e-9:
-                    lots.pop(0)
-            if remaining > 1e-9:
-                # short position extends beyond current inventory; treat as new short lot
-                lots.insert(0, PositionLot(size=-remaining, price=fill.price))
-                self.inventory[symbol] = inventory - fill.size
-            else:
-                self.inventory[symbol] = inventory - fill.size
-            self.realized_pnl[symbol] += pnl
+        remaining = signed_qty
+        while lots and abs(remaining) > 1e-9 and self._has_opposite_sign(remaining, lots[0].size):
+            lot = lots[0]
+            lot_sign = 1.0 if lot.size > 0 else -1.0
+            matched = min(abs(remaining), abs(lot.size))
+            pnl += matched * (fill.price - lot.price) * lot_sign
+            lot.size -= matched * lot_sign
+            remaining += matched * lot_sign
+            if abs(lot.size) <= 1e-9:
+                lots.pop(0)
+
+        if abs(remaining) > 1e-9:
+            lots.append(PositionLot(size=remaining, price=fill.price))
+
+        self.realized_pnl[symbol] += pnl
+        self.inventory[symbol] += signed_qty
+        if abs(self.inventory[symbol]) <= 1e-9:
+            self.inventory[symbol] = 0.0
         self._check_limits(symbol)
 
     def update_on_tick(self, snapshot: "MarketSnapshot") -> None:
@@ -82,24 +81,33 @@ class RiskEngine:
         lots = self.lots.get(symbol, [])
         if not lots:
             return self.last_mid.get(symbol) or 0.0
-        total_size = sum(max(lot.size, 0.0) for lot in lots)
-        if total_size <= 1e-9:
+        total_size = sum(lot.size for lot in lots)
+        if abs(total_size) <= 1e-9:
             return self.last_mid.get(symbol) or 0.0
-        total_cost = sum(max(lot.size, 0.0) * lot.price for lot in lots)
+        total_cost = sum(lot.size * lot.price for lot in lots)
         return total_cost / total_size
 
     def _check_limits(self, symbol: str) -> None:
         inventory = self.inventory.get(symbol, 0.0)
-        warn_level = self.config.warn_fraction * max(
-            self.config.max_long, abs(self.config.max_short)
-        )
-        if abs(inventory) >= warn_level:
+        warn_long = self.config.max_long * self.config.warn_fraction
+        warn_short = self.config.max_short * self.config.warn_fraction
+
+        if self.config.max_long > 0 and inventory >= warn_long:
             message = f"Inventory warning: {inventory} units on {symbol}"
             if not self.warnings or self.warnings[-1] != message:
                 self.warnings.append(message)
+        if self.config.max_short < 0 and inventory <= warn_short:
+            message = f"Inventory warning: {inventory} units on {symbol}"
+            if not self.warnings or self.warnings[-1] != message:
+                self.warnings.append(message)
+
         if inventory > self.config.max_long or inventory < self.config.max_short:
             if self.config.halt_on_breach:
                 self.strategy_halted = True
+
+    @staticmethod
+    def _has_opposite_sign(a: float, b: float) -> bool:
+        return (a > 0 > b) or (a < 0 < b)
 
 
 __all__ = ["RiskConfig", "RiskEngine", "PositionLot"]
