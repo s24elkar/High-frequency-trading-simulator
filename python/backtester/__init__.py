@@ -23,6 +23,7 @@ from .logging import (
 )
 from .dashboard import RiskDashboard, DashboardConfig
 from .strategy import StrategySandbox, StrategyError
+from .stress import StressConfig, StressMetrics, Hotspot, run_order_book_stress
 from .reports import (
     BacktestRun,
     BacktestSummary,
@@ -60,6 +61,10 @@ __all__ = [
     "DashboardConfig",
     "StrategySandbox",
     "StrategyError",
+    "StressConfig",
+    "StressMetrics",
+    "Hotspot",
+    "run_order_book_stress",
     "BacktestRun",
     "BacktestSummary",
     "SnapshotPoint",
