@@ -286,24 +286,27 @@ class Backtester:
         self._render_dashboard()
         self._fire_due_timers(self.clock_ns)
 
-    def run(self, replay_session: Iterable[MarketEvent]) -> None:
+    def start_strategy(self) -> None:
         if self.strategy is not None:
             self._strategy_call("on_start", self._context)
-        for event in replay_session:
-            self.clock_ns = event.timestamp_ns
+
+    def process_market_event(self, event: MarketEvent) -> None:
+        self.clock_ns = event.timestamp_ns
+        self._fire_due_timers(self.clock_ns)
+        update = self._dispatch_event(event)
+        for fill in update.fills:
+            self.process_fill(fill)
             self._fire_due_timers(self.clock_ns)
-            update = self._dispatch_event(event)
-            for fill in update.fills:
-                self.process_fill(fill)
-                self._fire_due_timers(self.clock_ns)
-            snapshot = update.snapshot
-            if snapshot is None:
-                self._fire_due_timers(self.clock_ns)
-                continue
-            if self.config.record_snapshots:
-                self.metrics_logger.log_snapshot(snapshot)
-            self._update_digest("SNAPSHOT", snapshot)
-            self.on_market_data(snapshot)
+        snapshot = update.snapshot
+        if snapshot is None:
+            self._fire_due_timers(self.clock_ns)
+            return
+        if self.config.record_snapshots:
+            self.metrics_logger.log_snapshot(snapshot)
+        self._update_digest("SNAPSHOT", snapshot)
+        self.on_market_data(snapshot)
+
+    def finalise_run(self) -> None:
         if self.strategy is not None:
             self._strategy_call("on_stop", self._context)
         realized = 0.0
@@ -323,6 +326,12 @@ class Backtester:
         )
         self._render_dashboard()
         self._fire_due_timers(self.clock_ns)
+
+    def run(self, replay_session: Iterable[MarketEvent]) -> None:
+        self.start_strategy()
+        for event in replay_session:
+            self.process_market_event(event)
+        self.finalise_run()
 
     def _dispatch_event(self, event: MarketEvent) -> OrderBookUpdate:
         update = self.limit_book.apply_event(event)
