@@ -115,7 +115,9 @@ class MetricsLogger:
             self._conn.close()
             self._conn = None
 
-    def log_order(self, order: "OrderRequest", latency_ns: Optional[int] = None) -> None:
+    def log_order(
+        self, order: "OrderRequest", latency_ns: Optional[int] = None
+    ) -> None:
         payload = asdict(order)
         if latency_ns is not None:
             payload["latency_ns"] = latency_ns
@@ -184,7 +186,9 @@ class MetricsLogger:
             )
             self._conn.commit()
 
-    def record_latency(self, market_to_decision_ns: int, decision_to_submit_ns: int) -> None:
+    def record_latency(
+        self, market_to_decision_ns: int, decision_to_submit_ns: int
+    ) -> None:
         total = market_to_decision_ns + decision_to_submit_ns
         self._latency_market_to_decision_ns.append(market_to_decision_ns)
         self._latency_decision_to_submit_ns.append(decision_to_submit_ns)
@@ -212,9 +216,7 @@ class MetricsLogger:
 
     def snapshot(self) -> MetricsSnapshot:
         avg_latency = (
-            sum(self._latencies) / len(self._latencies)
-            if self._latencies
-            else None
+            sum(self._latencies) / len(self._latencies) if self._latencies else None
         )
         p95_latency = None
         max_latency = None
@@ -244,20 +246,12 @@ class MetricsLogger:
         inventory: float,
         digest: Optional[str],
     ) -> RunSummary:
-        ratio = (
-            self._order_count / self._fill_count
-            if self._fill_count > 0
-            else None
-        )
+        ratio = self._order_count / self._fill_count if self._fill_count > 0 else None
         fill_eff = (
-            self._fill_volume / self._order_volume
-            if self._order_volume > 0
-            else None
+            self._fill_volume / self._order_volume if self._order_volume > 0 else None
         )
         avg_latency = (
-            sum(self._latencies) / len(self._latencies)
-            if self._latencies
-            else None
+            sum(self._latencies) / len(self._latencies) if self._latencies else None
         )
         p95_latency = None
         max_latency = None

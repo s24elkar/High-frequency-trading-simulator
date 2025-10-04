@@ -13,7 +13,16 @@ import time
 import logging
 from dataclasses import dataclass, field
 import heapq
-from typing import Any, Callable, Dict, Iterable, List, Optional, Protocol, TYPE_CHECKING
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Protocol,
+    TYPE_CHECKING,
+)
 
 import numpy as np
 
@@ -256,7 +265,11 @@ class Backtester:
             total_size=size,
             metadata={} if metadata is None else dict(metadata),
         )
-        decision_ns = self._last_snapshot_ns if self._last_snapshot_ns is not None else self.clock_ns
+        decision_ns = (
+            self._last_snapshot_ns
+            if self._last_snapshot_ns is not None
+            else self.clock_ns
+        )
         order.metadata.setdefault("source", "strategy")
         order.metadata.setdefault("decision_ns", decision_ns)
         self.active_orders[order_id] = order

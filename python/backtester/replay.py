@@ -52,7 +52,9 @@ class ReplayEngine:
             count += 1
 
 
-def replay(events: Iterable[MarketEvent], config: ReplayConfig) -> Iterator[MarketEvent]:
+def replay(
+    events: Iterable[MarketEvent], config: ReplayConfig
+) -> Iterator[MarketEvent]:
     """Convenience function producing replayed events."""
 
     engine = ReplayEngine(config)

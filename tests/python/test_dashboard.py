@@ -14,7 +14,9 @@ from python.backtester.order_book import PythonOrderBook
 from strategies import MarketMakingConfig, MarketMakingStrategy
 
 
-def _fill_event(order_id: int, side: str, price: float, size: float, ts: int) -> FillEvent:
+def _fill_event(
+    order_id: int, side: str, price: float, size: float, ts: int
+) -> FillEvent:
     return FillEvent(
         order_id=order_id,
         symbol="TEST",

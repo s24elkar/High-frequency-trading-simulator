@@ -30,13 +30,19 @@ class TimerToken:
 class StrategyCallbacks:
     """Minimal interface strategies must implement to interact with the backtester."""
 
-    def on_start(self, ctx: "StrategyContext") -> None:  # pragma: no cover - default hook
+    def on_start(
+        self, ctx: "StrategyContext"
+    ) -> None:  # pragma: no cover - default hook
         return None
 
-    def on_stop(self, ctx: "StrategyContext") -> None:  # pragma: no cover - default hook
+    def on_stop(
+        self, ctx: "StrategyContext"
+    ) -> None:  # pragma: no cover - default hook
         return None
 
-    def on_market_data(self, snapshot: "MarketSnapshot", ctx: "StrategyContext") -> None:
+    def on_market_data(
+        self, snapshot: "MarketSnapshot", ctx: "StrategyContext"
+    ) -> None:
         return None
 
     def on_fill(self, fill: "FillEvent", ctx: "StrategyContext") -> None:

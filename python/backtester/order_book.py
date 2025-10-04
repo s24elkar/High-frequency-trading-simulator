@@ -10,7 +10,13 @@ import logging
 from dataclasses import dataclass, field, replace
 from typing import Dict, List, Optional
 
-from .backtester import FillEvent, MarketEvent, MarketSnapshot, OrderBookUpdate, OrderRequest
+from .backtester import (
+    FillEvent,
+    MarketEvent,
+    MarketSnapshot,
+    OrderBookUpdate,
+    OrderRequest,
+)
 
 log = logging.getLogger(__name__)
 
@@ -63,8 +69,8 @@ class PythonOrderBook:
             }
 
         if order_copy.order_type == "PEGGED":
-            order_copy.peg_reference = (
-                order_copy.peg_reference or ("BID" if order_copy.side == "BUY" else "ASK")
+            order_copy.peg_reference = order_copy.peg_reference or (
+                "BID" if order_copy.side == "BUY" else "ASK"
             )
             order_copy.price = self._peg_price(order_copy)
             self.pegged_orders[order_copy.order_id] = order_copy
@@ -167,7 +173,9 @@ class PythonOrderBook:
                 book.pop(level_price, None)
         executed_size = size - remaining
         if executed_size > 0:
-            self.last_trade_price = price if price > 0 else (levels[0] if levels else price)
+            self.last_trade_price = (
+                price if price > 0 else (levels[0] if levels else price)
+            )
             self.last_trade_size = executed_size
         return fills
 
@@ -178,8 +186,12 @@ class PythonOrderBook:
         triggered: List[OrderRequest] = []
         best_bid = self._best_bid()
         best_ask = self._best_ask()
-        ref_buy = self.last_trade_price if self.last_trade_price is not None else best_ask
-        ref_sell = self.last_trade_price if self.last_trade_price is not None else best_bid
+        ref_buy = (
+            self.last_trade_price if self.last_trade_price is not None else best_ask
+        )
+        ref_sell = (
+            self.last_trade_price if self.last_trade_price is not None else best_bid
+        )
         for order in list(self.stop_orders.values()):
             trigger_price = order.stop_price or order.price
             if order.side == "BUY":
@@ -190,7 +202,9 @@ class PythonOrderBook:
                     triggered.append(order)
         for order in triggered:
             self.stop_orders.pop(order.order_id, None)
-            executed = self._execute(order.total_size or order.size, order.side, 0.0, timestamp_ns)
+            executed = self._execute(
+                order.total_size or order.size, order.side, 0.0, timestamp_ns
+            )
             fills.extend(executed)
             fill_price = self.last_trade_price or order.stop_price or order.price
             fills.append(

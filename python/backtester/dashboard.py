@@ -136,9 +136,7 @@ class RiskDashboard:
 
         latency = metrics_snapshot.latency_breakdown
         if latency.last_market_to_submit_us is None:
-            lines.append(
-                "Latency us (m->d / d->s / total): N/A"
-            )
+            lines.append("Latency us (m->d / d->s / total): N/A")
         else:
             lines.append(
                 "Latency us (m->d / d->s / total): "

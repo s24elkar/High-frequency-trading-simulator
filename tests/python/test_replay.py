@@ -5,7 +5,11 @@ from python.backtester.backtester import MarketEvent
 
 
 def _event(ts: int) -> MarketEvent:
-    return MarketEvent(timestamp_ns=ts, event_type="trade", payload={"symbol": "XYZ", "price": 100.0, "size": 1.0})
+    return MarketEvent(
+        timestamp_ns=ts,
+        event_type="trade",
+        payload={"symbol": "XYZ", "price": 100.0, "size": 1.0},
+    )
 
 
 def test_replay_engine_preserves_order_and_limits_events() -> None:

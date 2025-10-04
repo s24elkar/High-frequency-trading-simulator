@@ -64,7 +64,11 @@ class RiskEngine:
         pnl = 0.0
 
         remaining = signed_qty
-        while lots and abs(remaining) > 1e-9 and self._has_opposite_sign(remaining, lots[0].size):
+        while (
+            lots
+            and abs(remaining) > 1e-9
+            and self._has_opposite_sign(remaining, lots[0].size)
+        ):
             lot = lots[0]
             lot_sign = 1.0 if lot.size > 0 else -1.0
             matched = min(abs(remaining), abs(lot.size))
@@ -126,9 +130,13 @@ class RiskEngine:
             self._emit_warning(f"Inventory warning: {inventory} units on {symbol}")
 
         if self.config.max_long > 0 and inventory > self.config.max_long:
-            self._halt(f"Inventory limit breached: {inventory} > {self.config.max_long}")
+            self._halt(
+                f"Inventory limit breached: {inventory} > {self.config.max_long}"
+            )
         if self.config.max_short < 0 and inventory < self.config.max_short:
-            self._halt(f"Inventory limit breached: {inventory} < {self.config.max_short}")
+            self._halt(
+                f"Inventory limit breached: {inventory} < {self.config.max_short}"
+            )
 
         notional_limit = self.config.max_notional_exposure
         if notional_limit is not None and notional_limit > 0:

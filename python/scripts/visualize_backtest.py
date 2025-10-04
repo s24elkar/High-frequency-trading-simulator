@@ -140,16 +140,32 @@ def _plot_order_activity(ax, run: BacktestRun) -> None:
     xs_orders = _to_seconds(order_ts)
     xs_fills = _to_seconds(fill_ts)
     if xs_orders.size:
-        ax.step(xs_orders, np.arange(1, xs_orders.size + 1), where="post", label="Orders", color="#ff7f0e")
+        ax.step(
+            xs_orders,
+            np.arange(1, xs_orders.size + 1),
+            where="post",
+            label="Orders",
+            color="#ff7f0e",
+        )
     if xs_fills.size:
-        ax.step(xs_fills, np.arange(1, xs_fills.size + 1), where="post", label="Fills", color="#2ca02c")
+        ax.step(
+            xs_fills,
+            np.arange(1, xs_fills.size + 1),
+            where="post",
+            label="Fills",
+            color="#2ca02c",
+        )
     ax.set_ylabel("Count")
     ax.set_title("Order vs fill counts")
     ax.legend(loc="upper left")
 
 
 def _plot_latency(ax, run: BacktestRun) -> None:
-    latencies = [o.latency_ns for o in run.orders if o.latency_ns is not None and o.latency_ns >= 0]
+    latencies = [
+        o.latency_ns
+        for o in run.orders
+        if o.latency_ns is not None and o.latency_ns >= 0
+    ]
     if not latencies:
         ax.set_visible(False)
         return
@@ -238,6 +254,7 @@ def main(argv: Iterable[str] | None = None) -> None:
 
         matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+
     run = load_run(args.log)
     if run.summary is None:
         print("Warning: no run_summary event found; plot may be incomplete")

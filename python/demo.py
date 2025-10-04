@@ -11,7 +11,7 @@ try:
     from .kernels import ExpKernel, PowerLawKernel
     from .simulate import simulate_thinning_exp_fast, simulate_thinning_general
     from .viz import intensity_on_grid, plot_intensity, plot_counts_acf, plot_mark_acf
-    from .io import save_csv, save_json
+    from .io_utils import save_csv, save_json
 except (ImportError, ValueError):
     import importlib
     import importlib.util
@@ -34,7 +34,9 @@ except (ImportError, ValueError):
     plot_counts_acf = viz_mod.plot_counts_acf
     plot_mark_acf = viz_mod.plot_mark_acf
 
-    _io_spec = importlib.util.spec_from_file_location("_hawkes_io", _pkg_dir / "io.py")
+    _io_spec = importlib.util.spec_from_file_location(
+        "_hawkes_io", _pkg_dir / "io_utils.py"
+    )
     _io_mod = importlib.util.module_from_spec(_io_spec)
     assert _io_spec is not None and _io_spec.loader is not None
     _io_spec.loader.exec_module(_io_mod)

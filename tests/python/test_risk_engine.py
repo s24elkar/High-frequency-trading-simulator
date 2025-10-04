@@ -35,7 +35,9 @@ def _snapshot(best_bid: float, best_ask: float) -> MarketSnapshot:
 
 
 def test_pnl_engine_tracks_realized_and_unrealized_components() -> None:
-    config = RiskConfig(symbol="XYZ", max_long=100.0, max_short=-100.0, warn_fraction=0.8)
+    config = RiskConfig(
+        symbol="XYZ", max_long=100.0, max_short=-100.0, warn_fraction=0.8
+    )
     engine = RiskEngine(config)
 
     engine.update_on_fill(_fill("BUY", price=100.0, size=10.0, order_id=1))

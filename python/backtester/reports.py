@@ -96,7 +96,8 @@ def load_run(jsonl_path: str | Path) -> BacktestRun:
                         size=payload.get("size"),
                         latency_ns=(
                             int(payload["latency_ns"])
-                            if "latency_ns" in payload and payload["latency_ns"] is not None
+                            if "latency_ns" in payload
+                            and payload["latency_ns"] is not None
                             else None
                         ),
                     )

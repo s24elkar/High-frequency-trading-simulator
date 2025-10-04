@@ -58,8 +58,12 @@ class ConcurrentBacktester:
         event_queue_size: int = 10_000,
     ) -> None:
         self.backtester = backtester
-        self._event_queue: queue.Queue[Optional[MarketEvent]] = queue.Queue(event_queue_size)
-        self._order_queue: queue.Queue[tuple[str, object, Optional[Future]]] = queue.Queue()
+        self._event_queue: queue.Queue[Optional[MarketEvent]] = queue.Queue(
+            event_queue_size
+        )
+        self._order_queue: queue.Queue[tuple[str, object, Optional[Future]]] = (
+            queue.Queue()
+        )
         self._lock = threading.RLock()
         self._threads: list[threading.Thread] = []
         self._exceptions: list[BaseException] = []

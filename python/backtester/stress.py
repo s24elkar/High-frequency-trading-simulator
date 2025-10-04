@@ -50,7 +50,9 @@ class StressMetrics:
 
 
 def _build_event(timestamp_ns: int, event_type: str, payload: dict) -> MarketEvent:
-    return MarketEvent(timestamp_ns=timestamp_ns, event_type=event_type, payload=payload)
+    return MarketEvent(
+        timestamp_ns=timestamp_ns, event_type=event_type, payload=payload
+    )
 
 
 def run_order_book_stress(
@@ -81,9 +83,14 @@ def run_order_book_stress(
         for idx in range(config.message_count):
             action = rng.random()
             timestamp_ns = idx
-            if action < 1.0 - (config.cancel_ratio + config.execute_ratio) or not active_orders:
+            if (
+                action < 1.0 - (config.cancel_ratio + config.execute_ratio)
+                or not active_orders
+            ):
                 side = rng.choice(["BUY", "SELL"])
-                price_offset = rng.uniform(-config.max_price_jitter, config.max_price_jitter)
+                price_offset = rng.uniform(
+                    -config.max_price_jitter, config.max_price_jitter
+                )
                 price = max(0.01, config.base_price + price_offset)
                 size = max(0.01, rng.uniform(config.max_size * 0.1, config.max_size))
                 payload = {

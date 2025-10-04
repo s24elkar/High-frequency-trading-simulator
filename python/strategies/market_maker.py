@@ -79,12 +79,8 @@ class MarketMakingStrategy(StrategyCallbacks):
             bid_kwargs["stop_price"] = bid_price + offset
             ask_kwargs["stop_price"] = ask_price - offset
         if order_type == "PEGGED":
-            bid_kwargs["peg_reference"] = (
-                self.config.peg_reference or "BID"
-            )
-            ask_kwargs["peg_reference"] = (
-                self.config.peg_reference or "ASK"
-            )
+            bid_kwargs["peg_reference"] = self.config.peg_reference or "BID"
+            ask_kwargs["peg_reference"] = self.config.peg_reference or "ASK"
 
         bid_id = ctx.submit_order(
             "BUY",

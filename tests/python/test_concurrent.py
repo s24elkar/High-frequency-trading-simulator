@@ -70,7 +70,9 @@ def test_concurrent_backtester_runs_in_parallel() -> None:
     assert strategy.order_threads
     assert any(name == "StrategyThread" for name in strategy.market_threads)
     assert any(name == "OrderThread" for name in strategy.order_threads)
-    assert backtester.metrics_logger.snapshot().order_count == len(strategy.order_threads)
+    assert backtester.metrics_logger.snapshot().order_count == len(
+        strategy.order_threads
+    )
 
 
 def test_concurrent_backtester_matches_serial_results() -> None:

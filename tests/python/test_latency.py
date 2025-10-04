@@ -3,13 +3,22 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
 
-from python.backtester import Backtester, BacktesterConfig, MetricsLogger, StrategyCallbacks
+from python.backtester import (
+    Backtester,
+    BacktesterConfig,
+    MetricsLogger,
+    StrategyCallbacks,
+)
 from python.backtester.backtester import MarketEvent, MarketSnapshot, StrategyContext
 from python.backtester.order_book import PythonOrderBook
 
 
 def _event(ts: int) -> MarketEvent:
-    return MarketEvent(timestamp_ns=ts, event_type="trade", payload={"symbol": "TEST", "side": "BUY", "price": 100.0, "size": 1.0})
+    return MarketEvent(
+        timestamp_ns=ts,
+        event_type="trade",
+        payload={"symbol": "TEST", "side": "BUY", "price": 100.0, "size": 1.0},
+    )
 
 
 def _snapshot_from_event(ts: int) -> MarketSnapshot:

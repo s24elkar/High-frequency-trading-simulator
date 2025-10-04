@@ -107,7 +107,9 @@ def test_replay_engine_fast_mode(tmp_path: Path) -> None:
     messages = list(load_lobster_csv("tests/data/itch_sample.csv", symbol="TEST"))
     base_events = list(replay_from_lobster(messages))
 
-    replay_fast = ReplayEngine(ReplayConfig(speed=0.0, real_time=False)).stream(base_events)
+    replay_fast = ReplayEngine(ReplayConfig(speed=0.0, real_time=False)).stream(
+        base_events
+    )
 
     def run_stream(stream, path: Path) -> str:
         with MetricsLogger(json_path=path) as metrics:
@@ -124,7 +126,9 @@ def test_replay_engine_fast_mode(tmp_path: Path) -> None:
             return backtester.digest
 
     fast_digest = run_stream(replay_fast, tmp_path / "fast.jsonl")
-    baseline_digest = run_stream(replay_from_lobster(messages), tmp_path / "baseline.jsonl")
+    baseline_digest = run_stream(
+        replay_from_lobster(messages), tmp_path / "baseline.jsonl"
+    )
 
     assert fast_digest == baseline_digest
 
