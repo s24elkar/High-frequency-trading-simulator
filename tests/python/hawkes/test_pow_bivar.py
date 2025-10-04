@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from hawkes.pow_bivar import PowerLawParams, omega_matrix, pack_params, unpack_params
+from hawkes.pow_bivar import omega_matrix, pack_params, unpack_params
 
 
 def test_pack_unpack_roundtrip():

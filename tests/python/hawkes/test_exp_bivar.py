@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from hawkes.exp_bivar import ExponentialParams, omega_matrix, pack_params, unpack_params
+from hawkes.exp_bivar import omega_matrix, pack_params, unpack_params
 
 
 def test_pack_unpack_roundtrip():
