@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(hft_sim LANGUAGES CXX)
 
 option(HFT_ENABLE_TESTS "Build unit tests" OFF)
+option(ENABLE_DOCS "Generate documentation with Doxygen" OFF)
 if(HFT_ENABLE_TESTS)
     enable_testing()
 endif()
@@ -36,6 +37,20 @@ target_include_directories(hft_sim PRIVATE ${CMAKE_SOURCE_DIR}/src)
 add_executable(hawkes_example src/hawkes_example.cpp)
 target_link_libraries(hawkes_example PRIVATE hft_core)
 target_include_directories(hawkes_example PRIVATE ${CMAKE_SOURCE_DIR}/src)
+
+if(ENABLE_DOCS)
+    find_package(Doxygen REQUIRED)
+    set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/Doxyfile)
+    set(DOXYGEN_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    add_custom_target(
+        docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+endif()
 
 if(HFT_ENABLE_TESTS)
     include(FetchContent)

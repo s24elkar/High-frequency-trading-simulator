@@ -1,0 +1,15 @@
+PROJECT_NAME           = "High-Frequency Trading Simulator"
+PROJECT_BRIEF          = "Deterministic limit-order book and backtester"
+OUTPUT_DIRECTORY       = @CMAKE_BINARY_DIR@/docs
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = NO
+JAVADOC_AUTOBRIEF      = YES
+INPUT                  = @CMAKE_SOURCE_DIR@/src
+FILE_PATTERNS          = *.h *.hpp
+RECURSIVE              = YES
+EXTRACT_ALL            = YES
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+STRIP_FROM_PATH        = @CMAKE_SOURCE_DIR@

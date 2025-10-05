@@ -56,6 +56,28 @@ A practical sandbox for market microstructure research. Explore how clustered or
 ## Quick Start
 Need more context? The step-by-step guide in `docs/USAGE.md` covers the full workflow end to end.
 
+### Copy & Paste Quickstart
+```bash
+# Clone and configure out-of-tree build
+git clone https://github.com/sohaibelkarmi/High-Frequency-Trading-Simulator.git
+cd High-Frequency-Trading-Simulator
+cmake -S . -B build -DENABLE_DOCS=ON
+
+# Build core library + docs
+cmake --build build
+cmake --build build --target docs
+
+# Create Python env for analytics/backtester
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r python/requirements.txt
+
+# Run deterministic backtester replay
+python -m backtester.run --config configs/backtest_demo.json
+```
+The docs target drops HTML into `build/docs/html/index.html` ready for review.
+
+
 ### Prerequisites
 - CMake ≥ 3.15 and a C++17-capable compiler (Clang, GCC, or MSVC).
 - Python 3.10+ with `pip` for the analytics layer and Streamlit app.
