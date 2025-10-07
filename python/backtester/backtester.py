@@ -296,22 +296,27 @@ class Backtester:
         self._update_digest("CANCEL", {"order_id": order_id})
 
     def process_fill(self, fill: FillEvent) -> None:
-        log.debug("Processing fill %s", fill)
-        resting = self.active_orders.get(fill.order_id)
-        if resting:
-            remaining = resting.size - fill.size
-            if remaining <= 0:
-                self.active_orders.pop(fill.order_id, None)
-            else:
-                resting.size = remaining
-        if self.risk_engine is not None:
-            self.risk_engine.update_on_fill(fill)
-            if self.risk_engine.strategy_halted:
-                self.strategy_halted = True
-        self.metrics_logger.log_fill(fill)
-        self._update_digest("FILL", fill)
-        self._strategy_call("on_fill", fill, self._context)
-        self._render_dashboard()
+        start_ns = time.perf_counter_ns()
+        try:
+            log.debug("Processing fill %s", fill)
+            resting = self.active_orders.get(fill.order_id)
+            if resting:
+                remaining = resting.size - fill.size
+                if remaining <= 0:
+                    self.active_orders.pop(fill.order_id, None)
+                else:
+                    resting.size = remaining
+            if self.risk_engine is not None:
+                self.risk_engine.update_on_fill(fill)
+                if self.risk_engine.strategy_halted:
+                    self.strategy_halted = True
+            self.metrics_logger.log_fill(fill)
+            self._update_digest("FILL", fill)
+            self._strategy_call("on_fill", fill, self._context)
+            self._render_dashboard()
+        finally:
+            duration = time.perf_counter_ns() - start_ns
+            self.metrics_logger.record_timing("pnl_logging", duration)
 
     def on_market_data(self, snapshot: MarketSnapshot) -> None:
         self._last_snapshot_ns = snapshot.timestamp_ns
@@ -338,20 +343,27 @@ class Backtester:
             self._strategy_call("on_start", self._context)
 
     def process_market_event(self, event: MarketEvent) -> None:
-        self.clock_ns = event.timestamp_ns
-        self._fire_due_timers(self.clock_ns)
-        update = self._dispatch_event(event)
-        for fill in update.fills:
-            self.process_fill(fill)
+        logger = self.metrics_logger
+        start_ns = time.perf_counter_ns()
+        try:
+            self.clock_ns = event.timestamp_ns
             self._fire_due_timers(self.clock_ns)
-        snapshot = update.snapshot
-        if snapshot is None:
-            self._fire_due_timers(self.clock_ns)
-            return
-        if self.config.record_snapshots:
-            self.metrics_logger.log_snapshot(snapshot)
-        self._update_digest("SNAPSHOT", snapshot)
-        self.on_market_data(snapshot)
+            update = self._dispatch_event(event)
+            for fill in update.fills:
+                self.process_fill(fill)
+                self._fire_due_timers(self.clock_ns)
+            snapshot = update.snapshot
+            if snapshot is None:
+                self._fire_due_timers(self.clock_ns)
+                return
+            if self.config.record_snapshots:
+                self.metrics_logger.log_snapshot(snapshot)
+            self._update_digest("SNAPSHOT", snapshot)
+            self.on_market_data(snapshot)
+        finally:
+            duration = time.perf_counter_ns() - start_ns
+            if logger is not None:
+                logger.record_timing("message_handling", duration)
 
     def finalise_run(self) -> None:
         if self.strategy is not None:
@@ -381,10 +393,18 @@ class Backtester:
         self.finalise_run()
 
     def _dispatch_event(self, event: MarketEvent) -> OrderBookUpdate:
+        match_start = time.perf_counter_ns()
         update = self.limit_book.apply_event(event)
+        match_duration = time.perf_counter_ns() - match_start
+        if self.metrics_logger is not None:
+            self.metrics_logger.record_timing("matching", match_duration)
         if update.snapshot is None:
             # Some events (trading status, imbalance) may not yield a new snapshot
+            snapshot_start = time.perf_counter_ns()
             update.snapshot = self.limit_book.snapshot(self.config.book_depth)
+            snapshot_duration = time.perf_counter_ns() - snapshot_start
+            if self.metrics_logger is not None:
+                self.metrics_logger.record_timing("book_snapshot", snapshot_duration)
         return update
 
     def _update_digest(self, tag: str, payload: object) -> None:

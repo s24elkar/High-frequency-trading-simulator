@@ -17,6 +17,18 @@ add_library(hft_core STATIC
 target_include_directories(hft_core PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(hft_core PRIVATE -O2 -Wall -Wextra -Wpedantic)
 
+add_library(order_book_bridge SHARED
+    src/order_book_c_api.cpp
+)
+target_link_libraries(order_book_bridge PRIVATE hft_core)
+target_include_directories(order_book_bridge PRIVATE ${CMAKE_SOURCE_DIR}/src)
+set_target_properties(order_book_bridge PROPERTIES
+    OUTPUT_NAME order_book_bridge
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+)
+
 add_library(hawkes_bridge SHARED
     src/hawkes_c_api.cpp
 )

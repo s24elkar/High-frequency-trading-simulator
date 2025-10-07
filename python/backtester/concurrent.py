@@ -5,7 +5,7 @@ from __future__ import annotations
 import queue
 import threading
 from concurrent.futures import Future
-from typing import Iterable, Optional
+from typing import Callable, Iterable, Optional
 
 from .backtester import Backtester, MarketEvent, StrategyContext
 
@@ -56,14 +56,15 @@ class ConcurrentBacktester:
         self,
         backtester: Backtester,
         event_queue_size: int = 10_000,
+        queue_factory: Callable[[int], object] | None = None,
     ) -> None:
         self.backtester = backtester
-        self._event_queue: queue.Queue[Optional[MarketEvent]] = queue.Queue(
-            event_queue_size
-        )
-        self._order_queue: queue.Queue[tuple[str, object, Optional[Future]]] = (
-            queue.Queue()
-        )
+        self._event_queue = self._make_queue(
+            queue_factory, event_queue_size
+        )  # type: ignore[assignment]
+        self._order_queue = self._make_queue(
+            queue_factory, event_queue_size
+        )  # type: ignore[assignment]
         self._lock = threading.RLock()
         self._threads: list[threading.Thread] = []
         self._exceptions: list[BaseException] = []
@@ -71,6 +72,17 @@ class ConcurrentBacktester:
         if self.backtester.strategy is not None:
             context = ConcurrentStrategyContext(self.backtester, self)
             self.backtester._context = context
+
+    @staticmethod
+    def _make_queue(
+        factory: Callable[[int], object] | None, maxsize: int
+    ) -> object:
+        if factory is None:
+            return queue.Queue(maxsize)
+        try:
+            return factory(maxsize)
+        except TypeError:
+            return factory()
 
     def run(self, replay_session: Iterable[MarketEvent]) -> None:
         with self._lock:
@@ -187,7 +199,9 @@ class ConcurrentBacktester:
                     future.set_exception(exc)
                 self._exceptions.append(exc)
             finally:
-                self._order_queue.task_done()
+                task_done = getattr(self._order_queue, "task_done", None)
+                if callable(task_done):
+                    task_done()
 
     def _submit_with_lock(
         self,

@@ -120,13 +120,15 @@ class RiskDashboard:
         else:
             avg = metrics_snapshot.avg_latency_ns
             p95 = metrics_snapshot.p95_latency_ns
+            p99 = metrics_snapshot.p99_latency_ns
             p95_str = f"{p95}" if p95 is not None else "N/A"
+            p99_str = f"{p99}" if p99 is not None else "N/A"
             max_str = (
                 f"{metrics_snapshot.max_latency_ns}"
                 if metrics_snapshot.max_latency_ns is not None
                 else "N/A"
             )
-            latency_line += f"{avg:.0f}/{p95_str}/{max_str}"
+            latency_line += f"{avg:.0f}/{p95_str}/{p99_str}/{max_str}"
         lines.extend(
             [
                 f"Orders/Fills: {metrics_snapshot.order_count} / {metrics_snapshot.fill_count}",
@@ -150,6 +152,27 @@ class RiskDashboard:
                 f"{latency.avg_decision_to_submit_us:.2f} / "
                 f"{latency.avg_market_to_submit_us:.2f}"
             )
+
+        if metrics_snapshot.timings:
+            lines.append("Timing us (avg/p95/p99/max):")
+            for label in sorted(metrics_snapshot.timings):
+                summary = metrics_snapshot.timings[label]
+                avg_us = summary.avg_ns / 1_000.0
+                if summary.p95_ns is None:
+                    p95_repr = "n/a"
+                else:
+                    p95_repr = f"{summary.p95_ns / 1_000.0:.2f}"
+                if summary.p99_ns is None:
+                    p99_repr = "n/a"
+                else:
+                    p99_repr = f"{summary.p99_ns / 1_000.0:.2f}"
+                if summary.max_ns is None:
+                    max_repr = "n/a"
+                else:
+                    max_repr = f"{summary.max_ns / 1_000.0:.2f}"
+                lines.append(
+                    f" - {label}: {avg_us:.2f} / {p95_repr} / {p99_repr} / {max_repr}"
+                )
 
         return "\n".join(lines) + "\n"
 

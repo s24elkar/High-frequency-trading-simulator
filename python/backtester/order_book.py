@@ -329,14 +329,178 @@ class PythonOrderBook:
             depth=depth_entries,
         )
 
+class CppOrderBook:
+    """Adapter around the native C++ order book bridge."""
+
+    def __init__(self, depth: int = 5) -> None:
+        if _order_book_bridge is None:
+            raise RuntimeError("C++ order book bridge is unavailable")
+        self.depth = depth
+        self._native = _order_book_bridge.OrderBook()
+        self.last_trade_price: Optional[float] = None
+        self.last_trade_size: Optional[float] = None
+        self.last_timestamp_ns: int = 0
+        self.symbol: Optional[str] = None
+        self._order_meta: Dict[int, Dict[str, float | str]] = {}
+
+    @staticmethod
+    def _qty(value: float) -> int:
+        return int(round(value))
+
+    @staticmethod
+    def _side_to_enum(side: str) -> int:
+        return 0 if side.upper() == "BUY" else 1
+
+    def enqueue(self, order: OrderRequest) -> None:
+        if order.order_type.upper() != "LIMIT":
+            raise NotImplementedError("CppOrderBook currently supports LIMIT orders only")
+        side_enum = self._side_to_enum(order.side)
+        quantity = self._qty(order.size)
+        self._native.add_order(
+            order.order_id,
+            side_enum,
+            float(order.price),
+            quantity,
+            int(order.timestamp_ns),
+        )
+        self.symbol = order.symbol or self.symbol
+        self._order_meta[order.order_id] = {
+            "symbol": order.symbol,
+            "side": order.side,
+            "remaining": float(order.size),
+        }
+
+    def cancel(self, order_id: int) -> None:
+        self._native.cancel_order(order_id)
+        self._order_meta.pop(order_id, None)
+
+    def apply_event(self, event: MarketEvent) -> OrderBookUpdate:
+        payload = event.payload or {}
+        event_type = event.event_type
+        side = str(payload.get("side", "BUY")).upper()
+        price = float(payload.get("price", 0.0))
+        size = float(payload.get("size", 0.0))
+        symbol = payload.get("symbol")
+        if symbol:
+            self.symbol = symbol
+        fills: List[FillEvent] = []
+
+        if event_type == "add_order":
+            order_id = int(payload["order_id"])
+            quantity = self._qty(size)
+            timestamp_ns = int(event.timestamp_ns)
+            side_enum = self._side_to_enum(side)
+            self._native.add_order(order_id, side_enum, price, quantity, timestamp_ns)
+            self._order_meta[order_id] = {
+                "symbol": symbol or self.symbol or "",
+                "side": side,
+                "remaining": float(size),
+            }
+        elif event_type == "delete_order":
+            order_id = int(payload["order_id"])
+            self._native.cancel_order(order_id)
+            self._order_meta.pop(order_id, None)
+        elif event_type == "execute_order":
+            side_enum = self._side_to_enum(side)
+            quantity = self._qty(size)
+            native_fills = self._native.execute_order(side_enum, price, quantity)
+            executed_total = 0.0
+            for item in native_fills:
+                order_info = item["order"]
+                executed = float(item["executed_quantity"])
+                fill_price = float(item["fill_price"])
+                executed_total += executed
+                order_id = order_info["id"]
+                resting_side = order_info["side"]
+                meta = self._order_meta.get(order_id)
+                symbol_out = (
+                    meta.get("symbol") if meta else (self.symbol or symbol or "")
+                )
+                fills.append(
+                    FillEvent(
+                        order_id=order_id,
+                        symbol=symbol_out,
+                        side=resting_side,
+                        price=fill_price,
+                        size=executed,
+                        timestamp_ns=event.timestamp_ns,
+                        liquidity_flag="MAKER",
+                    )
+                )
+                if meta is not None:
+                    remaining = max(0.0, float(meta.get("remaining", 0.0)) - executed)
+                    if remaining <= 1e-9:
+                        self._order_meta.pop(order_id, None)
+                    else:
+                        meta["remaining"] = remaining
+            if executed_total > 0:
+                self.last_trade_price = price if price > 0 else (
+                    native_fills[0]["fill_price"] if native_fills else price
+                )
+                self.last_trade_size = executed_total
+        elif event_type == "trade":
+            self.last_trade_price = price
+            self.last_trade_size = size
+
+        self.last_timestamp_ns = event.timestamp_ns
+        snapshot = self.snapshot(self.depth)
+        return OrderBookUpdate(snapshot=snapshot, fills=fills)
+
+    def snapshot(self, depth: int = 1) -> MarketSnapshot:
+        levels = self._native.snapshot(depth)
+        best_bid = self._native.best_bid()
+        best_ask = self._native.best_ask()
+
+        best_bid_price = float(best_bid["price"]) if best_bid else None
+        best_ask_price = float(best_ask["price"]) if best_ask else None
+
+        bid_size = None
+        ask_size = None
+        depth_entries: List[Dict[str, float]] = []
+        for level in levels:
+            side = "BUY" if level["side"] == 0 else "SELL"
+            size_value = float(level["total_quantity"])
+            depth_entries.append(
+                {"side": side, "price": float(level["price"]), "size": size_value}
+            )
+            if side == "BUY" and best_bid_price is not None and bid_size is None:
+                if abs(level["price"] - best_bid_price) < 1e-9:
+                    bid_size = size_value
+            if side == "SELL" and best_ask_price is not None and ask_size is None:
+                if abs(level["price"] - best_ask_price) < 1e-9:
+                    ask_size = size_value
+
+        imbalance = None
+        if (
+            bid_size is not None
+            and ask_size is not None
+            and bid_size + ask_size > 0
+        ):
+            imbalance = (bid_size - ask_size) / (bid_size + ask_size)
+
+        snapshot = MarketSnapshot(
+            timestamp_ns=self.last_timestamp_ns,
+            best_bid=best_bid_price,
+            bid_size=bid_size,
+            best_ask=best_ask_price,
+            ask_size=ask_size,
+            last_trade_price=self.last_trade_price,
+            last_trade_size=self.last_trade_size,
+            imbalance=imbalance,
+            depth=depth_entries,
+        )
+        return snapshot
+
 
 def load_order_book(depth: int = 5) -> PythonOrderBook:
     if _order_book_bridge is None:
         log.info("Using PythonOrderBook fallback (C++ bridge not available)")
         return PythonOrderBook(depth=depth)
-    return _order_book_bridge.OrderBook(
-        depth
-    )  # pragma: no cover - requires compiled bridge
+    try:
+        return CppOrderBook(depth=depth)
+    except RuntimeError:
+        log.warning("Falling back to PythonOrderBook; native bridge initialisation failed")
+        return PythonOrderBook(depth=depth)
 
 
-__all__ = ["PythonOrderBook", "load_order_book", "DepthLevel"]
+__all__ = ["PythonOrderBook", "CppOrderBook", "load_order_book", "DepthLevel"]

@@ -47,7 +47,16 @@ class MarketMakingStrategy(StrategyCallbacks):
         self.working_orders: Dict[str, int] = {}
 
     def on_market_data(self, snapshot: MarketSnapshot, ctx: StrategyContext) -> None:
-        if snapshot.best_bid is None or snapshot.best_ask is None:
+        best_bid = snapshot.best_bid
+        best_ask = snapshot.best_ask
+        if best_bid is None and best_ask is None:
+            return
+        spread = self.config.spread_ticks * self.config.tick_size
+        if best_bid is None and best_ask is not None:
+            best_bid = best_ask - spread
+        if best_ask is None and best_bid is not None:
+            best_ask = best_bid + spread
+        if best_bid is None or best_ask is None:
             return
         if snapshot.timestamp_ns - self.last_quote_ns < self.config.update_interval_ns:
             return
@@ -56,10 +65,7 @@ class MarketMakingStrategy(StrategyCallbacks):
         if risk_engine is not None:
             inventory = risk_engine.inventory.get(ctx.config.symbol, 0.0)
             inventory_adjust = self.config.inventory_skew * inventory
-        mid = snapshot.midprice
-        if mid is None:
-            return
-        spread = self.config.spread_ticks * self.config.tick_size
+        mid = (best_bid + best_ask) / 2.0
         bid_price = mid - spread / 2.0 - inventory_adjust * self.config.tick_size
         ask_price = mid + spread / 2.0 - inventory_adjust * self.config.tick_size
         bid_size = self.config.quote_size
@@ -81,6 +87,11 @@ class MarketMakingStrategy(StrategyCallbacks):
         if order_type == "PEGGED":
             bid_kwargs["peg_reference"] = self.config.peg_reference or "BID"
             ask_kwargs["peg_reference"] = self.config.peg_reference or "ASK"
+
+        if self.working_orders:
+            for order_id in list(self.working_orders.values()):
+                ctx.cancel_order(order_id)
+            self.working_orders.clear()
 
         bid_id = ctx.submit_order(
             "BUY",

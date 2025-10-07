@@ -20,10 +20,13 @@ from .logging import (
     RunSummary,
     MetricsSnapshot,
     LatencyBreakdown,
+    TimingSummary,
 )
 from .dashboard import RiskDashboard, DashboardConfig
 from .strategy import StrategySandbox, StrategyError
 from .concurrent import ConcurrentBacktester, ConcurrentStrategyContext
+from .queues import RingBufferQueue
+from .order_book import PythonOrderBook, CppOrderBook, load_order_book
 from .stress import StressConfig, StressMetrics, Hotspot, run_order_book_stress
 from .replay import ReplayConfig, ReplayEngine, replay
 from .reports import (
@@ -62,12 +65,17 @@ __all__ = [
     "RunSummary",
     "MetricsSnapshot",
     "LatencyBreakdown",
+    "TimingSummary",
     "RiskDashboard",
     "DashboardConfig",
     "StrategySandbox",
     "StrategyError",
     "ConcurrentBacktester",
     "ConcurrentStrategyContext",
+    "PythonOrderBook",
+    "CppOrderBook",
+    "load_order_book",
+    "RingBufferQueue",
     "StressConfig",
     "StressMetrics",
     "Hotspot",
