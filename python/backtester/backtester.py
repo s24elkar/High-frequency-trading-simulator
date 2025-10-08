@@ -28,6 +28,7 @@ import numpy as np
 
 from .logging import MetricsLogger
 from .risk import RiskEngine
+from .risk_controls import RateLimitConfig, SlidingWindowRateLimiter
 from .strategy import StrategyCallbacks, StrategySandbox, StrategyError, TimerToken
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -191,6 +192,8 @@ class Backtester:
         risk_engine: Optional[RiskEngine] = None,
         strategy: Optional[Strategy] = None,
         dashboard: Optional["RiskDashboard"] = None,
+        order_rate_limit: Optional[RateLimitConfig] = None,
+        cancel_rate_limit: Optional[RateLimitConfig] = None,
         seed: int = 0,
         time_source: Optional[Callable[[], int]] = None,
     ) -> None:
@@ -202,6 +205,22 @@ class Backtester:
         self.strategy_error: Optional[str] = None
         self.dashboard = dashboard
         self.seed = seed
+        self._order_rate_limiter = (
+            SlidingWindowRateLimiter(order_rate_limit) if order_rate_limit else None
+        )
+        self._cancel_rate_limiter = (
+            SlidingWindowRateLimiter(cancel_rate_limit)
+            if cancel_rate_limit
+            else None
+        )
+        self._control_stats: Dict[str, int] = {
+            "order_rate_limit": 0,
+            "cancel_rate_limit": 0,
+        }
+        self._control_limits = {
+            "order_rate_limit": order_rate_limit,
+            "cancel_rate_limit": cancel_rate_limit,
+        }
 
         self._rng = np.random.default_rng(seed)
         self._id_counter = 1
@@ -248,6 +267,15 @@ class Backtester:
     ) -> int:
         decision_perf = self._time_source()
         self._rt_last_decision_ns = decision_perf
+        if self._order_rate_limiter is not None and not self._order_rate_limiter.allow(self.clock_ns):
+            message = (
+                "Order rate limit exceeded: "
+                f"{self._order_rate_limiter.window_size()} >= "
+                f"{self._order_rate_limiter.config.max_actions} orders "
+                f"in {self._order_rate_limiter.config.interval_ns}ns"
+            )
+            self._handle_control_violation("order_rate_limit", message)
+            raise StrategyError(message)
         order_id = self._id_counter
         self._id_counter += 1
         order = OrderRequest(
@@ -290,10 +318,48 @@ class Backtester:
         if order_id not in self.active_orders:
             log.debug("Cancel requested for unknown order %s", order_id)
             return
+        if self._cancel_rate_limiter is not None and not self._cancel_rate_limiter.allow(self.clock_ns):
+            message = (
+                "Cancel rate limit exceeded: "
+                f"{self._cancel_rate_limiter.window_size()} >= "
+                f"{self._cancel_rate_limiter.config.max_actions} cancels "
+                f"in {self._cancel_rate_limiter.config.interval_ns}ns"
+            )
+            self._handle_control_violation(
+                "cancel_rate_limit",
+                message,
+                {"order_id": order_id},
+            )
+            return
         self.pending_cancels.add(order_id)
         self.limit_book.cancel(order_id)
         self.metrics_logger.log_cancel(order_id, self.clock_ns)
         self._update_digest("CANCEL", {"order_id": order_id})
+
+    def _handle_control_violation(
+        self,
+        kind: str,
+        message: str,
+        payload: Optional[Dict[str, object]] = None,
+    ) -> None:
+        self._control_stats[kind] = self._control_stats.get(kind, 0) + 1
+        details: Dict[str, object] = {"message": message}
+        if payload:
+            details.update(payload)
+        limit = self._control_limits.get(kind)
+        if limit is not None:
+            details.setdefault("max_actions", limit.max_actions)
+            details.setdefault("interval_ns", limit.interval_ns)
+        self.metrics_logger.log_control_violation(kind, self.clock_ns, details)
+        log.warning("Risk control violation (%s): %s", kind, message)
+        if limit is not None and limit.halt_on_violation:
+            self.strategy_halted = True
+            if self.risk_engine is not None:
+                self.risk_engine.strategy_halted = True
+
+    @property
+    def control_stats(self) -> Dict[str, int]:
+        return dict(self._control_stats)
 
     def process_fill(self, fill: FillEvent) -> None:
         start_ns = time.perf_counter_ns()

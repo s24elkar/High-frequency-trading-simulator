@@ -1,0 +1,35 @@
+{
+  "order_rate_limit": {
+    "kind": "order_rate_limit",
+    "strategy_halted": true,
+    "error": "Order rate limit exceeded: 2 >= 2 orders in 1000ns",
+    "control_stats": {
+      "order_rate_limit": 1,
+      "cancel_rate_limit": 0
+    },
+    "log_file": "results/week4/stress/risk_controls/logs/order_rate_limit.jsonl"
+  },
+  "cancel_rate_limit": {
+    "kind": "cancel_rate_limit",
+    "strategy_halted": false,
+    "control_stats": {
+      "order_rate_limit": 0,
+      "cancel_rate_limit": 1
+    },
+    "throttled_order_active": true,
+    "log_file": "results/week4/stress/risk_controls/logs/cancel_rate_limit.jsonl"
+  },
+  "kill_switch": {
+    "kind": "kill_switch",
+    "strategy_halted": true,
+    "inventory": 10.0,
+    "alerts": [
+      "Inventory limit breached: 10.0 > 5.0"
+    ],
+    "warnings": [
+      "Inventory warning: 10.0 units on CTRL",
+      "Inventory limit breached: 10.0 > 5.0"
+    ],
+    "log_file": "results/week4/stress/risk_controls/logs/kill_switch.jsonl"
+  }
+}

@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+import json
+
 from pathlib import Path
 
-from python.backtester import StressConfig, run_order_book_stress
+from python.backtester import (
+    PoissonOrderFlowConfig,
+    StressConfig,
+    run_order_book_stress,
+)
+from python.scripts.run_stress_suite import run_suite as run_stress_suite
 
 
 def test_order_book_stress_metrics_smoke(tmp_path: Path) -> None:
@@ -29,3 +36,33 @@ def test_order_book_stress_hotspots_ranked() -> None:
         metrics.hotspots[0].cumulative_time_s >= metrics.hotspots[-1].cumulative_time_s
     )
     assert all(h.total_calls >= h.primitive_calls for h in metrics.hotspots)
+
+
+def test_poisson_stress_records_latency_and_sequence() -> None:
+    poisson_cfg = PoissonOrderFlowConfig(message_count=300, seed=99, base_rate_hz=1_000.0)
+    config = StressConfig(
+        poisson=poisson_cfg,
+        burst=None,
+        validate_sequence=True,
+        record_latency=True,
+        seed=99,
+        depth=5,
+    )
+    metrics = run_order_book_stress(config)
+
+    assert metrics.message_count == poisson_cfg.message_count
+    assert metrics.avg_latency_ns is not None
+    assert metrics.max_latency_ns is not None
+    assert metrics.p95_latency_ns is not None
+    assert metrics.sequence_report is not None
+    assert metrics.sequence_report.ok
+
+
+def test_stress_suite_runner(tmp_path: Path) -> None:
+    results = run_stress_suite(tmp_path, base_messages=500, base_rate_hz=2_000.0, seed=17)
+
+    output_file = tmp_path / "stress_suite.json"
+    assert output_file.exists()
+    data = json.loads(output_file.read_text(encoding="utf-8"))
+    assert len(data["scenarios"]) == 3
+    assert results["scenarios"][0]["multiplier"] == 1

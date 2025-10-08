@@ -1,0 +1,52 @@
+{
+  "scenarios": [
+    {
+      "multiplier": 1,
+      "message_count": 5000,
+      "wall_time_s": 0.26717645800090395,
+      "peak_memory_kb": 240.80859375,
+      "throughput_msgs_per_s": 18714.223691007548,
+      "avg_latency_ns": 33806.5216,
+      "p95_latency_ns": 45916,
+      "p99_latency_ns": 84708,
+      "max_latency_ns": 354084,
+      "sequence_ok": true,
+      "orphan_cancels": 0,
+      "orphan_executes": 0,
+      "duplicate_order_ids": 0,
+      "sequence_errors": []
+    },
+    {
+      "multiplier": 10,
+      "message_count": 50000,
+      "wall_time_s": 2.463864208002633,
+      "peak_memory_kb": 1828.27734375,
+      "throughput_msgs_per_s": 20293.326165297567,
+      "avg_latency_ns": 31899.21316,
+      "p95_latency_ns": 41916,
+      "p99_latency_ns": 72958,
+      "max_latency_ns": 1840291,
+      "sequence_ok": true,
+      "orphan_cancels": 0,
+      "orphan_executes": 0,
+      "duplicate_order_ids": 0,
+      "sequence_errors": []
+    },
+    {
+      "multiplier": 100,
+      "message_count": 500000,
+      "wall_time_s": 24.727004583000962,
+      "peak_memory_kb": 17766.3291015625,
+      "throughput_msgs_per_s": 20220.807511142466,
+      "avg_latency_ns": 32083.554374,
+      "p95_latency_ns": 39625,
+      "p99_latency_ns": 68209,
+      "max_latency_ns": 16419375,
+      "sequence_ok": true,
+      "orphan_cancels": 0,
+      "orphan_executes": 0,
+      "duplicate_order_ids": 0,
+      "sequence_errors": []
+    }
+  ]
+}

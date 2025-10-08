@@ -196,6 +196,19 @@ class MetricsLogger:
         self._write(record)
         self._mark_run_boundary(timestamp_ns)
 
+    def log_control_violation(
+        self,
+        kind: str,
+        timestamp_ns: int,
+        payload: Optional[Mapping[str, object]] = None,
+    ) -> None:
+        record_payload: Dict[str, object] = {"kind": kind}
+        if payload:
+            record_payload.update(payload)
+        record = LogRecord(timestamp_ns, "control_violation", record_payload)
+        self._write(record)
+        self._mark_run_boundary(timestamp_ns)
+
     def log_fill(self, fill: "FillEvent") -> None:
         record = LogRecord(fill.timestamp_ns, "fill", asdict(fill))
         self._write(record)

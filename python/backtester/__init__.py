@@ -38,6 +38,19 @@ from .reports import (
     load_run,
     summarise,
 )
+from .synthetic import (
+    BurstConfig,
+    PoissonOrderFlowConfig,
+    PoissonOrderFlowGenerator,
+    SequenceValidationReport,
+    SequenceValidator,
+    validate_sequence,
+)
+from .risk_controls import (
+    RateLimitConfig,
+    RiskControlViolation,
+    SlidingWindowRateLimiter,
+)
 
 __all__ = [
     "Backtester",
@@ -87,4 +100,13 @@ __all__ = [
     "FillEventRecord",
     "load_run",
     "summarise",
+    "BurstConfig",
+    "PoissonOrderFlowConfig",
+    "PoissonOrderFlowGenerator",
+    "SequenceValidationReport",
+    "SequenceValidator",
+    "validate_sequence",
+    "RateLimitConfig",
+    "RiskControlViolation",
+    "SlidingWindowRateLimiter",
 ]

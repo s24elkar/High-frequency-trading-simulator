@@ -11,10 +11,18 @@ import time
 import tracemalloc
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Optional
+import math
 
 from .backtester import MarketEvent, MarketSnapshot
 from .order_book import PythonOrderBook
+from .synthetic import (
+    BurstConfig,
+    PoissonOrderFlowConfig,
+    PoissonOrderFlowGenerator,
+    SequenceValidationReport,
+    SequenceValidator,
+)
 
 log = logging.getLogger(__name__)
 
@@ -30,6 +38,10 @@ class StressConfig:
     seed: int = 0
     cancel_ratio: float = 0.2
     execute_ratio: float = 0.2
+    poisson: Optional[PoissonOrderFlowConfig] = None
+    burst: Optional[BurstConfig] = None
+    validate_sequence: bool = False
+    record_latency: bool = False
 
 
 @dataclass(slots=True)
@@ -47,12 +59,35 @@ class StressMetrics:
     message_count: int
     final_depth: int
     hotspots: List[Hotspot]
+    sequence_report: Optional[SequenceValidationReport] = None
+    avg_latency_ns: Optional[float] = None
+    p95_latency_ns: Optional[int] = None
+    p99_latency_ns: Optional[int] = None
+    max_latency_ns: Optional[int] = None
 
 
 def _build_event(timestamp_ns: int, event_type: str, payload: dict) -> MarketEvent:
     return MarketEvent(
         timestamp_ns=timestamp_ns, event_type=event_type, payload=payload
     )
+
+
+def _apply_event_with_latency(
+    book: PythonOrderBook, event: MarketEvent, latencies: Optional[List[int]]
+) -> None:
+    if latencies is None:
+        book.apply_event(event)
+        return
+    start_ns = time.perf_counter_ns()
+    book.apply_event(event)
+    latencies.append(time.perf_counter_ns() - start_ns)
+
+
+def _percentile(sorted_values: List[int], fraction: float) -> Optional[int]:
+    if not sorted_values:
+        return None
+    index = max(0, min(len(sorted_values) - 1, math.ceil(fraction * len(sorted_values)) - 1))
+    return sorted_values[index]
 
 
 def run_order_book_stress(
@@ -73,6 +108,11 @@ def run_order_book_stress(
     book = PythonOrderBook(depth=config.depth)
     active_orders: List[tuple[int, str, float, float]] = []
     order_id = 1
+    processed = 0
+    sequence_validator: SequenceValidator | None = (
+        SequenceValidator() if config.validate_sequence else None
+    )
+    latencies_ns: Optional[List[int]] = [] if config.record_latency else None
 
     tracemalloc.start()
     start = time.perf_counter()
@@ -80,57 +120,74 @@ def run_order_book_stress(
     profiler.enable()
 
     try:
-        for idx in range(config.message_count):
-            action = rng.random()
-            timestamp_ns = idx
-            if (
-                action < 1.0 - (config.cancel_ratio + config.execute_ratio)
-                or not active_orders
-            ):
-                side = rng.choice(["BUY", "SELL"])
-                price_offset = rng.uniform(
-                    -config.max_price_jitter, config.max_price_jitter
-                )
-                price = max(0.01, config.base_price + price_offset)
-                size = max(0.01, rng.uniform(config.max_size * 0.1, config.max_size))
-                payload = {
-                    "order_id": order_id,
-                    "symbol": config.symbol,
-                    "side": side,
-                    "price": price,
-                    "size": size,
-                }
-                event = _build_event(timestamp_ns, "add_order", payload)
-                book.apply_event(event)
-                active_orders.append((order_id, side, price, size))
-                order_id += 1
-            elif action < 1.0 - config.execute_ratio and active_orders:
-                cancel_idx = rng.randrange(len(active_orders))
-                cancel_order_id, side, price, size = active_orders.pop(cancel_idx)
-                payload = {
-                    "order_id": cancel_order_id,
-                    "symbol": config.symbol,
-                    "side": side,
-                    "price": price,
-                    "size": size,
-                }
-                event = _build_event(timestamp_ns, "delete_order", payload)
-                book.apply_event(event)
-            else:
-                exec_idx = rng.randrange(len(active_orders))
-                exec_order_id, side, price, size = active_orders[exec_idx]
-                take_side = "SELL" if side == "BUY" else "BUY"
-                payload = {
-                    "order_id": exec_order_id,
-                    "symbol": config.symbol,
-                    "side": take_side,
-                    "price": price,
-                    "size": size,
-                }
-                event = _build_event(timestamp_ns, "execute_order", payload)
-                book.apply_event(event)
-                if active_orders:
-                    active_orders.pop(exec_idx)
+        if config.poisson is not None:
+            generator = PoissonOrderFlowGenerator(
+                config.poisson, burst_config=config.burst
+            )
+            for event in generator.stream(validator=sequence_validator):
+                _apply_event_with_latency(book, event, latencies_ns)
+                processed += 1
+        else:
+            for idx in range(config.message_count):
+                action = rng.random()
+                timestamp_ns = idx
+                if (
+                    action < 1.0 - (config.cancel_ratio + config.execute_ratio)
+                    or not active_orders
+                ):
+                    side = rng.choice(["BUY", "SELL"])
+                    price_offset = rng.uniform(
+                        -config.max_price_jitter, config.max_price_jitter
+                    )
+                    price = max(0.01, config.base_price + price_offset)
+                    size = max(
+                        0.01, rng.uniform(config.max_size * 0.1, config.max_size)
+                    )
+                    payload = {
+                        "order_id": order_id,
+                        "symbol": config.symbol,
+                        "side": side,
+                        "price": price,
+                        "size": size,
+                    }
+                    event = _build_event(timestamp_ns, "add_order", payload)
+                    if sequence_validator is not None:
+                        sequence_validator.observe(event)
+                    _apply_event_with_latency(book, event, latencies_ns)
+                    active_orders.append((order_id, side, price, size))
+                    order_id += 1
+                elif action < 1.0 - config.execute_ratio and active_orders:
+                    cancel_idx = rng.randrange(len(active_orders))
+                    cancel_order_id, side, price, size = active_orders.pop(cancel_idx)
+                    payload = {
+                        "order_id": cancel_order_id,
+                        "symbol": config.symbol,
+                        "side": side,
+                        "price": price,
+                        "size": size,
+                    }
+                    event = _build_event(timestamp_ns, "delete_order", payload)
+                    if sequence_validator is not None:
+                        sequence_validator.observe(event)
+                    _apply_event_with_latency(book, event, latencies_ns)
+                else:
+                    exec_idx = rng.randrange(len(active_orders))
+                    exec_order_id, side, price, size = active_orders[exec_idx]
+                    take_side = "SELL" if side == "BUY" else "BUY"
+                    payload = {
+                        "order_id": exec_order_id,
+                        "symbol": config.symbol,
+                        "side": take_side,
+                        "price": price,
+                        "size": size,
+                    }
+                    event = _build_event(timestamp_ns, "execute_order", payload)
+                    if sequence_validator is not None:
+                        sequence_validator.observe(event)
+                    _apply_event_with_latency(book, event, latencies_ns)
+                    if active_orders:
+                        active_orders.pop(exec_idx)
+                processed += 1
     finally:
         profiler.disable()
         wall_time_s = time.perf_counter() - start
@@ -151,12 +208,38 @@ def run_order_book_stress(
     snapshot: MarketSnapshot = book.snapshot(config.depth)
     final_depth = len(snapshot.depth)
 
+    total_messages = processed
+    if total_messages == 0:
+        total_messages = (
+            config.poisson.message_count if config.poisson is not None else config.message_count
+        )
+
+    avg_latency = None
+    p95_latency = None
+    p99_latency = None
+    max_latency = None
+    if latencies_ns:
+        sorted_latencies = sorted(latencies_ns)
+        count = len(sorted_latencies)
+        if count:
+            avg_latency = sum(sorted_latencies) / count
+            p95_latency = _percentile(sorted_latencies, 0.95)
+            p99_latency = _percentile(sorted_latencies, 0.99)
+            max_latency = sorted_latencies[-1]
+
     metrics = StressMetrics(
         wall_time_s=wall_time_s,
         peak_memory_kb=peak / 1024.0,
-        message_count=config.message_count,
+        message_count=total_messages,
         final_depth=final_depth,
         hotspots=hotspots,
+        sequence_report=sequence_validator.report()
+        if sequence_validator is not None
+        else None,
+        avg_latency_ns=avg_latency,
+        p95_latency_ns=p95_latency,
+        p99_latency_ns=p99_latency,
+        max_latency_ns=max_latency,
     )
 
     log.info(

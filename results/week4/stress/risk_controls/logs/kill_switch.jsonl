@@ -1,0 +1,1 @@
+{"timestamp_ns": 1, "event_type": "fill", "payload": {"order_id": 999, "symbol": "CTRL", "side": "BUY", "price": 100.0, "size": 10.0, "timestamp_ns": 1, "liquidity_flag": "UNKNOWN"}}

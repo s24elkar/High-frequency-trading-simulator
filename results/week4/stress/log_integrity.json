@@ -1,0 +1,71 @@
+{
+  "logs": [
+    {
+      "file": "results/week4/stress/risk_controls/logs/cancel_rate_limit.jsonl",
+      "total_records": 4,
+      "sequence": {
+        "ok": true,
+        "total_events": 3,
+        "timestamp_monotonic": true,
+        "orphan_cancels": 0,
+        "orphan_executes": 0,
+        "duplicate_order_ids": 0,
+        "max_timestamp_gap_ns": 0,
+        "errors": []
+      },
+      "control_events": [
+        {
+          "kind": "cancel_rate_limit",
+          "message": "Cancel rate limit exceeded: 1 >= 1 cancels in 1000ns",
+          "order_id": 2,
+          "max_actions": 1,
+          "interval_ns": 1000
+        }
+      ]
+    },
+    {
+      "file": "results/week4/stress/risk_controls/logs/kill_switch.jsonl",
+      "total_records": 1,
+      "sequence": {
+        "ok": false,
+        "total_events": 1,
+        "timestamp_monotonic": true,
+        "orphan_cancels": 0,
+        "orphan_executes": 1,
+        "duplicate_order_ids": 0,
+        "max_timestamp_gap_ns": 0,
+        "errors": [
+          {
+            "index": 0,
+            "message": "execution for unknown order",
+            "order_id": 999,
+            "event_type": "execute_order"
+          }
+        ]
+      },
+      "control_events": []
+    },
+    {
+      "file": "results/week4/stress/risk_controls/logs/order_rate_limit.jsonl",
+      "total_records": 3,
+      "sequence": {
+        "ok": true,
+        "total_events": 2,
+        "timestamp_monotonic": true,
+        "orphan_cancels": 0,
+        "orphan_executes": 0,
+        "duplicate_order_ids": 0,
+        "max_timestamp_gap_ns": 0,
+        "errors": []
+      },
+      "control_events": [
+        {
+          "kind": "order_rate_limit",
+          "message": "Order rate limit exceeded: 2 >= 2 orders in 1000ns",
+          "max_actions": 2,
+          "interval_ns": 1000
+        }
+      ]
+    }
+  ]
+}
