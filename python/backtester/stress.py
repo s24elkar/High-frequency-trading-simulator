@@ -53,6 +53,12 @@ class Hotspot:
 
 
 @dataclass(slots=True)
+class LatencyHistogramBin:
+    upper_ns: Optional[int]
+    count: int
+
+
+@dataclass(slots=True)
 class StressMetrics:
     wall_time_s: float
     peak_memory_kb: float
@@ -64,6 +70,10 @@ class StressMetrics:
     p95_latency_ns: Optional[int] = None
     p99_latency_ns: Optional[int] = None
     max_latency_ns: Optional[int] = None
+    latency_histogram: Optional[List[LatencyHistogramBin]] = None
+    add_order_events: Optional[int] = None
+    delete_order_events: Optional[int] = None
+    execute_order_events: Optional[int] = None
 
 
 def _build_event(timestamp_ns: int, event_type: str, payload: dict) -> MarketEvent:
@@ -81,6 +91,56 @@ def _apply_event_with_latency(
     start_ns = time.perf_counter_ns()
     book.apply_event(event)
     latencies.append(time.perf_counter_ns() - start_ns)
+
+
+_LATENCY_BOUNDS_NS: List[int] = [
+    100,
+    250,
+    500,
+    1_000,
+    2_500,
+    5_000,
+    10_000,
+    25_000,
+    50_000,
+    100_000,
+    250_000,
+    500_000,
+    1_000_000,
+    2_500_000,
+    5_000_000,
+    10_000_000,
+    25_000_000,
+    50_000_000,
+    100_000_000,
+]
+
+
+def _latency_histogram_from_sorted(
+    sorted_latencies: List[int],
+) -> List[LatencyHistogramBin]:
+    if not sorted_latencies:
+        return []
+
+    max_latency = sorted_latencies[-1]
+    bounds: List[int] = list(_LATENCY_BOUNDS_NS)
+    while bounds[-1] < max_latency:
+        bounds.append(bounds[-1] * 2)
+
+    histogram: List[LatencyHistogramBin] = []
+    idx = 0
+    total = len(sorted_latencies)
+    for limit in bounds:
+        count = 0
+        while idx < total and sorted_latencies[idx] <= limit:
+            idx += 1
+            count += 1
+        histogram.append(LatencyHistogramBin(upper_ns=limit, count=count))
+        if idx >= total:
+            break
+    if idx < total:
+        histogram.append(LatencyHistogramBin(upper_ns=None, count=total - idx))
+    return histogram
 
 
 def _percentile(sorted_values: List[int], fraction: float) -> Optional[int]:
@@ -109,6 +169,11 @@ def run_order_book_stress(
     active_orders: List[tuple[int, str, float, float]] = []
     order_id = 1
     processed = 0
+    event_type_counts = {
+        "add_order": 0,
+        "delete_order": 0,
+        "execute_order": 0,
+    }
     sequence_validator: SequenceValidator | None = (
         SequenceValidator() if config.validate_sequence else None
     )
@@ -125,6 +190,8 @@ def run_order_book_stress(
                 config.poisson, burst_config=config.burst
             )
             for event in generator.stream(validator=sequence_validator):
+                if event.event_type in event_type_counts:
+                    event_type_counts[event.event_type] += 1
                 _apply_event_with_latency(book, event, latencies_ns)
                 processed += 1
         else:
@@ -154,6 +221,7 @@ def run_order_book_stress(
                     if sequence_validator is not None:
                         sequence_validator.observe(event)
                     _apply_event_with_latency(book, event, latencies_ns)
+                    event_type_counts["add_order"] += 1
                     active_orders.append((order_id, side, price, size))
                     order_id += 1
                 elif action < 1.0 - config.execute_ratio and active_orders:
@@ -170,6 +238,7 @@ def run_order_book_stress(
                     if sequence_validator is not None:
                         sequence_validator.observe(event)
                     _apply_event_with_latency(book, event, latencies_ns)
+                    event_type_counts["delete_order"] += 1
                 else:
                     exec_idx = rng.randrange(len(active_orders))
                     exec_order_id, side, price, size = active_orders[exec_idx]
@@ -185,6 +254,7 @@ def run_order_book_stress(
                     if sequence_validator is not None:
                         sequence_validator.observe(event)
                     _apply_event_with_latency(book, event, latencies_ns)
+                    event_type_counts["execute_order"] += 1
                     if active_orders:
                         active_orders.pop(exec_idx)
                 processed += 1
@@ -218,6 +288,7 @@ def run_order_book_stress(
     p95_latency = None
     p99_latency = None
     max_latency = None
+    latency_histogram: Optional[List[LatencyHistogramBin]] = None
     if latencies_ns:
         sorted_latencies = sorted(latencies_ns)
         count = len(sorted_latencies)
@@ -226,6 +297,7 @@ def run_order_book_stress(
             p95_latency = _percentile(sorted_latencies, 0.95)
             p99_latency = _percentile(sorted_latencies, 0.99)
             max_latency = sorted_latencies[-1]
+            latency_histogram = _latency_histogram_from_sorted(sorted_latencies)
 
     metrics = StressMetrics(
         wall_time_s=wall_time_s,
@@ -240,6 +312,10 @@ def run_order_book_stress(
         p95_latency_ns=p95_latency,
         p99_latency_ns=p99_latency,
         max_latency_ns=max_latency,
+        latency_histogram=latency_histogram,
+        add_order_events=event_type_counts.get("add_order"),
+        delete_order_events=event_type_counts.get("delete_order"),
+        execute_order_events=event_type_counts.get("execute_order"),
     )
 
     log.info(
@@ -270,4 +346,10 @@ def _collect_hotspots(stats: pstats.Stats, limit: int = 10) -> List[Hotspot]:
     return entries
 
 
-__all__ = ["StressConfig", "StressMetrics", "Hotspot", "run_order_book_stress"]
+__all__ = [
+    "StressConfig",
+    "StressMetrics",
+    "Hotspot",
+    "LatencyHistogramBin",
+    "run_order_book_stress",
+]

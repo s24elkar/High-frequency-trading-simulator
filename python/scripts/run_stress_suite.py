@@ -72,6 +72,14 @@ def run_suite(
             if metrics.wall_time_s > 0
             else None
         )
+        latency_histogram = (
+            [
+                {"upper_ns": bin.upper_ns, "count": bin.count}
+                for bin in metrics.latency_histogram
+            ]
+            if metrics.latency_histogram
+            else None
+        )
         scenario = {
             "multiplier": multiplier,
             "message_count": metrics.message_count,
@@ -90,6 +98,16 @@ def run_suite(
             ),
             "sequence_errors": (
                 [asdict(err) for err in seq_report.errors] if seq_report else []
+            ),
+            "latency_histogram": latency_histogram,
+            "add_order_events": metrics.add_order_events,
+            "delete_order_events": metrics.delete_order_events,
+            "execute_order_events": metrics.execute_order_events,
+            "order_to_trade_ratio": (
+                metrics.add_order_events / metrics.execute_order_events
+                if metrics.add_order_events is not None
+                and metrics.execute_order_events not in (None, 0)
+                else None
             ),
         }
         scenarios.append(scenario)

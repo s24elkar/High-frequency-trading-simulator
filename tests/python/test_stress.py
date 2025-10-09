@@ -54,6 +54,12 @@ def test_poisson_stress_records_latency_and_sequence() -> None:
     assert metrics.avg_latency_ns is not None
     assert metrics.max_latency_ns is not None
     assert metrics.p95_latency_ns is not None
+    assert metrics.latency_histogram is not None
+    assert metrics.latency_histogram, "Expected latency histogram bins"
+    assert metrics.add_order_events is not None
+    assert metrics.execute_order_events is not None
+    assert metrics.add_order_events > 0
+    assert metrics.execute_order_events > 0
     assert metrics.sequence_report is not None
     assert metrics.sequence_report.ok
 
@@ -66,3 +72,11 @@ def test_stress_suite_runner(tmp_path: Path) -> None:
     data = json.loads(output_file.read_text(encoding="utf-8"))
     assert len(data["scenarios"]) == 3
     assert results["scenarios"][0]["multiplier"] == 1
+    assert data["scenarios"][0]["latency_histogram"] is not None
+    assert data["scenarios"][0]["add_order_events"] is not None
+    execute_events = data["scenarios"][0]["execute_order_events"]
+    ratio = data["scenarios"][0]["order_to_trade_ratio"]
+    if execute_events:
+        assert ratio is not None
+    else:
+        assert ratio is None

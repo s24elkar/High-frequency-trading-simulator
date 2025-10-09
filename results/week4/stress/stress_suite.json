@@ -3,50 +3,248 @@
     {
       "multiplier": 1,
       "message_count": 5000,
-      "wall_time_s": 0.26717645800090395,
-      "peak_memory_kb": 240.80859375,
-      "throughput_msgs_per_s": 18714.223691007548,
-      "avg_latency_ns": 33806.5216,
-      "p95_latency_ns": 45916,
-      "p99_latency_ns": 84708,
-      "max_latency_ns": 354084,
+      "wall_time_s": 0.2452259999990929,
+      "peak_memory_kb": 240.9697265625,
+      "throughput_msgs_per_s": 20389.355125551512,
+      "avg_latency_ns": 30869.4976,
+      "p95_latency_ns": 38209,
+      "p99_latency_ns": 50167,
+      "max_latency_ns": 133708,
       "sequence_ok": true,
       "orphan_cancels": 0,
       "orphan_executes": 0,
       "duplicate_order_ids": 0,
-      "sequence_errors": []
+      "sequence_errors": [],
+      "latency_histogram": [
+        {
+          "upper_ns": 100,
+          "count": 0
+        },
+        {
+          "upper_ns": 250,
+          "count": 0
+        },
+        {
+          "upper_ns": 500,
+          "count": 0
+        },
+        {
+          "upper_ns": 1000,
+          "count": 0
+        },
+        {
+          "upper_ns": 2500,
+          "count": 0
+        },
+        {
+          "upper_ns": 5000,
+          "count": 0
+        },
+        {
+          "upper_ns": 10000,
+          "count": 0
+        },
+        {
+          "upper_ns": 25000,
+          "count": 1330
+        },
+        {
+          "upper_ns": 50000,
+          "count": 3619
+        },
+        {
+          "upper_ns": 100000,
+          "count": 44
+        },
+        {
+          "upper_ns": 250000,
+          "count": 7
+        }
+      ],
+      "add_order_events": 2501,
+      "delete_order_events": 2499,
+      "execute_order_events": 0,
+      "order_to_trade_ratio": null
     },
     {
       "multiplier": 10,
       "message_count": 50000,
-      "wall_time_s": 2.463864208002633,
-      "peak_memory_kb": 1828.27734375,
-      "throughput_msgs_per_s": 20293.326165297567,
-      "avg_latency_ns": 31899.21316,
-      "p95_latency_ns": 41916,
-      "p99_latency_ns": 72958,
-      "max_latency_ns": 1840291,
+      "wall_time_s": 2.3559133329981705,
+      "peak_memory_kb": 1825.7294921875,
+      "throughput_msgs_per_s": 21223.19157486547,
+      "avg_latency_ns": 30378.52324,
+      "p95_latency_ns": 37000,
+      "p99_latency_ns": 50625,
+      "max_latency_ns": 14515750,
       "sequence_ok": true,
       "orphan_cancels": 0,
       "orphan_executes": 0,
       "duplicate_order_ids": 0,
-      "sequence_errors": []
+      "sequence_errors": [],
+      "latency_histogram": [
+        {
+          "upper_ns": 100,
+          "count": 0
+        },
+        {
+          "upper_ns": 250,
+          "count": 0
+        },
+        {
+          "upper_ns": 500,
+          "count": 0
+        },
+        {
+          "upper_ns": 1000,
+          "count": 0
+        },
+        {
+          "upper_ns": 2500,
+          "count": 0
+        },
+        {
+          "upper_ns": 5000,
+          "count": 0
+        },
+        {
+          "upper_ns": 10000,
+          "count": 0
+        },
+        {
+          "upper_ns": 25000,
+          "count": 13406
+        },
+        {
+          "upper_ns": 50000,
+          "count": 36064
+        },
+        {
+          "upper_ns": 100000,
+          "count": 436
+        },
+        {
+          "upper_ns": 250000,
+          "count": 79
+        },
+        {
+          "upper_ns": 500000,
+          "count": 6
+        },
+        {
+          "upper_ns": 1000000,
+          "count": 5
+        },
+        {
+          "upper_ns": 2500000,
+          "count": 2
+        },
+        {
+          "upper_ns": 5000000,
+          "count": 1
+        },
+        {
+          "upper_ns": 10000000,
+          "count": 0
+        },
+        {
+          "upper_ns": 25000000,
+          "count": 1
+        }
+      ],
+      "add_order_events": 25000,
+      "delete_order_events": 25000,
+      "execute_order_events": 0,
+      "order_to_trade_ratio": null
     },
     {
       "multiplier": 100,
       "message_count": 500000,
-      "wall_time_s": 24.727004583000962,
-      "peak_memory_kb": 17766.3291015625,
-      "throughput_msgs_per_s": 20220.807511142466,
-      "avg_latency_ns": 32083.554374,
-      "p95_latency_ns": 39625,
-      "p99_latency_ns": 68209,
-      "max_latency_ns": 16419375,
+      "wall_time_s": 23.01658574999965,
+      "peak_memory_kb": 17774.0849609375,
+      "throughput_msgs_per_s": 21723.465218989208,
+      "avg_latency_ns": 29734.291728,
+      "p95_latency_ns": 36500,
+      "p99_latency_ns": 48209,
+      "max_latency_ns": 12185292,
       "sequence_ok": true,
       "orphan_cancels": 0,
       "orphan_executes": 0,
       "duplicate_order_ids": 0,
-      "sequence_errors": []
+      "sequence_errors": [],
+      "latency_histogram": [
+        {
+          "upper_ns": 100,
+          "count": 0
+        },
+        {
+          "upper_ns": 250,
+          "count": 0
+        },
+        {
+          "upper_ns": 500,
+          "count": 0
+        },
+        {
+          "upper_ns": 1000,
+          "count": 0
+        },
+        {
+          "upper_ns": 2500,
+          "count": 0
+        },
+        {
+          "upper_ns": 5000,
+          "count": 0
+        },
+        {
+          "upper_ns": 10000,
+          "count": 0
+        },
+        {
+          "upper_ns": 25000,
+          "count": 137632
+        },
+        {
+          "upper_ns": 50000,
+          "count": 358070
+        },
+        {
+          "upper_ns": 100000,
+          "count": 3702
+        },
+        {
+          "upper_ns": 250000,
+          "count": 551
+        },
+        {
+          "upper_ns": 500000,
+          "count": 27
+        },
+        {
+          "upper_ns": 1000000,
+          "count": 8
+        },
+        {
+          "upper_ns": 2500000,
+          "count": 3
+        },
+        {
+          "upper_ns": 5000000,
+          "count": 3
+        },
+        {
+          "upper_ns": 10000000,
+          "count": 3
+        },
+        {
+          "upper_ns": 25000000,
+          "count": 1
+        }
+      ],
+      "add_order_events": 249998,
+      "delete_order_events": 249997,
+      "execute_order_events": 5,
+      "order_to_trade_ratio": 49999.6
     }
   ]
 }
