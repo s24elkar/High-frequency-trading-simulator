@@ -23,7 +23,8 @@ log = logging.getLogger(__name__)
 
 try:
     from . import _order_book_bridge  # type: ignore[attr-defined]
-except ImportError:  # pragma: no cover - the C++ bridge is optional during tests
+except Exception as exc:  # pragma: no cover - the C++ bridge is optional during tests
+    log.warning("C++ order book bridge unavailable: %s", exc)
     _order_book_bridge = None
 
 
