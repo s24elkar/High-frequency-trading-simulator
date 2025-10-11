@@ -72,7 +72,9 @@ def analyse_directory(log_dir: Path) -> Dict[str, object]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Analyse JSONL logs for integrity")
-    parser.add_argument("--log-dir", type=Path, required=True, help="Directory of JSONL logs")
+    parser.add_argument(
+        "--log-dir", type=Path, required=True, help="Directory of JSONL logs"
+    )
     parser.add_argument(
         "--output",
         type=Path,

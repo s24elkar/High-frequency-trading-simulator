@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Callable, Dict
+from typing import Dict, Tuple
 
-import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
 import streamlit as st
 
 try:
     from .bridge_utils import ensure_bridge_path
     from .kernels import ExpKernel, PowerLawKernel
     from .timeline_dashboard import (
-        plot_timeline,
+        plot_timeline_interactive,
         simulate_exp_timeline,
         simulate_powerlaw_timeline,
     )
@@ -28,7 +29,7 @@ except (ImportError, ValueError):
     from bridge_utils import ensure_bridge_path
     from kernels import ExpKernel, PowerLawKernel
     from timeline_dashboard import (
-        plot_timeline,
+        plot_timeline_interactive,
         simulate_exp_timeline,
         simulate_powerlaw_timeline,
     )
@@ -179,7 +180,11 @@ def _powerlaw_controls(key_prefix: str = "") -> Dict[str, float]:
     return {"alpha": alpha, "c": c, "gamma": gamma}
 
 
-def _mark_sampler_controls() -> Callable[[np.random.Generator], float]:
+MarkSamplerConfig = Dict[str, float | str]
+NUMERIC_TYPES = (int, float, np.floating)
+
+
+def _mark_sampler_controls() -> MarkSamplerConfig:
     choice = st.sidebar.selectbox(
         "Order size distribution",
         ("LogNormal", "Exponential", "Deterministic"),
@@ -212,10 +217,9 @@ def _mark_sampler_controls() -> Callable[[np.random.Generator], float]:
             help="Controls how varied the trade sizes are (higher means more spread).",
         )
 
-        def sampler(rng: np.random.Generator) -> float:
-            return float(rng.lognormal(mean, sigma))
+        return {"kind": "LogNormal", "mean": mean, "sigma": sigma}
 
-    elif choice == "Exponential":
+    if choice == "Exponential":
         scale = st.sidebar.slider(
             "Scale",
             0.1,
@@ -230,25 +234,122 @@ def _mark_sampler_controls() -> Callable[[np.random.Generator], float]:
             help="Average order size. Higher scale = larger trades on average.",
         )
 
+        return {"kind": "Exponential", "scale": scale}
+
+    value = st.sidebar.slider(
+        "Fixed value",
+        0.01,
+        5.0,
+        value=float(st.session_state.get("mark_value", DEFAULTS["mark_value"])),
+        step=0.01,
+        key="mark_value",
+        help="All trades use the same mark size — useful for stress-testing the timing model alone.",
+    )
+
+    return {"kind": "Deterministic", "value": value}
+
+
+def _build_mark_sampler(config: MarkSamplerConfig):
+    kind = config.get("kind")
+    if kind == "LogNormal":
+        mean = float(config["mean"])
+        sigma = float(config["sigma"])
+
+        def sampler(rng: np.random.Generator) -> float:
+            return float(rng.lognormal(mean, sigma))
+
+    elif kind == "Exponential":
+        scale = float(config["scale"])
+
         def sampler(rng: np.random.Generator) -> float:
             return float(rng.exponential(scale))
 
     else:
-        value = st.sidebar.slider(
-            "Fixed value",
-            0.01,
-            5.0,
-            value=float(st.session_state.get("mark_value", DEFAULTS["mark_value"])),
-            step=0.01,
-            key="mark_value",
-            help="All trades use the same mark size — useful for stress-testing the timing model alone.",
-        )
+        value = float(config["value"])
 
         def sampler(rng: np.random.Generator) -> float:
             return float(value)
 
-    sampler.__doc__ = f"Sampler: {choice}"
+    sampler.__doc__ = f"Sampler: {kind}"
     return sampler
+
+
+def _branching_ratio_message(branching_ratio: float | None) -> Tuple[str, str]:
+    if branching_ratio is None or np.isnan(branching_ratio):
+        return "info", "Branching ratio N/A"
+    if np.isinf(branching_ratio) or branching_ratio >= 1.0:
+        return "error", f"Branching ratio ≈ {branching_ratio:.2f} — supercritical"
+    if branching_ratio >= 0.85:
+        return "warning", f"Branching ratio ≈ {branching_ratio:.2f} — near-critical"
+    return (
+        "success",
+        f"Branching ratio ≈ {branching_ratio:.2f} — comfortably subcritical",
+    )
+
+
+@st.cache_data(show_spinner=False)
+def _simulate_hawkes(
+    kernel_choice: str,
+    mu: float,
+    params_tuple: Tuple[Tuple[str, float], ...],
+    horizon: float,
+    bins: int,
+    seed: int,
+    mark_config_tuple: Tuple[Tuple[str, float | str], ...],
+):
+    params = dict(params_tuple)
+    mark_config = dict(mark_config_tuple)
+    mark_sampler = _build_mark_sampler(mark_config)
+
+    if kernel_choice == "Exponential":
+        kernel = ExpKernel(**params)
+        timeline = simulate_exp_timeline(mu, kernel, horizon, mark_sampler, seed, bins)
+        branching_ratio = kernel.branching_ratio(
+            np.mean(timeline.marks) if timeline.marks.size else 0.0
+        )
+        ratio_value = (
+            float(branching_ratio)
+            if branching_ratio is not None and not np.isnan(branching_ratio)
+            else float("nan")
+        )
+        summary = {
+            "Kernel": kernel_choice,
+            "α": params["alpha"],
+            "β": params["beta"],
+            "Branching ratio": ratio_value,
+        }
+    else:
+        kernel = PowerLawKernel(**params)
+        timeline = simulate_powerlaw_timeline(
+            mu, kernel, horizon, mark_sampler, seed, bins
+        )
+        branching_ratio = kernel.branching_ratio(
+            np.mean(timeline.marks) if timeline.marks.size else 0.0
+        )
+        summary = {
+            "Kernel": kernel_choice,
+            "α": params["alpha"],
+            "c": params["c"],
+            "γ": params["gamma"],
+            "Branching ratio": (
+                float(branching_ratio)
+                if branching_ratio is not None and not np.isnan(branching_ratio)
+                else float("nan")
+            ),
+        }
+
+    summary.update(
+        {
+            "Events": int(timeline.times.size),
+            "Average mark": float(
+                np.mean(timeline.marks) if timeline.marks.size else 0.0
+            ),
+            "Max intensity": float(
+                timeline.intensity_grid.max() if timeline.intensity_grid.size else mu
+            ),
+        }
+    )
+    return timeline, summary
 
 
 def main() -> None:
@@ -328,36 +429,33 @@ def main() -> None:
         key="seed",
         help="Fix the random seed so runs are repeatable. Change it for a fresh sample path.",
     )
-    mark_sampler = _mark_sampler_controls()
+    mark_config = _mark_sampler_controls()
 
     if kernel_choice == "Exponential":
         params = _exp_controls()
-        kernel = ExpKernel(**params)
-        timeline = simulate_exp_timeline(mu, kernel, horizon, mark_sampler, seed, bins)
-        summary = {
-            "kernel": kernel_choice,
-            "alpha": params["alpha"],
-            "beta": params["beta"],
-            "branching_ratio": kernel.branching_ratio(
-                np.mean(timeline.marks) if timeline.marks.size else 0.0
-            ),
-        }
+        params_tuple = tuple(
+            sorted((key, float(value)) for key, value in params.items())
+        )
     else:
         params = _powerlaw_controls()
-        kernel = PowerLawKernel(**params)
-        timeline = simulate_powerlaw_timeline(
-            mu, kernel, horizon, mark_sampler, seed, bins
+        params_tuple = tuple(
+            sorted((key, float(value)) for key, value in params.items())
         )
-        summary = {
-            "kernel": kernel_choice,
-            **params,
-            "branching_ratio": kernel.branching_ratio(
-                np.mean(timeline.marks) if timeline.marks.size else 0.0
-            ),
-        }
+
+    mark_config_tuple = tuple(sorted(mark_config.items()))
+    timeline, summary = _simulate_hawkes(
+        kernel_choice,
+        float(mu),
+        params_tuple,
+        float(horizon),
+        int(bins),
+        int(seed),
+        mark_config_tuple,
+    )
 
     comparison_timeline = None
     comparison_label = None
+    comparison_summary = None
     with st.sidebar.expander(
         "Comparison overlay",
         expanded=bool(st.session_state.get("compare_enabled", False)),
@@ -377,68 +475,168 @@ def main() -> None:
             )
             if compare_kernel_choice == "Exponential":
                 compare_params = _exp_controls("compare_")
-                compare_kernel = ExpKernel(**compare_params)
-                comparison_timeline = simulate_exp_timeline(
-                    mu, compare_kernel, horizon, mark_sampler, seed + 1, bins
+                compare_params_tuple = tuple(
+                    sorted((key, float(value)) for key, value in compare_params.items())
+                )
+                comparison_timeline, comparison_summary = _simulate_hawkes(
+                    compare_kernel_choice,
+                    float(mu),
+                    compare_params_tuple,
+                    float(horizon),
+                    int(bins),
+                    int(seed) + 1,
+                    mark_config_tuple,
                 )
                 comparison_label = f"{compare_kernel_choice} (overlay)"
             else:
                 compare_params = _powerlaw_controls("compare_")
-                compare_kernel = PowerLawKernel(**compare_params)
-                comparison_timeline = simulate_powerlaw_timeline(
-                    mu, compare_kernel, horizon, mark_sampler, seed + 1, bins
+                compare_params_tuple = tuple(
+                    sorted((key, float(value)) for key, value in compare_params.items())
+                )
+                comparison_timeline, comparison_summary = _simulate_hawkes(
+                    compare_kernel_choice,
+                    float(mu),
+                    compare_params_tuple,
+                    float(horizon),
+                    int(bins),
+                    int(seed) + 1,
+                    mark_config_tuple,
                 )
                 comparison_label = f"{compare_kernel_choice} (overlay)"
 
     col_plot, col_data = st.columns((2.2, 1))
     with col_plot:
-        fig = plot_timeline(
+        fig = plot_timeline_interactive(
             timeline,
             title=f"{kernel_choice} Hawkes Simulation",
             comparison=comparison_timeline,
             labels=(kernel_choice, comparison_label or "Comparison"),
         )
-        st.pyplot(fig)
+        st.plotly_chart(fig, use_container_width=True)
 
     with col_data:
         st.subheader("Summary")
-        st.json(summary)
-        st.metric("Events", int(timeline.times.size))
-        st.metric(
-            "Average mark",
-            float(np.mean(timeline.marks) if timeline.marks.size else 0.0),
-        )
-        st.metric(
-            "Max intensity",
-            float(
-                timeline.intensity_grid.max() if timeline.intensity_grid.size else mu
-            ),
-        )
+        scenarios = [
+            (kernel_choice, "Baseline", timeline, summary),
+        ]
+        if comparison_timeline is not None and comparison_summary is not None:
+            scenarios.append(
+                (
+                    comparison_label or "Comparison",
+                    "Overlay",
+                    comparison_timeline,
+                    comparison_summary,
+                )
+            )
 
-        branching_ratio = summary.get("branching_ratio")
-        if branching_ratio is not None and not np.isnan(branching_ratio):
-            if np.isinf(branching_ratio) or branching_ratio >= 1.0:
-                msg = "Supercritical — cascades will keep growing."
-                st.error(f"Branching ratio ≈ {branching_ratio:.2f}. {msg}")
-            elif branching_ratio >= 0.85:
-                msg = "Near critical — bursts linger."
-                st.warning(f"Branching ratio ≈ {branching_ratio:.2f}. {msg}")
-            else:
-                msg = "Comfortably subcritical — bursts die out."
-                st.success(f"Branching ratio ≈ {branching_ratio:.2f}. {msg}")
+        metric_cols = st.columns(len(scenarios))
+        base_summary = summary
+        for idx, (label, _subtitle, _timeline_obj, stats) in enumerate(scenarios):
+            with metric_cols[idx]:
+                st.markdown(f"**{label}**")
+                delta_events = None
+                delta_avg_mark = None
+                delta_intensity = None
+                delta_branching = None
+                if idx > 0:
+                    delta_events = stats["Events"] - base_summary["Events"]
+                    delta_avg_mark = (
+                        stats["Average mark"] - base_summary["Average mark"]
+                    )
+                    delta_intensity = (
+                        stats["Max intensity"] - base_summary["Max intensity"]
+                    )
+                    if (
+                        isinstance(stats["Branching ratio"], NUMERIC_TYPES)
+                        and isinstance(base_summary["Branching ratio"], NUMERIC_TYPES)
+                        and not np.isnan(stats["Branching ratio"])
+                        and not np.isnan(base_summary["Branching ratio"])
+                    ):
+                        delta_branching = (
+                            stats["Branching ratio"] - base_summary["Branching ratio"]
+                        )
+                st.metric(
+                    "Events",
+                    stats["Events"],
+                    f"{delta_events:+d}" if delta_events is not None else None,
+                )
+                st.metric(
+                    "Average mark",
+                    f"{stats['Average mark']:.3f}",
+                    f"{delta_avg_mark:+.3f}" if delta_avg_mark is not None else None,
+                )
+                st.metric(
+                    "Max intensity",
+                    f"{stats['Max intensity']:.3f}",
+                    f"{delta_intensity:+.3f}" if delta_intensity is not None else None,
+                )
+                severity, msg = _branching_ratio_message(stats["Branching ratio"])
+                show_message = msg
+                if idx == 0:
+                    if severity == "error":
+                        st.error(show_message)
+                    elif severity == "warning":
+                        st.warning(show_message)
+                    elif severity == "success":
+                        st.success(show_message)
+                    else:
+                        st.info(show_message)
+                else:
+                    if delta_branching is not None:
+                        show_message = f"{msg} (Δ {delta_branching:+.2f})"
+                    if severity == "error":
+                        st.error(show_message)
+                    elif severity == "warning":
+                        st.warning(show_message)
+                    elif severity == "success":
+                        st.success(show_message)
+                    else:
+                        st.info(show_message)
+
+        summary_table = pd.DataFrame(
+            [
+                {
+                    "Scenario": label,
+                    **{k: v for k, v in stats.items() if k != "Branching ratio"},
+                    "Branching ratio": (
+                        stats["Branching ratio"]
+                        if isinstance(stats["Branching ratio"], NUMERIC_TYPES)
+                        else np.nan
+                    ),
+                }
+                for label, _, _, stats in scenarios
+            ]
+        ).set_index("Scenario")
+        st.dataframe(summary_table, use_container_width=True)
 
         if timeline.marks.size:
-            hist_fig, hist_ax = plt.subplots(figsize=(4, 3))
-            hist_ax.hist(
-                timeline.marks,
-                bins=min(30, max(5, int(len(timeline.marks) / 5))),
-                color="#1f77b4",
-                alpha=0.8,
+            hist_fig = go.Figure()
+            hist_fig.add_trace(
+                go.Histogram(
+                    x=timeline.marks,
+                    name=kernel_choice,
+                    nbinsx=min(30, max(5, int(len(timeline.marks) / 5))),
+                    opacity=0.75,
+                    marker_color="#1f77b4",
+                )
             )
-            hist_ax.set_title("Order size distribution")
-            hist_ax.set_xlabel("Mark value")
-            hist_ax.set_ylabel("Frequency")
-            st.pyplot(hist_fig)
+            if comparison_timeline is not None and comparison_timeline.marks.size:
+                hist_fig.add_trace(
+                    go.Histogram(
+                        x=comparison_timeline.marks,
+                        name=comparison_label or "Comparison",
+                        nbinsx=min(30, max(5, int(len(comparison_timeline.marks) / 5))),
+                        opacity=0.6,
+                        marker_color="#9467bd",
+                    )
+                )
+                hist_fig.update_layout(barmode="overlay")
+            hist_fig.update_layout(
+                title="Order size distribution",
+                xaxis_title="Mark value",
+                yaxis_title="Frequency",
+            )
+            st.plotly_chart(hist_fig, use_container_width=True)
 
         st.download_button(
             "Export simulated order flow (CSV)",

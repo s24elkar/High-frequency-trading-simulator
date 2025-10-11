@@ -39,7 +39,9 @@ def test_order_book_stress_hotspots_ranked() -> None:
 
 
 def test_poisson_stress_records_latency_and_sequence() -> None:
-    poisson_cfg = PoissonOrderFlowConfig(message_count=300, seed=99, base_rate_hz=1_000.0)
+    poisson_cfg = PoissonOrderFlowConfig(
+        message_count=300, seed=99, base_rate_hz=1_000.0
+    )
     config = StressConfig(
         poisson=poisson_cfg,
         burst=None,
@@ -65,7 +67,9 @@ def test_poisson_stress_records_latency_and_sequence() -> None:
 
 
 def test_stress_suite_runner(tmp_path: Path) -> None:
-    results = run_stress_suite(tmp_path, base_messages=500, base_rate_hz=2_000.0, seed=17)
+    results = run_stress_suite(
+        tmp_path, base_messages=500, base_rate_hz=2_000.0, seed=17
+    )
 
     output_file = tmp_path / "stress_suite.json"
     assert output_file.exists()

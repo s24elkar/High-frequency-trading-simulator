@@ -246,9 +246,7 @@ class PoissonOrderFlowGenerator:
                 validator.observe(event)
             yield event
 
-    def generate(
-        self, validator: SequenceValidator | None = None
-    ) -> List[MarketEvent]:
+    def generate(self, validator: SequenceValidator | None = None) -> List[MarketEvent]:
         return list(self.stream(validator=validator))
 
     # Internal helpers -------------------------------------------------
@@ -282,10 +280,7 @@ class PoissonOrderFlowGenerator:
         if not self._active_orders:
             return "add_order"
         if burst is not None and self.burst_config is not None:
-            if (
-                burst.active_ids
-                and self._rng.random() < self.burst_config.cancel_ratio
-            ):
+            if burst.active_ids and self._rng.random() < self.burst_config.cancel_ratio:
                 return "delete_order"
             return "add_order"
         roll = self._rng.random()
@@ -305,7 +300,9 @@ class PoissonOrderFlowGenerator:
             level = self._burst_state.price_level + jitter
         price = self.config.base_price + (level * self.config.tick_size)
         minimum = self.config.tick_size
-        return max(minimum, round(price / self.config.tick_size) * self.config.tick_size)
+        return max(
+            minimum, round(price / self.config.tick_size) * self.config.tick_size
+        )
 
     def _pick_size(self, burst: bool) -> float:
         if burst and self.burst_config is not None:
@@ -407,7 +404,10 @@ class PoissonOrderFlowGenerator:
         remaining_after = max(0.0, remaining - executed)
         if remaining_after <= 1e-12:
             self._active_orders.pop(order_id, None)
-            if self._burst_state is not None and order_id in self._burst_state.active_ids:
+            if (
+                self._burst_state is not None
+                and order_id in self._burst_state.active_ids
+            ):
                 try:
                     self._burst_state.active_ids.remove(order_id)
                 except ValueError:  # pragma: no cover - defensive

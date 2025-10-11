@@ -6,7 +6,7 @@ import ctypes
 import os
 import sys
 from pathlib import Path
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List, Optional
 
 _LIB_NAMES = {
     "darwin": ("liborder_book_bridge.dylib", "order_book_bridge.dylib"),
@@ -160,9 +160,7 @@ class OrderBook:
         )
 
     def cancel_order(self, order_id: int) -> bool:
-        return bool(
-            _lib.ob_cancel_order(self._handle, ctypes.c_int64(order_id))
-        )
+        return bool(_lib.ob_cancel_order(self._handle, ctypes.c_int64(order_id)))
 
     def best_bid(self) -> Optional[dict]:
         order = _Order()

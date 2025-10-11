@@ -69,13 +69,19 @@ def stats_to_hotspots(
     """Convert pstats output to a serialisable hotspot table."""
     if stats is None:
         return []
-    entries: Iterable[tuple[tuple[str, int, str], tuple[int, int, float, float]]] = stats.stats.items()
+    entries: Iterable[tuple[tuple[str, int, str], tuple[int, int, float, float]]] = (
+        stats.stats.items()
+    )
     sorted_entries = sorted(entries, key=lambda item: item[1][3], reverse=True)
     hotspots: List[Hotspot] = []
     for (filename, line_no, func_name), metrics in sorted_entries[:limit]:
         primitive_calls = metrics[0] if len(metrics) >= 1 else 0
         total_calls = metrics[1] if len(metrics) >= 2 else primitive_calls
-        cumulative = metrics[3] if len(metrics) >= 4 else metrics[2] if len(metrics) >= 3 else 0.0
+        cumulative = (
+            metrics[3]
+            if len(metrics) >= 4
+            else metrics[2] if len(metrics) >= 3 else 0.0
+        )
         location = f"{func_name} ({Path(filename).name}:{line_no})"
         hotspots.append(
             Hotspot(

@@ -12,17 +12,25 @@ from typing import List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-if __package__ in (None, ""):
+try:
+    from python.analysis import (
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        plot_latency_histogram,
+        plot_order_trade_ratio,
+        plot_throughput_series,
+    )
+except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
-
-from python.analysis import (
-    ArtifactWriter,
-    ReportMetadata,
-    detect_git_commit,
-    plot_latency_histogram,
-    plot_order_trade_ratio,
-    plot_throughput_series,
-)
+    from python.analysis import (  # type: ignore[import-not-found]
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        plot_latency_histogram,
+        plot_order_trade_ratio,
+        plot_throughput_series,
+    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -167,7 +175,9 @@ def aggregate() -> None:
             histogram,
             headers=("upper_ns", "count"),
         )
-        figure_path = figures_dir / f"latency_histogram_x{scenario.get('multiplier')}.png"
+        figure_path = (
+            figures_dir / f"latency_histogram_x{scenario.get('multiplier')}.png"
+        )
         plot_latency_histogram(
             histogram,
             multiplier=scenario.get("multiplier"),

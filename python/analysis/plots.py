@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
+from typing import Mapping, Sequence
+
 
 def ensure_matplotlib_backend(cache_dir: Path | None = None) -> None:
     """Configure Matplotlib for headless environments with deterministic caches."""

@@ -12,16 +12,26 @@ import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-if __package__ in (None, ""):
+try:
+    from python.analysis import (
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        ensure_matplotlib_backend,
+    )
+    from python.backtester.reports import BacktestRun, load_run
+except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
-
-from python.analysis import (
-    ArtifactWriter,
-    ReportMetadata,
-    detect_git_commit,
-    ensure_matplotlib_backend,
-)
-from python.backtester.reports import BacktestRun, load_run
+    from python.analysis import (  # type: ignore[import-not-found]
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        ensure_matplotlib_backend,
+    )
+    from python.backtester.reports import (  # type: ignore[import-not-found]
+        BacktestRun,
+        load_run,
+    )
 
 
 def _to_seconds(timestamps: Sequence[int]) -> np.ndarray:

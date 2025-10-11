@@ -329,6 +329,7 @@ class PythonOrderBook:
             depth=depth_entries,
         )
 
+
 class CppOrderBook:
     """Adapter around the native C++ order book bridge."""
 
@@ -353,7 +354,9 @@ class CppOrderBook:
 
     def enqueue(self, order: OrderRequest) -> None:
         if order.order_type.upper() != "LIMIT":
-            raise NotImplementedError("CppOrderBook currently supports LIMIT orders only")
+            raise NotImplementedError(
+                "CppOrderBook currently supports LIMIT orders only"
+            )
         side_enum = self._side_to_enum(order.side)
         quantity = self._qty(order.size)
         self._native.add_order(
@@ -434,8 +437,10 @@ class CppOrderBook:
                     else:
                         meta["remaining"] = remaining
             if executed_total > 0:
-                self.last_trade_price = price if price > 0 else (
-                    native_fills[0]["fill_price"] if native_fills else price
+                self.last_trade_price = (
+                    price
+                    if price > 0
+                    else (native_fills[0]["fill_price"] if native_fills else price)
                 )
                 self.last_trade_size = executed_total
         elif event_type == "trade":
@@ -471,11 +476,7 @@ class CppOrderBook:
                     ask_size = size_value
 
         imbalance = None
-        if (
-            bid_size is not None
-            and ask_size is not None
-            and bid_size + ask_size > 0
-        ):
+        if bid_size is not None and ask_size is not None and bid_size + ask_size > 0:
             imbalance = (bid_size - ask_size) / (bid_size + ask_size)
 
         snapshot = MarketSnapshot(
@@ -499,7 +500,9 @@ def load_order_book(depth: int = 5) -> PythonOrderBook:
     try:
         return CppOrderBook(depth=depth)
     except RuntimeError:
-        log.warning("Falling back to PythonOrderBook; native bridge initialisation failed")
+        log.warning(
+            "Falling back to PythonOrderBook; native bridge initialisation failed"
+        )
         return PythonOrderBook(depth=depth)
 
 

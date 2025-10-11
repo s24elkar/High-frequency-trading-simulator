@@ -74,9 +74,7 @@ class ConcurrentBacktester:
             self.backtester._context = context
 
     @staticmethod
-    def _make_queue(
-        factory: Callable[[int], object] | None, maxsize: int
-    ) -> object:
+    def _make_queue(factory: Callable[[int], object] | None, maxsize: int) -> object:
         if factory is None:
             return queue.Queue(maxsize)
         try:

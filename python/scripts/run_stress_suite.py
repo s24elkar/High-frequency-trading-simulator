@@ -9,16 +9,27 @@ from typing import Dict, List
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-if __package__ in (None, ""):
+try:
+    from python.analysis import ArtifactWriter, ReportMetadata, detect_git_commit
+    from python.backtester import (
+        BurstConfig,
+        PoissonOrderFlowConfig,
+        StressConfig,
+        run_order_book_stress,
+    )
+except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
-
-from python.analysis import ArtifactWriter, ReportMetadata, detect_git_commit
-from python.backtester import (
-    BurstConfig,
-    PoissonOrderFlowConfig,
-    StressConfig,
-    run_order_book_stress,
-)
+    from python.analysis import (  # type: ignore[import-not-found]
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+    )
+    from python.backtester import (  # type: ignore[import-not-found]
+        BurstConfig,
+        PoissonOrderFlowConfig,
+        StressConfig,
+        run_order_book_stress,
+    )
 
 
 def _scenario_config(

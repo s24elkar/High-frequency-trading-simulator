@@ -12,7 +12,12 @@ from typing import Iterable, Mapping, Sequence
 
 
 def _utc_timestamp() -> str:
-    return datetime.now(tz=timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    return (
+        datetime.now(tz=timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
 
 
 def detect_git_commit(repo_root: Path | None = None) -> str | None:
@@ -92,8 +97,12 @@ class ArtifactWriter:
     def _write_metadata_sidecar(self, artefact_path: Path) -> Path:
         meta_path = artefact_path.with_suffix(artefact_path.suffix + ".meta.json")
         if not self.overwrite and meta_path.exists():
-            raise FileExistsError(f"Refusing to overwrite metadata sidecar: {meta_path}")
-        meta_path.write_text(json.dumps(self.metadata.to_dict(), indent=2), encoding="utf-8")
+            raise FileExistsError(
+                f"Refusing to overwrite metadata sidecar: {meta_path}"
+            )
+        meta_path.write_text(
+            json.dumps(self.metadata.to_dict(), indent=2), encoding="utf-8"
+        )
         return meta_path
 
     def write_csv(
@@ -121,12 +130,16 @@ class ArtifactWriter:
         self._write_metadata_sidecar(path)
         return path
 
-    def attach_metadata(self, artefact_path: str | Path, *, relative: bool = True) -> Path:
+    def attach_metadata(
+        self, artefact_path: str | Path, *, relative: bool = True
+    ) -> Path:
         """Write metadata sidecar for an existing artefact."""
         path = Path(artefact_path)
         if relative:
             path = self.base_dir / path
         path.parent.mkdir(parents=True, exist_ok=True)
         if not path.exists():
-            raise FileNotFoundError(f"Artefact does not exist for metadata attachment: {path}")
+            raise FileNotFoundError(
+                f"Artefact does not exist for metadata attachment: {path}"
+            )
         return self._write_metadata_sidecar(path)

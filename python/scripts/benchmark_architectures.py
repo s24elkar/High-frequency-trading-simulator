@@ -4,32 +4,71 @@
 from __future__ import annotations
 
 import argparse
+import sys
 import time
 from dataclasses import asdict, dataclass
 from itertools import islice
 from pathlib import Path
 from statistics import mean
-from typing import Iterable, List, Tuple
-
-import sys
+from typing import Dict, Iterable, List, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-if __package__ in (None, ""):
+try:
+    from python.analysis import (
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        plot_metric_bars,
+    )
+    from python.backtester import (
+        Backtester,
+        BacktesterConfig,
+        ConcurrentBacktester,
+        MetricsLogger,
+        RiskConfig,
+        RiskEngine,
+    )
+    from python.backtester.itch import (
+        load_lobster_csv,
+        replay_from_lobster,
+    )
+    from python.backtester.logging import MetricsSnapshot
+    from python.backtester.order_book import load_order_book
+    from python.strategies.market_maker import (
+        MarketMakingConfig,
+        MarketMakingStrategy,
+    )
+except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
-
-from python.backtester import Backtester, BacktesterConfig, ConcurrentBacktester, MetricsLogger, RiskConfig, RiskEngine  # type: ignore[import-not-found]
-from python.backtester.logging import MetricsSnapshot  # type: ignore[import-not-found]
-from python.backtester.itch import (  # type: ignore[import-not-found]
-    load_lobster_csv,
-    replay_from_lobster,
-)
-from python.backtester.order_book import load_order_book  # type: ignore[import-not-found]
-from python.strategies.market_maker import (  # type: ignore[import-not-found]
-    MarketMakingConfig,
-    MarketMakingStrategy,
-)
-from python.analysis import ArtifactWriter, ReportMetadata, detect_git_commit, plot_metric_bars
+    from python.analysis import (  # type: ignore[import-not-found]
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        plot_metric_bars,
+    )
+    from python.backtester import (  # type: ignore[import-not-found]
+        Backtester,
+        BacktesterConfig,
+        ConcurrentBacktester,
+        MetricsLogger,
+        RiskConfig,
+        RiskEngine,
+    )
+    from python.backtester.itch import (  # type: ignore[import-not-found]
+        load_lobster_csv,
+        replay_from_lobster,
+    )
+    from python.backtester.logging import (  # type: ignore[import-not-found]
+        MetricsSnapshot,
+    )
+    from python.backtester.order_book import (  # type: ignore[import-not-found]
+        load_order_book,
+    )
+    from python.strategies.market_maker import (  # type: ignore[import-not-found]
+        MarketMakingConfig,
+        MarketMakingStrategy,
+    )
 
 
 @dataclass(slots=True)
@@ -96,7 +135,9 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _latency_fields(snapshot: MetricsSnapshot) -> Tuple[float | None, float | None, float | None, float | None]:
+def _latency_fields(
+    snapshot: MetricsSnapshot,
+) -> Tuple[float | None, float | None, float | None, float | None]:
     return (
         snapshot.avg_latency_ns,
         snapshot.p95_latency_ns,
@@ -105,7 +146,9 @@ def _latency_fields(snapshot: MetricsSnapshot) -> Tuple[float | None, float | No
     )
 
 
-def _build_backtester(symbol: str, depth: int, seed: int, metrics: MetricsLogger) -> Backtester:
+def _build_backtester(
+    symbol: str, depth: int, seed: int, metrics: MetricsLogger
+) -> Backtester:
     config = BacktesterConfig(symbol=symbol, book_depth=depth, record_snapshots=False)
     strategy = MarketMakingStrategy(
         MarketMakingConfig(spread_ticks=2, quote_size=5, update_interval_ns=200_000)
@@ -196,16 +239,22 @@ def summarise(results: List[RunMetrics]) -> Dict[str, dict]:
             "unique_digests": len(digests),
             "avg_wall_time_s": mean(run.wall_time_s for run in runs),
             "avg_throughput_msg_s": mean(run.throughput_msg_s for run in runs),
-            "avg_matching_ns": mean(
-                run.matching_avg_ns for run in runs if run.matching_avg_ns is not None
-            )
-            if any(run.matching_avg_ns is not None for run in runs)
-            else None,
-            "avg_message_ns": mean(
-                run.message_avg_ns for run in runs if run.message_avg_ns is not None
-            )
-            if any(run.message_avg_ns is not None for run in runs)
-            else None,
+            "avg_matching_ns": (
+                mean(
+                    run.matching_avg_ns
+                    for run in runs
+                    if run.matching_avg_ns is not None
+                )
+                if any(run.matching_avg_ns is not None for run in runs)
+                else None
+            ),
+            "avg_message_ns": (
+                mean(
+                    run.message_avg_ns for run in runs if run.message_avg_ns is not None
+                )
+                if any(run.message_avg_ns is not None for run in runs)
+                else None
+            ),
         }
     return summary
 
@@ -266,7 +315,9 @@ def main() -> None:
     if args.output_csv.parent == args.output.parent:
         writer.write_csv(args.output_csv.name, csv_rows, headers=csv_headers)
     else:
-        csv_writer = ArtifactWriter(args.output_csv.parent, metadata, overwrite=args.overwrite)
+        csv_writer = ArtifactWriter(
+            args.output_csv.parent, metadata, overwrite=args.overwrite
+        )
         csv_writer.write_csv(args.output_csv.name, csv_rows, headers=csv_headers)
 
     if not args.no_plot:

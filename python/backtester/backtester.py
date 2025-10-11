@@ -209,9 +209,7 @@ class Backtester:
             SlidingWindowRateLimiter(order_rate_limit) if order_rate_limit else None
         )
         self._cancel_rate_limiter = (
-            SlidingWindowRateLimiter(cancel_rate_limit)
-            if cancel_rate_limit
-            else None
+            SlidingWindowRateLimiter(cancel_rate_limit) if cancel_rate_limit else None
         )
         self._control_stats: Dict[str, int] = {
             "order_rate_limit": 0,
@@ -267,7 +265,9 @@ class Backtester:
     ) -> int:
         decision_perf = self._time_source()
         self._rt_last_decision_ns = decision_perf
-        if self._order_rate_limiter is not None and not self._order_rate_limiter.allow(self.clock_ns):
+        if self._order_rate_limiter is not None and not self._order_rate_limiter.allow(
+            self.clock_ns
+        ):
             message = (
                 "Order rate limit exceeded: "
                 f"{self._order_rate_limiter.window_size()} >= "
@@ -318,7 +318,10 @@ class Backtester:
         if order_id not in self.active_orders:
             log.debug("Cancel requested for unknown order %s", order_id)
             return
-        if self._cancel_rate_limiter is not None and not self._cancel_rate_limiter.allow(self.clock_ns):
+        if (
+            self._cancel_rate_limiter is not None
+            and not self._cancel_rate_limiter.allow(self.clock_ns)
+        ):
             message = (
                 "Cancel rate limit exceeded: "
                 f"{self._cancel_rate_limiter.window_size()} >= "

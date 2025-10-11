@@ -139,7 +139,9 @@ def _latency_histogram_from_sorted(
 def _percentile(sorted_values: List[int], fraction: float) -> Optional[int]:
     if not sorted_values:
         return None
-    index = max(0, min(len(sorted_values) - 1, math.ceil(fraction * len(sorted_values)) - 1))
+    index = max(
+        0, min(len(sorted_values) - 1, math.ceil(fraction * len(sorted_values)) - 1)
+    )
     return sorted_values[index]
 
 
@@ -255,7 +257,9 @@ def run_order_book_stress(
     total_messages = processed
     if total_messages == 0:
         total_messages = (
-            config.poisson.message_count if config.poisson is not None else config.message_count
+            config.poisson.message_count
+            if config.poisson is not None
+            else config.message_count
         )
 
     avg_latency = None
@@ -279,9 +283,9 @@ def run_order_book_stress(
         message_count=total_messages,
         final_depth=final_depth,
         hotspots=hotspots,
-        sequence_report=sequence_validator.report()
-        if sequence_validator is not None
-        else None,
+        sequence_report=(
+            sequence_validator.report() if sequence_validator is not None else None
+        ),
         avg_latency_ns=avg_latency,
         p95_latency_ns=p95_latency,
         p99_latency_ns=p99_latency,
@@ -300,6 +304,7 @@ def run_order_book_stress(
     )
 
     return metrics
+
 
 __all__ = [
     "StressConfig",

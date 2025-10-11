@@ -3,38 +3,66 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 import time
 from dataclasses import asdict, dataclass
 from itertools import islice
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, List
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-if __package__ in (None, ""):
+try:
+    from python.analysis import (
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        plot_metric_bars,
+    )
+    from python.backtester import (
+        Backtester,
+        BacktesterConfig,
+        MetricsLogger,
+        RiskConfig,
+        RiskEngine,
+        TimingSummary,
+    )
+    from python.backtester.itch import (
+        load_lobster_csv,
+        replay_from_lobster,
+    )
+    from python.backtester.order_book import load_order_book
+    from python.strategies.market_maker import (
+        MarketMakingConfig,
+        MarketMakingStrategy,
+    )
+except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
-
-from python.backtester import (  # type: ignore[import-not-found]
-    Backtester,
-    BacktesterConfig,
-    MetricsLogger,
-    RiskConfig,
-    RiskEngine,
-    TimingSummary,
-)
-from python.backtester.order_book import load_order_book  # type: ignore[import-not-found]
-from python.backtester.itch import (  # type: ignore[import-not-found]
-    load_lobster_csv,
-    replay_from_lobster,
-)
-from python.backtester.order_book import load_order_book  # type: ignore[import-not-found]
-from python.strategies.market_maker import (  # type: ignore[import-not-found]
-    MarketMakingConfig,
-    MarketMakingStrategy,
-)
-from python.analysis import ArtifactWriter, ReportMetadata, detect_git_commit, plot_metric_bars
+    from python.analysis import (  # type: ignore[import-not-found]
+        ArtifactWriter,
+        ReportMetadata,
+        detect_git_commit,
+        plot_metric_bars,
+    )
+    from python.backtester import (  # type: ignore[import-not-found]
+        Backtester,
+        BacktesterConfig,
+        MetricsLogger,
+        RiskConfig,
+        RiskEngine,
+        TimingSummary,
+    )
+    from python.backtester.itch import (  # type: ignore[import-not-found]
+        load_lobster_csv,
+        replay_from_lobster,
+    )
+    from python.backtester.order_book import (  # type: ignore[import-not-found]
+        load_order_book,
+    )
+    from python.strategies.market_maker import (  # type: ignore[import-not-found]
+        MarketMakingConfig,
+        MarketMakingStrategy,
+    )
 
 
 @dataclass(slots=True)
@@ -114,7 +142,9 @@ def run_case(
     strategy = MarketMakingStrategy(
         MarketMakingConfig(spread_ticks=2, quote_size=5, update_interval_ns=200_000)
     )
-    risk_engine = RiskEngine(RiskConfig(symbol=symbol, max_long=100.0, max_short=-100.0))
+    risk_engine = RiskEngine(
+        RiskConfig(symbol=symbol, max_long=100.0, max_short=-100.0)
+    )
     order_book = load_order_book(depth=10)
     backtester = Backtester(
         config=config,
@@ -169,6 +199,8 @@ def run_case(
         message_max_ns=message_max,
         digest=backtester.digest,
     )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run order-book throughput benchmarks")
     parser.add_argument(
@@ -259,7 +291,9 @@ def main() -> None:
         "results": [asdict(result) for result in results],
     }
     writer.write_json(args.output.name, payload)
-    csv_rows = [{field: getattr(result, field) for field in _CSV_FIELDS} for result in results]
+    csv_rows = [
+        {field: getattr(result, field) for field in _CSV_FIELDS} for result in results
+    ]
     writer.write_csv(f"{args.output.stem}.csv", csv_rows, headers=_CSV_FIELDS)
     if not args.no_plot:
         plot_path = args.plot_output
