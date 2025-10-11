@@ -70,12 +70,16 @@ def test_stress_suite_runner(tmp_path: Path) -> None:
     output_file = tmp_path / "stress_suite.json"
     assert output_file.exists()
     data = json.loads(output_file.read_text(encoding="utf-8"))
-    assert len(data["scenarios"]) == 3
+    scenarios = data.get("scenarios")
+    if scenarios is None:
+        scenarios = (data.get("data") or {}).get("scenarios")
+    assert scenarios is not None
+    assert len(scenarios) == 3
     assert results["scenarios"][0]["multiplier"] == 1
-    assert data["scenarios"][0]["latency_histogram"] is not None
-    assert data["scenarios"][0]["add_order_events"] is not None
-    execute_events = data["scenarios"][0]["execute_order_events"]
-    ratio = data["scenarios"][0]["order_to_trade_ratio"]
+    assert scenarios[0]["latency_histogram"] is not None
+    assert scenarios[0]["add_order_events"] is not None
+    execute_events = scenarios[0]["execute_order_events"]
+    ratio = scenarios[0]["order_to_trade_ratio"]
     if execute_events:
         assert ratio is not None
     else:

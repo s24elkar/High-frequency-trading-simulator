@@ -4,16 +4,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import time
 from dataclasses import asdict, dataclass
 from itertools import islice
 from pathlib import Path
 from typing import Dict, Iterable, List
 
-import sys
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(REPO_ROOT))
 
 from python.backtester import (  # type: ignore[import-not-found]
     Backtester,
@@ -33,6 +34,7 @@ from python.strategies.market_maker import (  # type: ignore[import-not-found]
     MarketMakingConfig,
     MarketMakingStrategy,
 )
+from python.analysis import ArtifactWriter, ReportMetadata, detect_git_commit, plot_metric_bars
 
 
 @dataclass(slots=True)
@@ -54,6 +56,27 @@ class BenchmarkResult:
     message_p99_ns: int | None
     message_max_ns: int | None
     digest: str
+
+
+_CSV_FIELDS: List[str] = [
+    "label",
+    "events",
+    "wall_time_s",
+    "throughput_msg_s",
+    "latency_avg_us",
+    "latency_p95_us",
+    "latency_p99_us",
+    "latency_max_us",
+    "matching_avg_ns",
+    "matching_p95_ns",
+    "matching_p99_ns",
+    "matching_max_ns",
+    "message_avg_ns",
+    "message_p95_ns",
+    "message_p99_ns",
+    "message_max_ns",
+    "digest",
+]
 
 
 def _latency_us(value_ns: float | int | None) -> float | None:
@@ -146,14 +169,6 @@ def run_case(
         message_max_ns=message_max,
         digest=backtester.digest,
     )
-
-
-def _write_results(results: Iterable[BenchmarkResult], path: Path) -> None:
-    payload = [asdict(result) for result in results]
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run order-book throughput benchmarks")
     parser.add_argument(
@@ -174,11 +189,27 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("logs/benchmarks/order_book_benchmarks.json"),
-        help="Where to write the JSON results",
+        default=Path("results/week4/perf/benchmarks.json"),
+        help="Where to write the primary JSON results (default: results/week4/perf/benchmarks.json)",
     )
     parser.add_argument("--symbol", type=str, default="AAPL")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Allow overwriting existing artefacts",
+    )
+    parser.add_argument(
+        "--plot-output",
+        type=Path,
+        default=Path("results/week4/plots/benchmark_throughput.png"),
+        help="Path to save the throughput summary plot",
+    )
+    parser.add_argument(
+        "--no-plot",
+        action="store_true",
+        help="Skip generating the throughput summary plot",
+    )
     args = parser.parse_args()
 
     scenarios = {
@@ -202,7 +233,47 @@ def main() -> None:
         )
         results.append(result)
 
-    _write_results(results, args.output)
+    output_dir = args.output.parent
+    metadata = ReportMetadata(
+        generator="run_benchmarks",
+        git_commit=detect_git_commit(REPO_ROOT),
+        seed=args.seed,
+        extra={
+            "baseline_messages": args.baseline,
+            "symbol": args.symbol,
+            "data_path": str(args.data),
+        },
+    )
+    writer = ArtifactWriter(output_dir, metadata, overwrite=args.overwrite)
+    scenario_definitions = [
+        {"label": label, "message_count": count} for label, count in scenarios.items()
+    ]
+    payload = {
+        "run_config": {
+            "symbol": args.symbol,
+            "seed": args.seed,
+            "baseline_messages": args.baseline,
+            "data_path": str(args.data),
+        },
+        "scenarios": scenario_definitions,
+        "results": [asdict(result) for result in results],
+    }
+    writer.write_json(args.output.name, payload)
+    csv_rows = [{field: getattr(result, field) for field in _CSV_FIELDS} for result in results]
+    writer.write_csv(f"{args.output.stem}.csv", csv_rows, headers=_CSV_FIELDS)
+    if not args.no_plot:
+        plot_path = args.plot_output
+        labels = [result.label for result in results]
+        throughputs = [float(result.throughput_msg_s) for result in results]
+        plot_metric_bars(
+            labels,
+            throughputs,
+            title="Benchmark throughput",
+            ylabel="Messages per second",
+            output_path=plot_path,
+            overwrite=args.overwrite,
+        )
+        writer.attach_metadata(plot_path, relative=False)
 
 
 if __name__ == "__main__":

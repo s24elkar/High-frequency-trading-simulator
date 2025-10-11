@@ -1,0 +1,3 @@
+run_id,symbol,realized_pnl,unrealized_pnl,inventory,order_volume,fill_volume,order_to_trade_ratio,fill_efficiency,avg_latency_ns,p95_latency_ns,p99_latency_ns,max_latency_ns,duration_ns,digest
+run_10x,SIM,0.0,0.0,0.0,0.0,95983.65599999847,0.0,,,,,,199981,bdb68d28a3e36efb9e42611146e717c045169c09b6d223552b28ffa5f7a3d4e6
+run_1x,SIM,0.0,0.0,0.0,0.0,9348.471000000027,0.0,,,,,,19987,de8c75204bfeb454e19b17a85132718f67166e4371d5f6be4aefe07da0bffba9

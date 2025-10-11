@@ -2,10 +2,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(REPO_ROOT))
+
+from python.analysis import ArtifactWriter, ReportMetadata, detect_git_commit
 from python.backtester import (
     BurstConfig,
     PoissonOrderFlowConfig,
@@ -55,6 +62,7 @@ def run_suite(
     base_rate_hz: float = 5_000.0,
     seed: int = 2024,
     symbol: str = "SYN-STRESS",
+    overwrite: bool = False,
 ) -> Dict[str, List[Dict[str, object]]]:
     scenarios: List[Dict[str, object]] = []
     for multiplier in (1, 10, 100):
@@ -113,10 +121,19 @@ def run_suite(
         scenarios.append(scenario)
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    payload = {"scenarios": scenarios}
-    (output_dir / "stress_suite.json").write_text(
-        json.dumps(payload, indent=2), encoding="utf-8"
+    metadata = ReportMetadata(
+        generator="run_stress_suite",
+        git_commit=detect_git_commit(REPO_ROOT),
+        seed=seed,
+        extra={
+            "base_messages": base_messages,
+            "base_rate_hz": base_rate_hz,
+            "symbol": symbol,
+        },
     )
+    writer = ArtifactWriter(output_dir, metadata, overwrite=overwrite)
+    payload = {"scenarios": scenarios}
+    writer.write_json("stress_suite.json", payload)
     return payload
 
 
@@ -146,6 +163,11 @@ def main() -> None:
     parser.add_argument(
         "--symbol", type=str, default="SYN-STRESS", help="Synthetic symbol identifier."
     )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Allow overwriting existing results",
+    )
     args = parser.parse_args()
     results = run_suite(
         args.output_dir,
@@ -153,6 +175,7 @@ def main() -> None:
         base_rate_hz=args.base_rate_hz,
         seed=args.seed,
         symbol=args.symbol,
+        overwrite=args.overwrite,
     )
     print(json.dumps(results, indent=2))
 

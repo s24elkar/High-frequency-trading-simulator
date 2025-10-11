@@ -4,20 +4,25 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import json
-import os
+import sys
 from collections import Counter
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
-os.environ.setdefault("MPLCONFIGDIR", "/tmp")
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
-import matplotlib
+if __package__ in (None, ""):
+    sys.path.insert(0, str(REPO_ROOT))
 
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+from python.analysis import (
+    ArtifactWriter,
+    ReportMetadata,
+    detect_git_commit,
+    plot_latency_histogram,
+    plot_order_trade_ratio,
+    plot_throughput_series,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -73,12 +78,6 @@ def load_json(path: Path) -> dict:
         return json.load(fh)
 
 
-def ensure_output(path: Path, overwrite: bool = False) -> None:
-    if path.exists() and not overwrite:
-        raise FileExistsError(f"Refusing to overwrite existing file: {path}")
-    path.parent.mkdir(parents=True, exist_ok=True)
-
-
 def calculate_throughput_series(
     run_path: Path, bucket_ns: int
 ) -> Tuple[List[dict], Optional[dict]]:
@@ -111,108 +110,26 @@ def calculate_throughput_series(
     return series, run_summary
 
 
-def _format_latency_label(upper_ns: Optional[int]) -> str:
-    if upper_ns is None:
-        return "> max"
-    if upper_ns < 1_000:
-        return f"≤{upper_ns}ns"
-    if upper_ns < 1_000_000:
-        return f"≤{upper_ns / 1_000:.0f}µs"
-    if upper_ns < 1_000_000_000:
-        return f"≤{upper_ns / 1_000_000:.1f}ms"
-    return f"≤{upper_ns / 1_000_000_000:.1f}s"
-
-
-def write_csv(path: Path, headers: Iterable[str], rows: Iterable[dict], overwrite: bool) -> None:
-    ensure_output(path, overwrite=overwrite)
-    with path.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=list(headers))
-        writer.writeheader()
-        for row in rows:
-            writer.writerow(row)
-
-
-def save_json(path: Path, payload: dict, overwrite: bool) -> None:
-    ensure_output(path, overwrite=overwrite)
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-
-
-def plot_latency_histogram(
-    scenario: dict, output_path: Path, overwrite: bool
-) -> None:
-    histogram = scenario.get("latency_histogram") or []
-    if not histogram:
-        return
-    ensure_output(output_path, overwrite=overwrite)
-    labels = [_format_latency_label(entry.get("upper_ns")) for entry in histogram]
-    counts = [entry.get("count", 0) for entry in histogram]
-    fig, ax = plt.subplots(figsize=(8, 4.5))
-    ax.bar(range(len(counts)), counts, color="#4477AA")
-    ax.set_xticks(range(len(labels)))
-    ax.set_xticklabels(labels, rotation=45, ha="right")
-    ax.set_ylabel("Events")
-    ax.set_title(f"Latency Histogram (multiplier ×{scenario.get('multiplier')})")
-    fig.tight_layout()
-    fig.savefig(output_path)
-    plt.close(fig)
-
-
-def plot_throughput_series(
-    runs: List[dict], output_path: Path, overwrite: bool
-) -> None:
-    if not runs:
-        return
-    ensure_output(output_path, overwrite=overwrite)
-    fig, ax = plt.subplots(figsize=(8, 4.5))
-    for run in runs:
-        run_id = run["run_id"]
-        points = run["series"]
-        if not points:
-            continue
-        times = [p["bucket_start_ms"] for p in points]
-        throughput = [p["throughput_msgs_per_s"] for p in points]
-        ax.plot(times, throughput, label=run_id)
-    ax.set_xlabel("Time (ms)")
-    ax.set_ylabel("Throughput (msg/s)")
-    ax.set_title("Throughput During Stress Runs")
-    ax.legend()
-    fig.tight_layout()
-    fig.savefig(output_path)
-    plt.close(fig)
-
-
-def plot_order_trade_ratio(
-    scenarios: List[dict], output_path: Path, overwrite: bool
-) -> None:
-    ratios = []
-    labels = []
-    for scenario in scenarios:
-        ratio = scenario.get("order_to_trade_ratio")
-        if ratio:
-            ratios.append(ratio)
-            labels.append(f"×{scenario.get('multiplier')}")
-    if not ratios:
-        return
-    ensure_output(output_path, overwrite=overwrite)
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.bar(labels, ratios, color="#AA7744")
-    ax.set_ylabel("Order-to-Trade Ratio (log scale)")
-    ax.set_yscale("log")
-    ax.set_title("Order Activity vs Executions")
-    fig.tight_layout()
-    fig.savefig(output_path)
-    plt.close(fig)
-
-
 def aggregate() -> None:
     args = parse_args()
     output_dir = args.output_dir
     figures_dir = args.figures_dir or (output_dir / "figures")
-    output_dir.mkdir(parents=True, exist_ok=True)
     figures_dir.mkdir(parents=True, exist_ok=True)
 
+    metadata = ReportMetadata(
+        generator="aggregate_stress_metrics",
+        git_commit=detect_git_commit(REPO_ROOT),
+        extra={"bucket_ns": args.bucket_ns},
+    )
+    writer = ArtifactWriter(output_dir, metadata, overwrite=args.overwrite)
+
     stress = load_json(args.stress_suite)
-    scenarios: List[dict] = stress.get("scenarios", [])
+    data_section = stress.get("data") if isinstance(stress, dict) else None
+    scenarios: List[dict]
+    if isinstance(data_section, dict):
+        scenarios = data_section.get("scenarios", [])
+    else:
+        scenarios = stress.get("scenarios", []) if isinstance(stress, dict) else []
 
     # Scenario level dataset
     scenario_rows: List[dict] = []
@@ -237,30 +154,27 @@ def aggregate() -> None:
             }
         )
 
-    write_csv(
-        output_dir / "scenario_metrics.csv",
-        scenario_rows[0].keys() if scenario_rows else [],
-        scenario_rows,
-        overwrite=args.overwrite,
-    )
+    if scenario_rows:
+        writer.write_csv("scenario_metrics.csv", scenario_rows)
 
     # Persist latency histograms per scenario
     for scenario in scenarios:
         histogram = scenario.get("latency_histogram") or []
         if not histogram:
             continue
-        write_csv(
-            output_dir
-            / f"latency_histogram_x{scenario.get('multiplier')}.csv",
-            ("upper_ns", "count"),
+        writer.write_csv(
+            f"latency_histogram_x{scenario.get('multiplier')}.csv",
             histogram,
-            overwrite=args.overwrite,
+            headers=("upper_ns", "count"),
         )
+        figure_path = figures_dir / f"latency_histogram_x{scenario.get('multiplier')}.png"
         plot_latency_histogram(
-            scenario,
-            figures_dir / f"latency_histogram_x{scenario.get('multiplier')}.png",
+            histogram,
+            multiplier=scenario.get("multiplier"),
+            output_path=figure_path,
             overwrite=args.overwrite,
         )
+        writer.attach_metadata(figure_path, relative=False)
 
     # Risk control aggregation
     risk_payload = load_json(args.log_integrity)
@@ -292,28 +206,71 @@ def aggregate() -> None:
             )
 
         throughput_rows: List[dict] = []
+        summary_rows: List[dict] = []
         for run in perf_runs:
             run_id = run["run_id"]
             for record in run["series"]:
                 throughput_rows.append({"run_id": run_id, **record})
+            summary = run.get("summary") or {}
+            if summary:
+                summary_rows.append(
+                    {
+                        "run_id": run_id,
+                        "symbol": summary.get("symbol"),
+                        "realized_pnl": summary.get("realized_pnl"),
+                        "unrealized_pnl": summary.get("unrealized_pnl"),
+                        "inventory": summary.get("inventory"),
+                        "order_volume": summary.get("order_volume"),
+                        "fill_volume": summary.get("fill_volume"),
+                        "order_to_trade_ratio": summary.get("order_to_trade_ratio"),
+                        "fill_efficiency": summary.get("fill_efficiency"),
+                        "avg_latency_ns": summary.get("avg_latency_ns"),
+                        "p95_latency_ns": summary.get("p95_latency_ns"),
+                        "p99_latency_ns": summary.get("p99_latency_ns"),
+                        "max_latency_ns": summary.get("max_latency_ns"),
+                        "duration_ns": summary.get("duration_ns"),
+                        "digest": summary.get("digest"),
+                    }
+                )
         if throughput_rows:
-            write_csv(
-                output_dir / "throughput_timeseries.csv",
-                throughput_rows[0].keys(),
+            writer.write_csv(
+                "throughput_timeseries.csv",
                 throughput_rows,
-                overwrite=args.overwrite,
+                headers=throughput_rows[0].keys(),
             )
+            figure_path = figures_dir / "throughput_timeseries.png"
             plot_throughput_series(
-                perf_runs,
-                figures_dir / "throughput_timeseries.png",
+                [
+                    {
+                        "label": run["run_id"],
+                        "times": [p["bucket_start_ms"] for p in run["series"]],
+                        "values": [p["throughput_msgs_per_s"] for p in run["series"]],
+                    }
+                    for run in perf_runs
+                ],
+                output_path=figure_path,
                 overwrite=args.overwrite,
             )
+            writer.attach_metadata(figure_path, relative=False)
+        if summary_rows:
+            writer.write_csv("perf_run_summary.csv", summary_rows)
 
-    plot_order_trade_ratio(
-        scenarios,
-        figures_dir / "order_to_trade_ratio.png",
-        overwrite=args.overwrite,
-    )
+    ratios = []
+    labels = []
+    for scenario in scenarios:
+        ratio = scenario.get("order_to_trade_ratio")
+        if ratio:
+            ratios.append(float(ratio))
+            labels.append(f"×{scenario.get('multiplier')}")
+    if ratios:
+        figure_path = figures_dir / "order_to_trade_ratio.png"
+        plot_order_trade_ratio(
+            labels,
+            ratios,
+            output_path=figure_path,
+            overwrite=args.overwrite,
+        )
+        writer.attach_metadata(figure_path, relative=False)
 
     aggregated_payload = {
         "scenarios": scenarios,
@@ -321,11 +278,7 @@ def aggregate() -> None:
         "perf_runs": perf_runs,
         "bucket_ns": args.bucket_ns,
     }
-    save_json(
-        output_dir / "aggregated_metrics.json",
-        aggregated_payload,
-        overwrite=args.overwrite,
-    )
+    writer.write_json("aggregated_metrics.json", aggregated_payload)
 
 
 if __name__ == "__main__":

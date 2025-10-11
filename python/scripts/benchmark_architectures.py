@@ -4,8 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import csv
-import json
 import time
 from dataclasses import asdict, dataclass
 from itertools import islice
@@ -15,8 +13,10 @@ from typing import Iterable, List, Tuple
 
 import sys
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(REPO_ROOT))
 
 from python.backtester import Backtester, BacktesterConfig, ConcurrentBacktester, MetricsLogger, RiskConfig, RiskEngine  # type: ignore[import-not-found]
 from python.backtester.logging import MetricsSnapshot  # type: ignore[import-not-found]
@@ -29,6 +29,7 @@ from python.strategies.market_maker import (  # type: ignore[import-not-found]
     MarketMakingConfig,
     MarketMakingStrategy,
 )
+from python.analysis import ArtifactWriter, ReportMetadata, detect_git_commit, plot_metric_bars
 
 
 @dataclass(slots=True)
@@ -81,6 +82,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Allow overwriting existing output files.",
     )
+    parser.add_argument(
+        "--plot-output",
+        type=Path,
+        default=Path("results/week4/plots/architecture_throughput.png"),
+        help="Path to save the architecture throughput comparison plot",
+    )
+    parser.add_argument(
+        "--no-plot",
+        action="store_true",
+        help="Skip generating the throughput comparison plot",
+    )
     return parser.parse_args()
 
 
@@ -91,12 +103,6 @@ def _latency_fields(snapshot: MetricsSnapshot) -> Tuple[float | None, float | No
         snapshot.p99_latency_ns,
         snapshot.max_latency_ns,
     )
-
-
-def _ensure_output(path: Path, overwrite: bool) -> None:
-    if path.exists() and not overwrite:
-        raise FileExistsError(f"Refusing to overwrite existing file: {path}")
-    path.parent.mkdir(parents=True, exist_ok=True)
 
 
 def _build_backtester(symbol: str, depth: int, seed: int, metrics: MetricsLogger) -> Backtester:
@@ -206,9 +212,6 @@ def summarise(results: List[RunMetrics]) -> Dict[str, dict]:
 
 def main() -> None:
     args = parse_args()
-    _ensure_output(args.output, args.overwrite)
-    _ensure_output(args.output_csv, args.overwrite)
-
     messages = _materialise_events(
         load_lobster_csv(args.data, symbol=args.symbol), args.message_count
     )
@@ -244,15 +247,41 @@ def main() -> None:
         "results": [asdict(run) for run in results],
         "summary": summary,
     }
+    metadata = ReportMetadata(
+        generator="benchmark_architectures",
+        git_commit=detect_git_commit(REPO_ROOT),
+        seed=args.seed,
+        extra={
+            "message_count": args.message_count,
+            "runs_per_variant": args.runs,
+            "data_path": str(args.data),
+            "symbol": args.symbol,
+        },
+    )
+    writer = ArtifactWriter(args.output.parent, metadata, overwrite=args.overwrite)
+    writer.write_json(args.output.name, payload)
 
-    args.output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    csv_rows = [asdict(run) for run in results]
+    csv_headers = list(RunMetrics.__dataclass_fields__.keys()) if results else []
+    if args.output_csv.parent == args.output.parent:
+        writer.write_csv(args.output_csv.name, csv_rows, headers=csv_headers)
+    else:
+        csv_writer = ArtifactWriter(args.output_csv.parent, metadata, overwrite=args.overwrite)
+        csv_writer.write_csv(args.output_csv.name, csv_rows, headers=csv_headers)
 
-    with args.output_csv.open("w", encoding="utf-8", newline="") as fh:
-        fieldnames = list(asdict(results[0]).keys()) if results else []
-        writer = csv.DictWriter(fh, fieldnames=fieldnames)
-        writer.writeheader()
-        for run in results:
-            writer.writerow(asdict(run))
+    if not args.no_plot:
+        labels = [f"{run.variant}#{run.iteration}" for run in results]
+        throughputs = [float(run.throughput_msg_s) for run in results]
+        plot_path = args.plot_output
+        plot_metric_bars(
+            labels,
+            throughputs,
+            title="Architecture throughput per run",
+            ylabel="Messages per second",
+            output_path=plot_path,
+            overwrite=args.overwrite,
+        )
+        writer.attach_metadata(plot_path, relative=False)
 
 
 if __name__ == "__main__":

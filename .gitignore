@@ -41,3 +41,6 @@
 *.dwo
 
 build/
+.matplotlib_cache/
+.tmp/
+pytest.log

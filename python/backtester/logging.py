@@ -253,12 +253,16 @@ class MetricsLogger:
             "payload": record.payload,
         }
         if self._json_handle:
-            self._json_handle.write(json.dumps(payload) + "\n")
+            self._json_handle.write(json.dumps(payload, sort_keys=True) + "\n")
             self._json_handle.flush()
         if self._conn:
             self._conn.execute(
                 "INSERT INTO metrics(timestamp_ns, event_type, payload) VALUES(?, ?, ?)",
-                (record.timestamp_ns, record.event_type, json.dumps(record.payload)),
+                (
+                    record.timestamp_ns,
+                    record.event_type,
+                    json.dumps(record.payload, sort_keys=True),
+                ),
             )
             self._conn.commit()
 

@@ -1,1973 +1,1956 @@
 {
-  "scenarios": [
-    {
-      "multiplier": 1,
-      "message_count": 5000,
-      "wall_time_s": 0.2452259999990929,
-      "peak_memory_kb": 240.9697265625,
-      "throughput_msgs_per_s": 20389.355125551512,
-      "avg_latency_ns": 30869.4976,
-      "p95_latency_ns": 38209,
-      "p99_latency_ns": 50167,
-      "max_latency_ns": 133708,
-      "sequence_ok": true,
-      "orphan_cancels": 0,
-      "orphan_executes": 0,
-      "duplicate_order_ids": 0,
-      "sequence_errors": [],
-      "latency_histogram": [
-        {
-          "upper_ns": 100,
-          "count": 0
-        },
-        {
-          "upper_ns": 250,
-          "count": 0
-        },
-        {
-          "upper_ns": 500,
-          "count": 0
-        },
-        {
-          "upper_ns": 1000,
-          "count": 0
-        },
-        {
-          "upper_ns": 2500,
-          "count": 0
-        },
-        {
-          "upper_ns": 5000,
-          "count": 0
-        },
-        {
-          "upper_ns": 10000,
-          "count": 0
-        },
-        {
-          "upper_ns": 25000,
-          "count": 1330
-        },
-        {
-          "upper_ns": 50000,
-          "count": 3619
-        },
-        {
-          "upper_ns": 100000,
-          "count": 44
-        },
-        {
-          "upper_ns": 250000,
-          "count": 7
-        }
-      ],
-      "add_order_events": 2501,
-      "delete_order_events": 2499,
-      "execute_order_events": 0,
-      "order_to_trade_ratio": null
-    },
-    {
-      "multiplier": 10,
-      "message_count": 50000,
-      "wall_time_s": 2.3559133329981705,
-      "peak_memory_kb": 1825.7294921875,
-      "throughput_msgs_per_s": 21223.19157486547,
-      "avg_latency_ns": 30378.52324,
-      "p95_latency_ns": 37000,
-      "p99_latency_ns": 50625,
-      "max_latency_ns": 14515750,
-      "sequence_ok": true,
-      "orphan_cancels": 0,
-      "orphan_executes": 0,
-      "duplicate_order_ids": 0,
-      "sequence_errors": [],
-      "latency_histogram": [
-        {
-          "upper_ns": 100,
-          "count": 0
-        },
-        {
-          "upper_ns": 250,
-          "count": 0
-        },
-        {
-          "upper_ns": 500,
-          "count": 0
-        },
-        {
-          "upper_ns": 1000,
-          "count": 0
-        },
-        {
-          "upper_ns": 2500,
-          "count": 0
-        },
-        {
-          "upper_ns": 5000,
-          "count": 0
-        },
-        {
-          "upper_ns": 10000,
-          "count": 0
-        },
-        {
-          "upper_ns": 25000,
-          "count": 13406
-        },
-        {
-          "upper_ns": 50000,
-          "count": 36064
-        },
-        {
-          "upper_ns": 100000,
-          "count": 436
-        },
-        {
-          "upper_ns": 250000,
-          "count": 79
-        },
-        {
-          "upper_ns": 500000,
-          "count": 6
-        },
-        {
-          "upper_ns": 1000000,
-          "count": 5
-        },
-        {
-          "upper_ns": 2500000,
-          "count": 2
-        },
-        {
-          "upper_ns": 5000000,
-          "count": 1
-        },
-        {
-          "upper_ns": 10000000,
-          "count": 0
-        },
-        {
-          "upper_ns": 25000000,
-          "count": 1
-        }
-      ],
-      "add_order_events": 25000,
-      "delete_order_events": 25000,
-      "execute_order_events": 0,
-      "order_to_trade_ratio": null
-    },
-    {
-      "multiplier": 100,
-      "message_count": 500000,
-      "wall_time_s": 23.01658574999965,
-      "peak_memory_kb": 17774.0849609375,
-      "throughput_msgs_per_s": 21723.465218989208,
-      "avg_latency_ns": 29734.291728,
-      "p95_latency_ns": 36500,
-      "p99_latency_ns": 48209,
-      "max_latency_ns": 12185292,
-      "sequence_ok": true,
-      "orphan_cancels": 0,
-      "orphan_executes": 0,
-      "duplicate_order_ids": 0,
-      "sequence_errors": [],
-      "latency_histogram": [
-        {
-          "upper_ns": 100,
-          "count": 0
-        },
-        {
-          "upper_ns": 250,
-          "count": 0
-        },
-        {
-          "upper_ns": 500,
-          "count": 0
-        },
-        {
-          "upper_ns": 1000,
-          "count": 0
-        },
-        {
-          "upper_ns": 2500,
-          "count": 0
-        },
-        {
-          "upper_ns": 5000,
-          "count": 0
-        },
-        {
-          "upper_ns": 10000,
-          "count": 0
-        },
-        {
-          "upper_ns": 25000,
-          "count": 137632
-        },
-        {
-          "upper_ns": 50000,
-          "count": 358070
-        },
-        {
-          "upper_ns": 100000,
-          "count": 3702
-        },
-        {
-          "upper_ns": 250000,
-          "count": 551
-        },
-        {
-          "upper_ns": 500000,
-          "count": 27
-        },
-        {
-          "upper_ns": 1000000,
-          "count": 8
-        },
-        {
-          "upper_ns": 2500000,
-          "count": 3
-        },
-        {
-          "upper_ns": 5000000,
-          "count": 3
-        },
-        {
-          "upper_ns": 10000000,
-          "count": 3
-        },
-        {
-          "upper_ns": 25000000,
-          "count": 1
-        }
-      ],
-      "add_order_events": 249998,
-      "delete_order_events": 249997,
-      "execute_order_events": 5,
-      "order_to_trade_ratio": 49999.6
+  "meta": {
+    "schema_version": "hftsim/v0",
+    "generated_at": "2025-10-11T09:13:22Z",
+    "generator": "aggregate_stress_metrics",
+    "git_commit": "49af07a467d90379be5f54eea7e6224265297b1c",
+    "extra": {
+      "bucket_ns": 1000
     }
-  ],
-  "risk_controls": {
-    "total_logs": 3,
-    "total_orphan_executes": 1,
-    "total_orphan_cancels": 0,
-    "files": [
+  },
+  "data": {
+    "scenarios": [
       {
-        "file": "results/week4/stress/risk_controls/logs/cancel_rate_limit.jsonl",
-        "total_records": 4,
-        "sequence": {
-          "ok": true,
-          "total_events": 3,
-          "timestamp_monotonic": true,
-          "orphan_cancels": 0,
-          "orphan_executes": 0,
-          "duplicate_order_ids": 0,
-          "max_timestamp_gap_ns": 0,
-          "errors": []
-        },
-        "control_events": [
+        "multiplier": 1,
+        "message_count": 10000,
+        "wall_time_s": 0.4730704999965383,
+        "peak_memory_kb": 421.19921875,
+        "throughput_msgs_per_s": 21138.498384644943,
+        "avg_latency_ns": 29822.8949,
+        "p95_latency_ns": 36792,
+        "p99_latency_ns": 45709,
+        "max_latency_ns": 152500,
+        "sequence_ok": true,
+        "orphan_cancels": 0,
+        "orphan_executes": 0,
+        "duplicate_order_ids": 0,
+        "sequence_errors": [],
+        "latency_histogram": [
           {
-            "kind": "cancel_rate_limit",
-            "message": "Cancel rate limit exceeded: 1 >= 1 cancels in 1000ns",
-            "order_id": 2,
-            "max_actions": 1,
-            "interval_ns": 1000
+            "upper_ns": 100,
+            "count": 0
+          },
+          {
+            "upper_ns": 250,
+            "count": 0
+          },
+          {
+            "upper_ns": 500,
+            "count": 0
+          },
+          {
+            "upper_ns": 1000,
+            "count": 0
+          },
+          {
+            "upper_ns": 2500,
+            "count": 0
+          },
+          {
+            "upper_ns": 5000,
+            "count": 0
+          },
+          {
+            "upper_ns": 10000,
+            "count": 0
+          },
+          {
+            "upper_ns": 25000,
+            "count": 2744
+          },
+          {
+            "upper_ns": 50000,
+            "count": 7207
+          },
+          {
+            "upper_ns": 100000,
+            "count": 48
+          },
+          {
+            "upper_ns": 250000,
+            "count": 1
           }
-        ]
+        ],
+        "add_order_events": 5000,
+        "delete_order_events": 4999,
+        "execute_order_events": 1,
+        "order_to_trade_ratio": 5000.0
       },
       {
-        "file": "results/week4/stress/risk_controls/logs/kill_switch.jsonl",
-        "total_records": 1,
-        "sequence": {
-          "ok": false,
-          "total_events": 1,
-          "timestamp_monotonic": true,
-          "orphan_cancels": 0,
-          "orphan_executes": 1,
-          "duplicate_order_ids": 0,
-          "max_timestamp_gap_ns": 0,
-          "errors": [
+        "multiplier": 10,
+        "message_count": 100000,
+        "wall_time_s": 4.599269958009245,
+        "peak_memory_kb": 3543.52734375,
+        "throughput_msgs_per_s": 21742.581086343573,
+        "avg_latency_ns": 29970.08637,
+        "p95_latency_ns": 37041,
+        "p99_latency_ns": 43167,
+        "max_latency_ns": 372291,
+        "sequence_ok": true,
+        "orphan_cancels": 0,
+        "orphan_executes": 0,
+        "duplicate_order_ids": 0,
+        "sequence_errors": [],
+        "latency_histogram": [
+          {
+            "upper_ns": 100,
+            "count": 0
+          },
+          {
+            "upper_ns": 250,
+            "count": 0
+          },
+          {
+            "upper_ns": 500,
+            "count": 0
+          },
+          {
+            "upper_ns": 1000,
+            "count": 0
+          },
+          {
+            "upper_ns": 2500,
+            "count": 0
+          },
+          {
+            "upper_ns": 5000,
+            "count": 0
+          },
+          {
+            "upper_ns": 10000,
+            "count": 0
+          },
+          {
+            "upper_ns": 25000,
+            "count": 21285
+          },
+          {
+            "upper_ns": 50000,
+            "count": 78218
+          },
+          {
+            "upper_ns": 100000,
+            "count": 488
+          },
+          {
+            "upper_ns": 250000,
+            "count": 8
+          },
+          {
+            "upper_ns": 500000,
+            "count": 1
+          }
+        ],
+        "add_order_events": 49999,
+        "delete_order_events": 49997,
+        "execute_order_events": 4,
+        "order_to_trade_ratio": 12499.75
+      },
+      {
+        "multiplier": 100,
+        "message_count": 1000000,
+        "wall_time_s": 44.37998324999353,
+        "peak_memory_kb": 35624.3916015625,
+        "throughput_msgs_per_s": 22532.680879282347,
+        "avg_latency_ns": 28662.015867,
+        "p95_latency_ns": 34625,
+        "p99_latency_ns": 37292,
+        "max_latency_ns": 2622917,
+        "sequence_ok": true,
+        "orphan_cancels": 0,
+        "orphan_executes": 0,
+        "duplicate_order_ids": 0,
+        "sequence_errors": [],
+        "latency_histogram": [
+          {
+            "upper_ns": 100,
+            "count": 0
+          },
+          {
+            "upper_ns": 250,
+            "count": 0
+          },
+          {
+            "upper_ns": 500,
+            "count": 0
+          },
+          {
+            "upper_ns": 1000,
+            "count": 0
+          },
+          {
+            "upper_ns": 2500,
+            "count": 0
+          },
+          {
+            "upper_ns": 5000,
+            "count": 0
+          },
+          {
+            "upper_ns": 10000,
+            "count": 0
+          },
+          {
+            "upper_ns": 25000,
+            "count": 282655
+          },
+          {
+            "upper_ns": 50000,
+            "count": 716412
+          },
+          {
+            "upper_ns": 100000,
+            "count": 880
+          },
+          {
+            "upper_ns": 250000,
+            "count": 50
+          },
+          {
+            "upper_ns": 500000,
+            "count": 0
+          },
+          {
+            "upper_ns": 1000000,
+            "count": 1
+          },
+          {
+            "upper_ns": 2500000,
+            "count": 1
+          },
+          {
+            "upper_ns": 5000000,
+            "count": 1
+          }
+        ],
+        "add_order_events": 499997,
+        "delete_order_events": 499994,
+        "execute_order_events": 9,
+        "order_to_trade_ratio": 55555.22222222222
+      }
+    ],
+    "risk_controls": {
+      "total_logs": 3,
+      "total_orphan_executes": 1,
+      "total_orphan_cancels": 0,
+      "files": [
+        {
+          "file": "results/week4/stress/risk_controls/logs/cancel_rate_limit.jsonl",
+          "total_records": 4,
+          "sequence": {
+            "ok": true,
+            "total_events": 3,
+            "timestamp_monotonic": true,
+            "orphan_cancels": 0,
+            "orphan_executes": 0,
+            "duplicate_order_ids": 0,
+            "max_timestamp_gap_ns": 0,
+            "errors": []
+          },
+          "control_events": [
             {
-              "index": 0,
-              "message": "execution for unknown order",
-              "order_id": 999,
-              "event_type": "execute_order"
+              "kind": "cancel_rate_limit",
+              "message": "Cancel rate limit exceeded: 1 >= 1 cancels in 1000ns",
+              "order_id": 2,
+              "max_actions": 1,
+              "interval_ns": 1000
             }
           ]
         },
-        "control_events": []
+        {
+          "file": "results/week4/stress/risk_controls/logs/kill_switch.jsonl",
+          "total_records": 1,
+          "sequence": {
+            "ok": false,
+            "total_events": 1,
+            "timestamp_monotonic": true,
+            "orphan_cancels": 0,
+            "orphan_executes": 1,
+            "duplicate_order_ids": 0,
+            "max_timestamp_gap_ns": 0,
+            "errors": [
+              {
+                "index": 0,
+                "message": "execution for unknown order",
+                "order_id": 999,
+                "event_type": "execute_order"
+              }
+            ]
+          },
+          "control_events": []
+        },
+        {
+          "file": "results/week4/stress/risk_controls/logs/order_rate_limit.jsonl",
+          "total_records": 3,
+          "sequence": {
+            "ok": true,
+            "total_events": 2,
+            "timestamp_monotonic": true,
+            "orphan_cancels": 0,
+            "orphan_executes": 0,
+            "duplicate_order_ids": 0,
+            "max_timestamp_gap_ns": 0,
+            "errors": []
+          },
+          "control_events": [
+            {
+              "kind": "order_rate_limit",
+              "message": "Order rate limit exceeded: 2 >= 2 orders in 1000ns",
+              "max_actions": 2,
+              "interval_ns": 1000
+            }
+          ]
+        }
+      ]
+    },
+    "perf_runs": [
+      {
+        "run_id": "run_10x",
+        "series": [
+          {
+            "bucket_idx": 0,
+            "bucket_start_ns": 0,
+            "bucket_start_ms": 0.0,
+            "messages": 276,
+            "throughput_msgs_per_s": 276000000.0
+          },
+          {
+            "bucket_idx": 1,
+            "bucket_start_ns": 1000,
+            "bucket_start_ms": 0.001,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 2,
+            "bucket_start_ns": 2000,
+            "bucket_start_ms": 0.002,
+            "messages": 280,
+            "throughput_msgs_per_s": 280000000.0
+          },
+          {
+            "bucket_idx": 3,
+            "bucket_start_ns": 3000,
+            "bucket_start_ms": 0.003,
+            "messages": 255,
+            "throughput_msgs_per_s": 255000000.0
+          },
+          {
+            "bucket_idx": 4,
+            "bucket_start_ns": 4000,
+            "bucket_start_ms": 0.004,
+            "messages": 325,
+            "throughput_msgs_per_s": 325000000.0
+          },
+          {
+            "bucket_idx": 5,
+            "bucket_start_ns": 5000,
+            "bucket_start_ms": 0.005,
+            "messages": 257,
+            "throughput_msgs_per_s": 257000000.0
+          },
+          {
+            "bucket_idx": 6,
+            "bucket_start_ns": 6000,
+            "bucket_start_ms": 0.006,
+            "messages": 288,
+            "throughput_msgs_per_s": 288000000.0
+          },
+          {
+            "bucket_idx": 7,
+            "bucket_start_ns": 7000,
+            "bucket_start_ms": 0.007,
+            "messages": 233,
+            "throughput_msgs_per_s": 233000000.0
+          },
+          {
+            "bucket_idx": 8,
+            "bucket_start_ns": 8000,
+            "bucket_start_ms": 0.008,
+            "messages": 311,
+            "throughput_msgs_per_s": 311000000.0
+          },
+          {
+            "bucket_idx": 9,
+            "bucket_start_ns": 9000,
+            "bucket_start_ms": 0.009,
+            "messages": 285,
+            "throughput_msgs_per_s": 285000000.0
+          },
+          {
+            "bucket_idx": 10,
+            "bucket_start_ns": 10000,
+            "bucket_start_ms": 0.01,
+            "messages": 296,
+            "throughput_msgs_per_s": 296000000.0
+          },
+          {
+            "bucket_idx": 11,
+            "bucket_start_ns": 11000,
+            "bucket_start_ms": 0.011,
+            "messages": 320,
+            "throughput_msgs_per_s": 320000000.0
+          },
+          {
+            "bucket_idx": 12,
+            "bucket_start_ns": 12000,
+            "bucket_start_ms": 0.012,
+            "messages": 323,
+            "throughput_msgs_per_s": 323000000.0
+          },
+          {
+            "bucket_idx": 13,
+            "bucket_start_ns": 13000,
+            "bucket_start_ms": 0.013,
+            "messages": 309,
+            "throughput_msgs_per_s": 309000000.0
+          },
+          {
+            "bucket_idx": 14,
+            "bucket_start_ns": 14000,
+            "bucket_start_ms": 0.014,
+            "messages": 289,
+            "throughput_msgs_per_s": 289000000.0
+          },
+          {
+            "bucket_idx": 15,
+            "bucket_start_ns": 15000,
+            "bucket_start_ms": 0.015,
+            "messages": 305,
+            "throughput_msgs_per_s": 305000000.0
+          },
+          {
+            "bucket_idx": 16,
+            "bucket_start_ns": 16000,
+            "bucket_start_ms": 0.016,
+            "messages": 289,
+            "throughput_msgs_per_s": 289000000.0
+          },
+          {
+            "bucket_idx": 17,
+            "bucket_start_ns": 17000,
+            "bucket_start_ms": 0.017,
+            "messages": 276,
+            "throughput_msgs_per_s": 276000000.0
+          },
+          {
+            "bucket_idx": 18,
+            "bucket_start_ns": 18000,
+            "bucket_start_ms": 0.018,
+            "messages": 267,
+            "throughput_msgs_per_s": 267000000.0
+          },
+          {
+            "bucket_idx": 19,
+            "bucket_start_ns": 19000,
+            "bucket_start_ms": 0.019,
+            "messages": 298,
+            "throughput_msgs_per_s": 298000000.0
+          },
+          {
+            "bucket_idx": 20,
+            "bucket_start_ns": 20000,
+            "bucket_start_ms": 0.02,
+            "messages": 276,
+            "throughput_msgs_per_s": 276000000.0
+          },
+          {
+            "bucket_idx": 21,
+            "bucket_start_ns": 21000,
+            "bucket_start_ms": 0.021,
+            "messages": 281,
+            "throughput_msgs_per_s": 281000000.0
+          },
+          {
+            "bucket_idx": 22,
+            "bucket_start_ns": 22000,
+            "bucket_start_ms": 0.022,
+            "messages": 284,
+            "throughput_msgs_per_s": 284000000.0
+          },
+          {
+            "bucket_idx": 23,
+            "bucket_start_ns": 23000,
+            "bucket_start_ms": 0.023,
+            "messages": 287,
+            "throughput_msgs_per_s": 287000000.0
+          },
+          {
+            "bucket_idx": 24,
+            "bucket_start_ns": 24000,
+            "bucket_start_ms": 0.024,
+            "messages": 277,
+            "throughput_msgs_per_s": 277000000.0
+          },
+          {
+            "bucket_idx": 25,
+            "bucket_start_ns": 25000,
+            "bucket_start_ms": 0.025,
+            "messages": 250,
+            "throughput_msgs_per_s": 250000000.0
+          },
+          {
+            "bucket_idx": 26,
+            "bucket_start_ns": 26000,
+            "bucket_start_ms": 0.026,
+            "messages": 276,
+            "throughput_msgs_per_s": 276000000.0
+          },
+          {
+            "bucket_idx": 27,
+            "bucket_start_ns": 27000,
+            "bucket_start_ms": 0.027,
+            "messages": 275,
+            "throughput_msgs_per_s": 275000000.0
+          },
+          {
+            "bucket_idx": 28,
+            "bucket_start_ns": 28000,
+            "bucket_start_ms": 0.028,
+            "messages": 275,
+            "throughput_msgs_per_s": 275000000.0
+          },
+          {
+            "bucket_idx": 29,
+            "bucket_start_ns": 29000,
+            "bucket_start_ms": 0.029,
+            "messages": 288,
+            "throughput_msgs_per_s": 288000000.0
+          },
+          {
+            "bucket_idx": 30,
+            "bucket_start_ns": 30000,
+            "bucket_start_ms": 0.03,
+            "messages": 281,
+            "throughput_msgs_per_s": 281000000.0
+          },
+          {
+            "bucket_idx": 31,
+            "bucket_start_ns": 31000,
+            "bucket_start_ms": 0.031,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 32,
+            "bucket_start_ns": 32000,
+            "bucket_start_ms": 0.032,
+            "messages": 305,
+            "throughput_msgs_per_s": 305000000.0
+          },
+          {
+            "bucket_idx": 33,
+            "bucket_start_ns": 33000,
+            "bucket_start_ms": 0.033,
+            "messages": 285,
+            "throughput_msgs_per_s": 285000000.0
+          },
+          {
+            "bucket_idx": 34,
+            "bucket_start_ns": 34000,
+            "bucket_start_ms": 0.034,
+            "messages": 253,
+            "throughput_msgs_per_s": 253000000.0
+          },
+          {
+            "bucket_idx": 35,
+            "bucket_start_ns": 35000,
+            "bucket_start_ms": 0.035,
+            "messages": 297,
+            "throughput_msgs_per_s": 297000000.0
+          },
+          {
+            "bucket_idx": 36,
+            "bucket_start_ns": 36000,
+            "bucket_start_ms": 0.036,
+            "messages": 274,
+            "throughput_msgs_per_s": 274000000.0
+          },
+          {
+            "bucket_idx": 37,
+            "bucket_start_ns": 37000,
+            "bucket_start_ms": 0.037,
+            "messages": 253,
+            "throughput_msgs_per_s": 253000000.0
+          },
+          {
+            "bucket_idx": 38,
+            "bucket_start_ns": 38000,
+            "bucket_start_ms": 0.038,
+            "messages": 303,
+            "throughput_msgs_per_s": 303000000.0
+          },
+          {
+            "bucket_idx": 39,
+            "bucket_start_ns": 39000,
+            "bucket_start_ms": 0.039,
+            "messages": 275,
+            "throughput_msgs_per_s": 275000000.0
+          },
+          {
+            "bucket_idx": 40,
+            "bucket_start_ns": 40000,
+            "bucket_start_ms": 0.04,
+            "messages": 287,
+            "throughput_msgs_per_s": 287000000.0
+          },
+          {
+            "bucket_idx": 41,
+            "bucket_start_ns": 41000,
+            "bucket_start_ms": 0.041,
+            "messages": 272,
+            "throughput_msgs_per_s": 272000000.0
+          },
+          {
+            "bucket_idx": 42,
+            "bucket_start_ns": 42000,
+            "bucket_start_ms": 0.042,
+            "messages": 274,
+            "throughput_msgs_per_s": 274000000.0
+          },
+          {
+            "bucket_idx": 43,
+            "bucket_start_ns": 43000,
+            "bucket_start_ms": 0.043,
+            "messages": 311,
+            "throughput_msgs_per_s": 311000000.0
+          },
+          {
+            "bucket_idx": 44,
+            "bucket_start_ns": 44000,
+            "bucket_start_ms": 0.044,
+            "messages": 309,
+            "throughput_msgs_per_s": 309000000.0
+          },
+          {
+            "bucket_idx": 45,
+            "bucket_start_ns": 45000,
+            "bucket_start_ms": 0.045,
+            "messages": 304,
+            "throughput_msgs_per_s": 304000000.0
+          },
+          {
+            "bucket_idx": 46,
+            "bucket_start_ns": 46000,
+            "bucket_start_ms": 0.046,
+            "messages": 295,
+            "throughput_msgs_per_s": 295000000.0
+          },
+          {
+            "bucket_idx": 47,
+            "bucket_start_ns": 47000,
+            "bucket_start_ms": 0.047,
+            "messages": 256,
+            "throughput_msgs_per_s": 256000000.0
+          },
+          {
+            "bucket_idx": 48,
+            "bucket_start_ns": 48000,
+            "bucket_start_ms": 0.048,
+            "messages": 304,
+            "throughput_msgs_per_s": 304000000.0
+          },
+          {
+            "bucket_idx": 49,
+            "bucket_start_ns": 49000,
+            "bucket_start_ms": 0.049,
+            "messages": 310,
+            "throughput_msgs_per_s": 310000000.0
+          },
+          {
+            "bucket_idx": 50,
+            "bucket_start_ns": 50000,
+            "bucket_start_ms": 0.05,
+            "messages": 243,
+            "throughput_msgs_per_s": 243000000.0
+          },
+          {
+            "bucket_idx": 51,
+            "bucket_start_ns": 51000,
+            "bucket_start_ms": 0.051,
+            "messages": 274,
+            "throughput_msgs_per_s": 274000000.0
+          },
+          {
+            "bucket_idx": 52,
+            "bucket_start_ns": 52000,
+            "bucket_start_ms": 0.052,
+            "messages": 307,
+            "throughput_msgs_per_s": 307000000.0
+          },
+          {
+            "bucket_idx": 53,
+            "bucket_start_ns": 53000,
+            "bucket_start_ms": 0.053,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 54,
+            "bucket_start_ns": 54000,
+            "bucket_start_ms": 0.054,
+            "messages": 292,
+            "throughput_msgs_per_s": 292000000.0
+          },
+          {
+            "bucket_idx": 55,
+            "bucket_start_ns": 55000,
+            "bucket_start_ms": 0.055,
+            "messages": 282,
+            "throughput_msgs_per_s": 282000000.0
+          },
+          {
+            "bucket_idx": 56,
+            "bucket_start_ns": 56000,
+            "bucket_start_ms": 0.056,
+            "messages": 276,
+            "throughput_msgs_per_s": 276000000.0
+          },
+          {
+            "bucket_idx": 57,
+            "bucket_start_ns": 57000,
+            "bucket_start_ms": 0.057,
+            "messages": 261,
+            "throughput_msgs_per_s": 261000000.0
+          },
+          {
+            "bucket_idx": 58,
+            "bucket_start_ns": 58000,
+            "bucket_start_ms": 0.058,
+            "messages": 275,
+            "throughput_msgs_per_s": 275000000.0
+          },
+          {
+            "bucket_idx": 59,
+            "bucket_start_ns": 59000,
+            "bucket_start_ms": 0.059,
+            "messages": 269,
+            "throughput_msgs_per_s": 269000000.0
+          },
+          {
+            "bucket_idx": 60,
+            "bucket_start_ns": 60000,
+            "bucket_start_ms": 0.06,
+            "messages": 250,
+            "throughput_msgs_per_s": 250000000.0
+          },
+          {
+            "bucket_idx": 61,
+            "bucket_start_ns": 61000,
+            "bucket_start_ms": 0.061,
+            "messages": 286,
+            "throughput_msgs_per_s": 286000000.0
+          },
+          {
+            "bucket_idx": 62,
+            "bucket_start_ns": 62000,
+            "bucket_start_ms": 0.062,
+            "messages": 295,
+            "throughput_msgs_per_s": 295000000.0
+          },
+          {
+            "bucket_idx": 63,
+            "bucket_start_ns": 63000,
+            "bucket_start_ms": 0.063,
+            "messages": 274,
+            "throughput_msgs_per_s": 274000000.0
+          },
+          {
+            "bucket_idx": 64,
+            "bucket_start_ns": 64000,
+            "bucket_start_ms": 0.064,
+            "messages": 309,
+            "throughput_msgs_per_s": 309000000.0
+          },
+          {
+            "bucket_idx": 65,
+            "bucket_start_ns": 65000,
+            "bucket_start_ms": 0.065,
+            "messages": 300,
+            "throughput_msgs_per_s": 300000000.0
+          },
+          {
+            "bucket_idx": 66,
+            "bucket_start_ns": 66000,
+            "bucket_start_ms": 0.066,
+            "messages": 298,
+            "throughput_msgs_per_s": 298000000.0
+          },
+          {
+            "bucket_idx": 67,
+            "bucket_start_ns": 67000,
+            "bucket_start_ms": 0.067,
+            "messages": 271,
+            "throughput_msgs_per_s": 271000000.0
+          },
+          {
+            "bucket_idx": 68,
+            "bucket_start_ns": 68000,
+            "bucket_start_ms": 0.068,
+            "messages": 281,
+            "throughput_msgs_per_s": 281000000.0
+          },
+          {
+            "bucket_idx": 69,
+            "bucket_start_ns": 69000,
+            "bucket_start_ms": 0.069,
+            "messages": 271,
+            "throughput_msgs_per_s": 271000000.0
+          },
+          {
+            "bucket_idx": 70,
+            "bucket_start_ns": 70000,
+            "bucket_start_ms": 0.07,
+            "messages": 307,
+            "throughput_msgs_per_s": 307000000.0
+          },
+          {
+            "bucket_idx": 71,
+            "bucket_start_ns": 71000,
+            "bucket_start_ms": 0.071,
+            "messages": 281,
+            "throughput_msgs_per_s": 281000000.0
+          },
+          {
+            "bucket_idx": 72,
+            "bucket_start_ns": 72000,
+            "bucket_start_ms": 0.072,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 73,
+            "bucket_start_ns": 73000,
+            "bucket_start_ms": 0.073,
+            "messages": 272,
+            "throughput_msgs_per_s": 272000000.0
+          },
+          {
+            "bucket_idx": 74,
+            "bucket_start_ns": 74000,
+            "bucket_start_ms": 0.074,
+            "messages": 314,
+            "throughput_msgs_per_s": 314000000.0
+          },
+          {
+            "bucket_idx": 75,
+            "bucket_start_ns": 75000,
+            "bucket_start_ms": 0.075,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 76,
+            "bucket_start_ns": 76000,
+            "bucket_start_ms": 0.076,
+            "messages": 305,
+            "throughput_msgs_per_s": 305000000.0
+          },
+          {
+            "bucket_idx": 77,
+            "bucket_start_ns": 77000,
+            "bucket_start_ms": 0.077,
+            "messages": 278,
+            "throughput_msgs_per_s": 278000000.0
+          },
+          {
+            "bucket_idx": 78,
+            "bucket_start_ns": 78000,
+            "bucket_start_ms": 0.078,
+            "messages": 298,
+            "throughput_msgs_per_s": 298000000.0
+          },
+          {
+            "bucket_idx": 79,
+            "bucket_start_ns": 79000,
+            "bucket_start_ms": 0.079,
+            "messages": 277,
+            "throughput_msgs_per_s": 277000000.0
+          },
+          {
+            "bucket_idx": 80,
+            "bucket_start_ns": 80000,
+            "bucket_start_ms": 0.08,
+            "messages": 310,
+            "throughput_msgs_per_s": 310000000.0
+          },
+          {
+            "bucket_idx": 81,
+            "bucket_start_ns": 81000,
+            "bucket_start_ms": 0.081,
+            "messages": 351,
+            "throughput_msgs_per_s": 351000000.0
+          },
+          {
+            "bucket_idx": 82,
+            "bucket_start_ns": 82000,
+            "bucket_start_ms": 0.082,
+            "messages": 288,
+            "throughput_msgs_per_s": 288000000.0
+          },
+          {
+            "bucket_idx": 83,
+            "bucket_start_ns": 83000,
+            "bucket_start_ms": 0.083,
+            "messages": 234,
+            "throughput_msgs_per_s": 234000000.0
+          },
+          {
+            "bucket_idx": 84,
+            "bucket_start_ns": 84000,
+            "bucket_start_ms": 0.084,
+            "messages": 284,
+            "throughput_msgs_per_s": 284000000.0
+          },
+          {
+            "bucket_idx": 85,
+            "bucket_start_ns": 85000,
+            "bucket_start_ms": 0.085,
+            "messages": 257,
+            "throughput_msgs_per_s": 257000000.0
+          },
+          {
+            "bucket_idx": 86,
+            "bucket_start_ns": 86000,
+            "bucket_start_ms": 0.086,
+            "messages": 284,
+            "throughput_msgs_per_s": 284000000.0
+          },
+          {
+            "bucket_idx": 87,
+            "bucket_start_ns": 87000,
+            "bucket_start_ms": 0.087,
+            "messages": 294,
+            "throughput_msgs_per_s": 294000000.0
+          },
+          {
+            "bucket_idx": 88,
+            "bucket_start_ns": 88000,
+            "bucket_start_ms": 0.088,
+            "messages": 295,
+            "throughput_msgs_per_s": 295000000.0
+          },
+          {
+            "bucket_idx": 89,
+            "bucket_start_ns": 89000,
+            "bucket_start_ms": 0.089,
+            "messages": 269,
+            "throughput_msgs_per_s": 269000000.0
+          },
+          {
+            "bucket_idx": 90,
+            "bucket_start_ns": 90000,
+            "bucket_start_ms": 0.09,
+            "messages": 267,
+            "throughput_msgs_per_s": 267000000.0
+          },
+          {
+            "bucket_idx": 91,
+            "bucket_start_ns": 91000,
+            "bucket_start_ms": 0.091,
+            "messages": 276,
+            "throughput_msgs_per_s": 276000000.0
+          },
+          {
+            "bucket_idx": 92,
+            "bucket_start_ns": 92000,
+            "bucket_start_ms": 0.092,
+            "messages": 305,
+            "throughput_msgs_per_s": 305000000.0
+          },
+          {
+            "bucket_idx": 93,
+            "bucket_start_ns": 93000,
+            "bucket_start_ms": 0.093,
+            "messages": 266,
+            "throughput_msgs_per_s": 266000000.0
+          },
+          {
+            "bucket_idx": 94,
+            "bucket_start_ns": 94000,
+            "bucket_start_ms": 0.094,
+            "messages": 284,
+            "throughput_msgs_per_s": 284000000.0
+          },
+          {
+            "bucket_idx": 95,
+            "bucket_start_ns": 95000,
+            "bucket_start_ms": 0.095,
+            "messages": 301,
+            "throughput_msgs_per_s": 301000000.0
+          },
+          {
+            "bucket_idx": 96,
+            "bucket_start_ns": 96000,
+            "bucket_start_ms": 0.096,
+            "messages": 260,
+            "throughput_msgs_per_s": 260000000.0
+          },
+          {
+            "bucket_idx": 97,
+            "bucket_start_ns": 97000,
+            "bucket_start_ms": 0.097,
+            "messages": 314,
+            "throughput_msgs_per_s": 314000000.0
+          },
+          {
+            "bucket_idx": 98,
+            "bucket_start_ns": 98000,
+            "bucket_start_ms": 0.098,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 99,
+            "bucket_start_ns": 99000,
+            "bucket_start_ms": 0.099,
+            "messages": 322,
+            "throughput_msgs_per_s": 322000000.0
+          },
+          {
+            "bucket_idx": 100,
+            "bucket_start_ns": 100000,
+            "bucket_start_ms": 0.1,
+            "messages": 299,
+            "throughput_msgs_per_s": 299000000.0
+          },
+          {
+            "bucket_idx": 101,
+            "bucket_start_ns": 101000,
+            "bucket_start_ms": 0.101,
+            "messages": 236,
+            "throughput_msgs_per_s": 236000000.0
+          },
+          {
+            "bucket_idx": 102,
+            "bucket_start_ns": 102000,
+            "bucket_start_ms": 0.102,
+            "messages": 278,
+            "throughput_msgs_per_s": 278000000.0
+          },
+          {
+            "bucket_idx": 103,
+            "bucket_start_ns": 103000,
+            "bucket_start_ms": 0.103,
+            "messages": 316,
+            "throughput_msgs_per_s": 316000000.0
+          },
+          {
+            "bucket_idx": 104,
+            "bucket_start_ns": 104000,
+            "bucket_start_ms": 0.104,
+            "messages": 274,
+            "throughput_msgs_per_s": 274000000.0
+          },
+          {
+            "bucket_idx": 105,
+            "bucket_start_ns": 105000,
+            "bucket_start_ms": 0.105,
+            "messages": 296,
+            "throughput_msgs_per_s": 296000000.0
+          },
+          {
+            "bucket_idx": 106,
+            "bucket_start_ns": 106000,
+            "bucket_start_ms": 0.106,
+            "messages": 297,
+            "throughput_msgs_per_s": 297000000.0
+          },
+          {
+            "bucket_idx": 107,
+            "bucket_start_ns": 107000,
+            "bucket_start_ms": 0.107,
+            "messages": 302,
+            "throughput_msgs_per_s": 302000000.0
+          },
+          {
+            "bucket_idx": 108,
+            "bucket_start_ns": 108000,
+            "bucket_start_ms": 0.108,
+            "messages": 286,
+            "throughput_msgs_per_s": 286000000.0
+          },
+          {
+            "bucket_idx": 109,
+            "bucket_start_ns": 109000,
+            "bucket_start_ms": 0.109,
+            "messages": 271,
+            "throughput_msgs_per_s": 271000000.0
+          },
+          {
+            "bucket_idx": 110,
+            "bucket_start_ns": 110000,
+            "bucket_start_ms": 0.11,
+            "messages": 304,
+            "throughput_msgs_per_s": 304000000.0
+          },
+          {
+            "bucket_idx": 111,
+            "bucket_start_ns": 111000,
+            "bucket_start_ms": 0.111,
+            "messages": 271,
+            "throughput_msgs_per_s": 271000000.0
+          },
+          {
+            "bucket_idx": 112,
+            "bucket_start_ns": 112000,
+            "bucket_start_ms": 0.112,
+            "messages": 277,
+            "throughput_msgs_per_s": 277000000.0
+          },
+          {
+            "bucket_idx": 113,
+            "bucket_start_ns": 113000,
+            "bucket_start_ms": 0.113,
+            "messages": 298,
+            "throughput_msgs_per_s": 298000000.0
+          },
+          {
+            "bucket_idx": 114,
+            "bucket_start_ns": 114000,
+            "bucket_start_ms": 0.114,
+            "messages": 286,
+            "throughput_msgs_per_s": 286000000.0
+          },
+          {
+            "bucket_idx": 115,
+            "bucket_start_ns": 115000,
+            "bucket_start_ms": 0.115,
+            "messages": 308,
+            "throughput_msgs_per_s": 308000000.0
+          },
+          {
+            "bucket_idx": 116,
+            "bucket_start_ns": 116000,
+            "bucket_start_ms": 0.116,
+            "messages": 276,
+            "throughput_msgs_per_s": 276000000.0
+          },
+          {
+            "bucket_idx": 117,
+            "bucket_start_ns": 117000,
+            "bucket_start_ms": 0.117,
+            "messages": 286,
+            "throughput_msgs_per_s": 286000000.0
+          },
+          {
+            "bucket_idx": 118,
+            "bucket_start_ns": 118000,
+            "bucket_start_ms": 0.118,
+            "messages": 256,
+            "throughput_msgs_per_s": 256000000.0
+          },
+          {
+            "bucket_idx": 119,
+            "bucket_start_ns": 119000,
+            "bucket_start_ms": 0.119,
+            "messages": 263,
+            "throughput_msgs_per_s": 263000000.0
+          },
+          {
+            "bucket_idx": 120,
+            "bucket_start_ns": 120000,
+            "bucket_start_ms": 0.12,
+            "messages": 298,
+            "throughput_msgs_per_s": 298000000.0
+          },
+          {
+            "bucket_idx": 121,
+            "bucket_start_ns": 121000,
+            "bucket_start_ms": 0.121,
+            "messages": 265,
+            "throughput_msgs_per_s": 265000000.0
+          },
+          {
+            "bucket_idx": 122,
+            "bucket_start_ns": 122000,
+            "bucket_start_ms": 0.122,
+            "messages": 292,
+            "throughput_msgs_per_s": 292000000.0
+          },
+          {
+            "bucket_idx": 123,
+            "bucket_start_ns": 123000,
+            "bucket_start_ms": 0.123,
+            "messages": 271,
+            "throughput_msgs_per_s": 271000000.0
+          },
+          {
+            "bucket_idx": 124,
+            "bucket_start_ns": 124000,
+            "bucket_start_ms": 0.124,
+            "messages": 304,
+            "throughput_msgs_per_s": 304000000.0
+          },
+          {
+            "bucket_idx": 125,
+            "bucket_start_ns": 125000,
+            "bucket_start_ms": 0.125,
+            "messages": 288,
+            "throughput_msgs_per_s": 288000000.0
+          },
+          {
+            "bucket_idx": 126,
+            "bucket_start_ns": 126000,
+            "bucket_start_ms": 0.126,
+            "messages": 305,
+            "throughput_msgs_per_s": 305000000.0
+          },
+          {
+            "bucket_idx": 127,
+            "bucket_start_ns": 127000,
+            "bucket_start_ms": 0.127,
+            "messages": 274,
+            "throughput_msgs_per_s": 274000000.0
+          },
+          {
+            "bucket_idx": 128,
+            "bucket_start_ns": 128000,
+            "bucket_start_ms": 0.128,
+            "messages": 277,
+            "throughput_msgs_per_s": 277000000.0
+          },
+          {
+            "bucket_idx": 129,
+            "bucket_start_ns": 129000,
+            "bucket_start_ms": 0.129,
+            "messages": 324,
+            "throughput_msgs_per_s": 324000000.0
+          },
+          {
+            "bucket_idx": 130,
+            "bucket_start_ns": 130000,
+            "bucket_start_ms": 0.13,
+            "messages": 267,
+            "throughput_msgs_per_s": 267000000.0
+          },
+          {
+            "bucket_idx": 131,
+            "bucket_start_ns": 131000,
+            "bucket_start_ms": 0.131,
+            "messages": 261,
+            "throughput_msgs_per_s": 261000000.0
+          },
+          {
+            "bucket_idx": 132,
+            "bucket_start_ns": 132000,
+            "bucket_start_ms": 0.132,
+            "messages": 319,
+            "throughput_msgs_per_s": 319000000.0
+          },
+          {
+            "bucket_idx": 133,
+            "bucket_start_ns": 133000,
+            "bucket_start_ms": 0.133,
+            "messages": 278,
+            "throughput_msgs_per_s": 278000000.0
+          },
+          {
+            "bucket_idx": 134,
+            "bucket_start_ns": 134000,
+            "bucket_start_ms": 0.134,
+            "messages": 320,
+            "throughput_msgs_per_s": 320000000.0
+          },
+          {
+            "bucket_idx": 135,
+            "bucket_start_ns": 135000,
+            "bucket_start_ms": 0.135,
+            "messages": 284,
+            "throughput_msgs_per_s": 284000000.0
+          },
+          {
+            "bucket_idx": 136,
+            "bucket_start_ns": 136000,
+            "bucket_start_ms": 0.136,
+            "messages": 264,
+            "throughput_msgs_per_s": 264000000.0
+          },
+          {
+            "bucket_idx": 137,
+            "bucket_start_ns": 137000,
+            "bucket_start_ms": 0.137,
+            "messages": 250,
+            "throughput_msgs_per_s": 250000000.0
+          },
+          {
+            "bucket_idx": 138,
+            "bucket_start_ns": 138000,
+            "bucket_start_ms": 0.138,
+            "messages": 301,
+            "throughput_msgs_per_s": 301000000.0
+          },
+          {
+            "bucket_idx": 139,
+            "bucket_start_ns": 139000,
+            "bucket_start_ms": 0.139,
+            "messages": 267,
+            "throughput_msgs_per_s": 267000000.0
+          },
+          {
+            "bucket_idx": 140,
+            "bucket_start_ns": 140000,
+            "bucket_start_ms": 0.14,
+            "messages": 250,
+            "throughput_msgs_per_s": 250000000.0
+          },
+          {
+            "bucket_idx": 141,
+            "bucket_start_ns": 141000,
+            "bucket_start_ms": 0.141,
+            "messages": 299,
+            "throughput_msgs_per_s": 299000000.0
+          },
+          {
+            "bucket_idx": 142,
+            "bucket_start_ns": 142000,
+            "bucket_start_ms": 0.142,
+            "messages": 310,
+            "throughput_msgs_per_s": 310000000.0
+          },
+          {
+            "bucket_idx": 143,
+            "bucket_start_ns": 143000,
+            "bucket_start_ms": 0.143,
+            "messages": 274,
+            "throughput_msgs_per_s": 274000000.0
+          },
+          {
+            "bucket_idx": 144,
+            "bucket_start_ns": 144000,
+            "bucket_start_ms": 0.144,
+            "messages": 281,
+            "throughput_msgs_per_s": 281000000.0
+          },
+          {
+            "bucket_idx": 145,
+            "bucket_start_ns": 145000,
+            "bucket_start_ms": 0.145,
+            "messages": 288,
+            "throughput_msgs_per_s": 288000000.0
+          },
+          {
+            "bucket_idx": 146,
+            "bucket_start_ns": 146000,
+            "bucket_start_ms": 0.146,
+            "messages": 300,
+            "throughput_msgs_per_s": 300000000.0
+          },
+          {
+            "bucket_idx": 147,
+            "bucket_start_ns": 147000,
+            "bucket_start_ms": 0.147,
+            "messages": 314,
+            "throughput_msgs_per_s": 314000000.0
+          },
+          {
+            "bucket_idx": 148,
+            "bucket_start_ns": 148000,
+            "bucket_start_ms": 0.148,
+            "messages": 327,
+            "throughput_msgs_per_s": 327000000.0
+          },
+          {
+            "bucket_idx": 149,
+            "bucket_start_ns": 149000,
+            "bucket_start_ms": 0.149,
+            "messages": 281,
+            "throughput_msgs_per_s": 281000000.0
+          },
+          {
+            "bucket_idx": 150,
+            "bucket_start_ns": 150000,
+            "bucket_start_ms": 0.15,
+            "messages": 324,
+            "throughput_msgs_per_s": 324000000.0
+          },
+          {
+            "bucket_idx": 151,
+            "bucket_start_ns": 151000,
+            "bucket_start_ms": 0.151,
+            "messages": 301,
+            "throughput_msgs_per_s": 301000000.0
+          },
+          {
+            "bucket_idx": 152,
+            "bucket_start_ns": 152000,
+            "bucket_start_ms": 0.152,
+            "messages": 281,
+            "throughput_msgs_per_s": 281000000.0
+          },
+          {
+            "bucket_idx": 153,
+            "bucket_start_ns": 153000,
+            "bucket_start_ms": 0.153,
+            "messages": 264,
+            "throughput_msgs_per_s": 264000000.0
+          },
+          {
+            "bucket_idx": 154,
+            "bucket_start_ns": 154000,
+            "bucket_start_ms": 0.154,
+            "messages": 258,
+            "throughput_msgs_per_s": 258000000.0
+          },
+          {
+            "bucket_idx": 155,
+            "bucket_start_ns": 155000,
+            "bucket_start_ms": 0.155,
+            "messages": 332,
+            "throughput_msgs_per_s": 332000000.0
+          },
+          {
+            "bucket_idx": 156,
+            "bucket_start_ns": 156000,
+            "bucket_start_ms": 0.156,
+            "messages": 277,
+            "throughput_msgs_per_s": 277000000.0
+          },
+          {
+            "bucket_idx": 157,
+            "bucket_start_ns": 157000,
+            "bucket_start_ms": 0.157,
+            "messages": 285,
+            "throughput_msgs_per_s": 285000000.0
+          },
+          {
+            "bucket_idx": 158,
+            "bucket_start_ns": 158000,
+            "bucket_start_ms": 0.158,
+            "messages": 329,
+            "throughput_msgs_per_s": 329000000.0
+          },
+          {
+            "bucket_idx": 159,
+            "bucket_start_ns": 159000,
+            "bucket_start_ms": 0.159,
+            "messages": 307,
+            "throughput_msgs_per_s": 307000000.0
+          },
+          {
+            "bucket_idx": 160,
+            "bucket_start_ns": 160000,
+            "bucket_start_ms": 0.16,
+            "messages": 291,
+            "throughput_msgs_per_s": 291000000.0
+          },
+          {
+            "bucket_idx": 161,
+            "bucket_start_ns": 161000,
+            "bucket_start_ms": 0.161,
+            "messages": 277,
+            "throughput_msgs_per_s": 277000000.0
+          },
+          {
+            "bucket_idx": 162,
+            "bucket_start_ns": 162000,
+            "bucket_start_ms": 0.162,
+            "messages": 327,
+            "throughput_msgs_per_s": 327000000.0
+          },
+          {
+            "bucket_idx": 163,
+            "bucket_start_ns": 163000,
+            "bucket_start_ms": 0.163,
+            "messages": 272,
+            "throughput_msgs_per_s": 272000000.0
+          },
+          {
+            "bucket_idx": 164,
+            "bucket_start_ns": 164000,
+            "bucket_start_ms": 0.164,
+            "messages": 335,
+            "throughput_msgs_per_s": 335000000.0
+          },
+          {
+            "bucket_idx": 165,
+            "bucket_start_ns": 165000,
+            "bucket_start_ms": 0.165,
+            "messages": 284,
+            "throughput_msgs_per_s": 284000000.0
+          },
+          {
+            "bucket_idx": 166,
+            "bucket_start_ns": 166000,
+            "bucket_start_ms": 0.166,
+            "messages": 275,
+            "throughput_msgs_per_s": 275000000.0
+          },
+          {
+            "bucket_idx": 167,
+            "bucket_start_ns": 167000,
+            "bucket_start_ms": 0.167,
+            "messages": 319,
+            "throughput_msgs_per_s": 319000000.0
+          },
+          {
+            "bucket_idx": 168,
+            "bucket_start_ns": 168000,
+            "bucket_start_ms": 0.168,
+            "messages": 296,
+            "throughput_msgs_per_s": 296000000.0
+          },
+          {
+            "bucket_idx": 169,
+            "bucket_start_ns": 169000,
+            "bucket_start_ms": 0.169,
+            "messages": 285,
+            "throughput_msgs_per_s": 285000000.0
+          },
+          {
+            "bucket_idx": 170,
+            "bucket_start_ns": 170000,
+            "bucket_start_ms": 0.17,
+            "messages": 304,
+            "throughput_msgs_per_s": 304000000.0
+          },
+          {
+            "bucket_idx": 171,
+            "bucket_start_ns": 171000,
+            "bucket_start_ms": 0.171,
+            "messages": 305,
+            "throughput_msgs_per_s": 305000000.0
+          },
+          {
+            "bucket_idx": 172,
+            "bucket_start_ns": 172000,
+            "bucket_start_ms": 0.172,
+            "messages": 294,
+            "throughput_msgs_per_s": 294000000.0
+          },
+          {
+            "bucket_idx": 173,
+            "bucket_start_ns": 173000,
+            "bucket_start_ms": 0.173,
+            "messages": 275,
+            "throughput_msgs_per_s": 275000000.0
+          },
+          {
+            "bucket_idx": 174,
+            "bucket_start_ns": 174000,
+            "bucket_start_ms": 0.174,
+            "messages": 320,
+            "throughput_msgs_per_s": 320000000.0
+          },
+          {
+            "bucket_idx": 175,
+            "bucket_start_ns": 175000,
+            "bucket_start_ms": 0.175,
+            "messages": 299,
+            "throughput_msgs_per_s": 299000000.0
+          },
+          {
+            "bucket_idx": 176,
+            "bucket_start_ns": 176000,
+            "bucket_start_ms": 0.176,
+            "messages": 247,
+            "throughput_msgs_per_s": 247000000.0
+          },
+          {
+            "bucket_idx": 177,
+            "bucket_start_ns": 177000,
+            "bucket_start_ms": 0.177,
+            "messages": 272,
+            "throughput_msgs_per_s": 272000000.0
+          },
+          {
+            "bucket_idx": 178,
+            "bucket_start_ns": 178000,
+            "bucket_start_ms": 0.178,
+            "messages": 266,
+            "throughput_msgs_per_s": 266000000.0
+          },
+          {
+            "bucket_idx": 179,
+            "bucket_start_ns": 179000,
+            "bucket_start_ms": 0.179,
+            "messages": 270,
+            "throughput_msgs_per_s": 270000000.0
+          },
+          {
+            "bucket_idx": 180,
+            "bucket_start_ns": 180000,
+            "bucket_start_ms": 0.18,
+            "messages": 265,
+            "throughput_msgs_per_s": 265000000.0
+          },
+          {
+            "bucket_idx": 181,
+            "bucket_start_ns": 181000,
+            "bucket_start_ms": 0.181,
+            "messages": 300,
+            "throughput_msgs_per_s": 300000000.0
+          },
+          {
+            "bucket_idx": 182,
+            "bucket_start_ns": 182000,
+            "bucket_start_ms": 0.182,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 183,
+            "bucket_start_ns": 183000,
+            "bucket_start_ms": 0.183,
+            "messages": 307,
+            "throughput_msgs_per_s": 307000000.0
+          },
+          {
+            "bucket_idx": 184,
+            "bucket_start_ns": 184000,
+            "bucket_start_ms": 0.184,
+            "messages": 302,
+            "throughput_msgs_per_s": 302000000.0
+          },
+          {
+            "bucket_idx": 185,
+            "bucket_start_ns": 185000,
+            "bucket_start_ms": 0.185,
+            "messages": 272,
+            "throughput_msgs_per_s": 272000000.0
+          },
+          {
+            "bucket_idx": 186,
+            "bucket_start_ns": 186000,
+            "bucket_start_ms": 0.186,
+            "messages": 310,
+            "throughput_msgs_per_s": 310000000.0
+          },
+          {
+            "bucket_idx": 187,
+            "bucket_start_ns": 187000,
+            "bucket_start_ms": 0.187,
+            "messages": 314,
+            "throughput_msgs_per_s": 314000000.0
+          },
+          {
+            "bucket_idx": 188,
+            "bucket_start_ns": 188000,
+            "bucket_start_ms": 0.188,
+            "messages": 296,
+            "throughput_msgs_per_s": 296000000.0
+          },
+          {
+            "bucket_idx": 189,
+            "bucket_start_ns": 189000,
+            "bucket_start_ms": 0.189,
+            "messages": 305,
+            "throughput_msgs_per_s": 305000000.0
+          },
+          {
+            "bucket_idx": 190,
+            "bucket_start_ns": 190000,
+            "bucket_start_ms": 0.19,
+            "messages": 313,
+            "throughput_msgs_per_s": 313000000.0
+          },
+          {
+            "bucket_idx": 191,
+            "bucket_start_ns": 191000,
+            "bucket_start_ms": 0.191,
+            "messages": 288,
+            "throughput_msgs_per_s": 288000000.0
+          },
+          {
+            "bucket_idx": 192,
+            "bucket_start_ns": 192000,
+            "bucket_start_ms": 0.192,
+            "messages": 268,
+            "throughput_msgs_per_s": 268000000.0
+          },
+          {
+            "bucket_idx": 193,
+            "bucket_start_ns": 193000,
+            "bucket_start_ms": 0.193,
+            "messages": 294,
+            "throughput_msgs_per_s": 294000000.0
+          },
+          {
+            "bucket_idx": 194,
+            "bucket_start_ns": 194000,
+            "bucket_start_ms": 0.194,
+            "messages": 278,
+            "throughput_msgs_per_s": 278000000.0
+          },
+          {
+            "bucket_idx": 195,
+            "bucket_start_ns": 195000,
+            "bucket_start_ms": 0.195,
+            "messages": 287,
+            "throughput_msgs_per_s": 287000000.0
+          },
+          {
+            "bucket_idx": 196,
+            "bucket_start_ns": 196000,
+            "bucket_start_ms": 0.196,
+            "messages": 284,
+            "throughput_msgs_per_s": 284000000.0
+          },
+          {
+            "bucket_idx": 197,
+            "bucket_start_ns": 197000,
+            "bucket_start_ms": 0.197,
+            "messages": 289,
+            "throughput_msgs_per_s": 289000000.0
+          },
+          {
+            "bucket_idx": 198,
+            "bucket_start_ns": 198000,
+            "bucket_start_ms": 0.198,
+            "messages": 261,
+            "throughput_msgs_per_s": 261000000.0
+          },
+          {
+            "bucket_idx": 199,
+            "bucket_start_ns": 199000,
+            "bucket_start_ms": 0.199,
+            "messages": 322,
+            "throughput_msgs_per_s": 322000000.0
+          }
+        ],
+        "summary": {
+          "symbol": "SIM",
+          "realized_pnl": 0.0,
+          "unrealized_pnl": 0.0,
+          "inventory": 0.0,
+          "order_count": 0,
+          "fill_count": 57398,
+          "order_volume": 0.0,
+          "fill_volume": 95983.65599999847,
+          "order_to_trade_ratio": 0.0,
+          "fill_efficiency": null,
+          "avg_latency_ns": null,
+          "p95_latency_ns": null,
+          "max_latency_ns": null,
+          "start_timestamp_ns": 14,
+          "end_timestamp_ns": 199995,
+          "duration_ns": 199981,
+          "digest": "bdb68d28a3e36efb9e42611146e717c045169c09b6d223552b28ffa5f7a3d4e6",
+          "timings": {
+            "matching": {
+              "label": "matching",
+              "count": 200000,
+              "total_ns": 1326806502188,
+              "avg_ns": 6634032.51094,
+              "p95_ns": 19976875,
+              "p99_ns": 94442667,
+              "max_ns": 815036333
+            },
+            "message_handling": {
+              "label": "message_handling",
+              "count": 200000,
+              "total_ns": 1334840340115,
+              "avg_ns": 6674201.700575,
+              "p95_ns": 20031250,
+              "p99_ns": 94489750,
+              "max_ns": 815162000
+            },
+            "pnl_logging": {
+              "label": "pnl_logging",
+              "count": 57398,
+              "total_ns": 2534659059,
+              "avg_ns": 44159.3619812537,
+              "p95_ns": 87292,
+              "p99_ns": 129500,
+              "max_ns": 25553541
+            }
+          }
+        }
       },
       {
-        "file": "results/week4/stress/risk_controls/logs/order_rate_limit.jsonl",
-        "total_records": 3,
-        "sequence": {
-          "ok": true,
-          "total_events": 2,
-          "timestamp_monotonic": true,
-          "orphan_cancels": 0,
-          "orphan_executes": 0,
-          "duplicate_order_ids": 0,
-          "max_timestamp_gap_ns": 0,
-          "errors": []
-        },
-        "control_events": [
+        "run_id": "run_1x",
+        "series": [
           {
-            "kind": "order_rate_limit",
-            "message": "Order rate limit exceeded: 2 >= 2 orders in 1000ns",
-            "max_actions": 2,
-            "interval_ns": 1000
+            "bucket_idx": 0,
+            "bucket_start_ns": 0,
+            "bucket_start_ms": 0.0,
+            "messages": 288,
+            "throughput_msgs_per_s": 288000000.0
+          },
+          {
+            "bucket_idx": 1,
+            "bucket_start_ns": 1000,
+            "bucket_start_ms": 0.001,
+            "messages": 272,
+            "throughput_msgs_per_s": 272000000.0
+          },
+          {
+            "bucket_idx": 2,
+            "bucket_start_ns": 2000,
+            "bucket_start_ms": 0.002,
+            "messages": 267,
+            "throughput_msgs_per_s": 267000000.0
+          },
+          {
+            "bucket_idx": 3,
+            "bucket_start_ns": 3000,
+            "bucket_start_ms": 0.003,
+            "messages": 293,
+            "throughput_msgs_per_s": 293000000.0
+          },
+          {
+            "bucket_idx": 4,
+            "bucket_start_ns": 4000,
+            "bucket_start_ms": 0.004,
+            "messages": 264,
+            "throughput_msgs_per_s": 264000000.0
+          },
+          {
+            "bucket_idx": 5,
+            "bucket_start_ns": 5000,
+            "bucket_start_ms": 0.005,
+            "messages": 267,
+            "throughput_msgs_per_s": 267000000.0
+          },
+          {
+            "bucket_idx": 6,
+            "bucket_start_ns": 6000,
+            "bucket_start_ms": 0.006,
+            "messages": 280,
+            "throughput_msgs_per_s": 280000000.0
+          },
+          {
+            "bucket_idx": 7,
+            "bucket_start_ns": 7000,
+            "bucket_start_ms": 0.007,
+            "messages": 275,
+            "throughput_msgs_per_s": 275000000.0
+          },
+          {
+            "bucket_idx": 8,
+            "bucket_start_ns": 8000,
+            "bucket_start_ms": 0.008,
+            "messages": 230,
+            "throughput_msgs_per_s": 230000000.0
+          },
+          {
+            "bucket_idx": 9,
+            "bucket_start_ns": 9000,
+            "bucket_start_ms": 0.009,
+            "messages": 296,
+            "throughput_msgs_per_s": 296000000.0
+          },
+          {
+            "bucket_idx": 10,
+            "bucket_start_ns": 10000,
+            "bucket_start_ms": 0.01,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 11,
+            "bucket_start_ns": 11000,
+            "bucket_start_ms": 0.011,
+            "messages": 280,
+            "throughput_msgs_per_s": 280000000.0
+          },
+          {
+            "bucket_idx": 12,
+            "bucket_start_ns": 12000,
+            "bucket_start_ms": 0.012,
+            "messages": 334,
+            "throughput_msgs_per_s": 334000000.0
+          },
+          {
+            "bucket_idx": 13,
+            "bucket_start_ns": 13000,
+            "bucket_start_ms": 0.013,
+            "messages": 279,
+            "throughput_msgs_per_s": 279000000.0
+          },
+          {
+            "bucket_idx": 14,
+            "bucket_start_ns": 14000,
+            "bucket_start_ms": 0.014,
+            "messages": 273,
+            "throughput_msgs_per_s": 273000000.0
+          },
+          {
+            "bucket_idx": 15,
+            "bucket_start_ns": 15000,
+            "bucket_start_ms": 0.015,
+            "messages": 261,
+            "throughput_msgs_per_s": 261000000.0
+          },
+          {
+            "bucket_idx": 16,
+            "bucket_start_ns": 16000,
+            "bucket_start_ms": 0.016,
+            "messages": 255,
+            "throughput_msgs_per_s": 255000000.0
+          },
+          {
+            "bucket_idx": 17,
+            "bucket_start_ns": 17000,
+            "bucket_start_ms": 0.017,
+            "messages": 264,
+            "throughput_msgs_per_s": 264000000.0
+          },
+          {
+            "bucket_idx": 18,
+            "bucket_start_ns": 18000,
+            "bucket_start_ms": 0.018,
+            "messages": 263,
+            "throughput_msgs_per_s": 263000000.0
+          },
+          {
+            "bucket_idx": 19,
+            "bucket_start_ns": 19000,
+            "bucket_start_ms": 0.019,
+            "messages": 311,
+            "throughput_msgs_per_s": 311000000.0
           }
-        ]
-      }
-    ]
-  },
-  "perf_runs": [
-    {
-      "run_id": "run_10x",
-      "series": [
-        {
-          "bucket_idx": 0,
-          "bucket_start_ns": 0,
-          "bucket_start_ms": 0.0,
-          "messages": 276,
-          "throughput_msgs_per_s": 276000000.0
-        },
-        {
-          "bucket_idx": 1,
-          "bucket_start_ns": 1000,
-          "bucket_start_ms": 0.001,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 2,
-          "bucket_start_ns": 2000,
-          "bucket_start_ms": 0.002,
-          "messages": 280,
-          "throughput_msgs_per_s": 280000000.0
-        },
-        {
-          "bucket_idx": 3,
-          "bucket_start_ns": 3000,
-          "bucket_start_ms": 0.003,
-          "messages": 255,
-          "throughput_msgs_per_s": 255000000.0
-        },
-        {
-          "bucket_idx": 4,
-          "bucket_start_ns": 4000,
-          "bucket_start_ms": 0.004,
-          "messages": 325,
-          "throughput_msgs_per_s": 325000000.0
-        },
-        {
-          "bucket_idx": 5,
-          "bucket_start_ns": 5000,
-          "bucket_start_ms": 0.005,
-          "messages": 257,
-          "throughput_msgs_per_s": 257000000.0
-        },
-        {
-          "bucket_idx": 6,
-          "bucket_start_ns": 6000,
-          "bucket_start_ms": 0.006,
-          "messages": 288,
-          "throughput_msgs_per_s": 288000000.0
-        },
-        {
-          "bucket_idx": 7,
-          "bucket_start_ns": 7000,
-          "bucket_start_ms": 0.007,
-          "messages": 233,
-          "throughput_msgs_per_s": 233000000.0
-        },
-        {
-          "bucket_idx": 8,
-          "bucket_start_ns": 8000,
-          "bucket_start_ms": 0.008,
-          "messages": 311,
-          "throughput_msgs_per_s": 311000000.0
-        },
-        {
-          "bucket_idx": 9,
-          "bucket_start_ns": 9000,
-          "bucket_start_ms": 0.009,
-          "messages": 285,
-          "throughput_msgs_per_s": 285000000.0
-        },
-        {
-          "bucket_idx": 10,
-          "bucket_start_ns": 10000,
-          "bucket_start_ms": 0.01,
-          "messages": 296,
-          "throughput_msgs_per_s": 296000000.0
-        },
-        {
-          "bucket_idx": 11,
-          "bucket_start_ns": 11000,
-          "bucket_start_ms": 0.011,
-          "messages": 320,
-          "throughput_msgs_per_s": 320000000.0
-        },
-        {
-          "bucket_idx": 12,
-          "bucket_start_ns": 12000,
-          "bucket_start_ms": 0.012,
-          "messages": 323,
-          "throughput_msgs_per_s": 323000000.0
-        },
-        {
-          "bucket_idx": 13,
-          "bucket_start_ns": 13000,
-          "bucket_start_ms": 0.013,
-          "messages": 309,
-          "throughput_msgs_per_s": 309000000.0
-        },
-        {
-          "bucket_idx": 14,
-          "bucket_start_ns": 14000,
-          "bucket_start_ms": 0.014,
-          "messages": 289,
-          "throughput_msgs_per_s": 289000000.0
-        },
-        {
-          "bucket_idx": 15,
-          "bucket_start_ns": 15000,
-          "bucket_start_ms": 0.015,
-          "messages": 305,
-          "throughput_msgs_per_s": 305000000.0
-        },
-        {
-          "bucket_idx": 16,
-          "bucket_start_ns": 16000,
-          "bucket_start_ms": 0.016,
-          "messages": 289,
-          "throughput_msgs_per_s": 289000000.0
-        },
-        {
-          "bucket_idx": 17,
-          "bucket_start_ns": 17000,
-          "bucket_start_ms": 0.017,
-          "messages": 276,
-          "throughput_msgs_per_s": 276000000.0
-        },
-        {
-          "bucket_idx": 18,
-          "bucket_start_ns": 18000,
-          "bucket_start_ms": 0.018,
-          "messages": 267,
-          "throughput_msgs_per_s": 267000000.0
-        },
-        {
-          "bucket_idx": 19,
-          "bucket_start_ns": 19000,
-          "bucket_start_ms": 0.019,
-          "messages": 298,
-          "throughput_msgs_per_s": 298000000.0
-        },
-        {
-          "bucket_idx": 20,
-          "bucket_start_ns": 20000,
-          "bucket_start_ms": 0.02,
-          "messages": 276,
-          "throughput_msgs_per_s": 276000000.0
-        },
-        {
-          "bucket_idx": 21,
-          "bucket_start_ns": 21000,
-          "bucket_start_ms": 0.021,
-          "messages": 281,
-          "throughput_msgs_per_s": 281000000.0
-        },
-        {
-          "bucket_idx": 22,
-          "bucket_start_ns": 22000,
-          "bucket_start_ms": 0.022,
-          "messages": 284,
-          "throughput_msgs_per_s": 284000000.0
-        },
-        {
-          "bucket_idx": 23,
-          "bucket_start_ns": 23000,
-          "bucket_start_ms": 0.023,
-          "messages": 287,
-          "throughput_msgs_per_s": 287000000.0
-        },
-        {
-          "bucket_idx": 24,
-          "bucket_start_ns": 24000,
-          "bucket_start_ms": 0.024,
-          "messages": 277,
-          "throughput_msgs_per_s": 277000000.0
-        },
-        {
-          "bucket_idx": 25,
-          "bucket_start_ns": 25000,
-          "bucket_start_ms": 0.025,
-          "messages": 250,
-          "throughput_msgs_per_s": 250000000.0
-        },
-        {
-          "bucket_idx": 26,
-          "bucket_start_ns": 26000,
-          "bucket_start_ms": 0.026,
-          "messages": 276,
-          "throughput_msgs_per_s": 276000000.0
-        },
-        {
-          "bucket_idx": 27,
-          "bucket_start_ns": 27000,
-          "bucket_start_ms": 0.027,
-          "messages": 275,
-          "throughput_msgs_per_s": 275000000.0
-        },
-        {
-          "bucket_idx": 28,
-          "bucket_start_ns": 28000,
-          "bucket_start_ms": 0.028,
-          "messages": 275,
-          "throughput_msgs_per_s": 275000000.0
-        },
-        {
-          "bucket_idx": 29,
-          "bucket_start_ns": 29000,
-          "bucket_start_ms": 0.029,
-          "messages": 288,
-          "throughput_msgs_per_s": 288000000.0
-        },
-        {
-          "bucket_idx": 30,
-          "bucket_start_ns": 30000,
-          "bucket_start_ms": 0.03,
-          "messages": 281,
-          "throughput_msgs_per_s": 281000000.0
-        },
-        {
-          "bucket_idx": 31,
-          "bucket_start_ns": 31000,
-          "bucket_start_ms": 0.031,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 32,
-          "bucket_start_ns": 32000,
-          "bucket_start_ms": 0.032,
-          "messages": 305,
-          "throughput_msgs_per_s": 305000000.0
-        },
-        {
-          "bucket_idx": 33,
-          "bucket_start_ns": 33000,
-          "bucket_start_ms": 0.033,
-          "messages": 285,
-          "throughput_msgs_per_s": 285000000.0
-        },
-        {
-          "bucket_idx": 34,
-          "bucket_start_ns": 34000,
-          "bucket_start_ms": 0.034,
-          "messages": 253,
-          "throughput_msgs_per_s": 253000000.0
-        },
-        {
-          "bucket_idx": 35,
-          "bucket_start_ns": 35000,
-          "bucket_start_ms": 0.035,
-          "messages": 297,
-          "throughput_msgs_per_s": 297000000.0
-        },
-        {
-          "bucket_idx": 36,
-          "bucket_start_ns": 36000,
-          "bucket_start_ms": 0.036,
-          "messages": 274,
-          "throughput_msgs_per_s": 274000000.0
-        },
-        {
-          "bucket_idx": 37,
-          "bucket_start_ns": 37000,
-          "bucket_start_ms": 0.037,
-          "messages": 253,
-          "throughput_msgs_per_s": 253000000.0
-        },
-        {
-          "bucket_idx": 38,
-          "bucket_start_ns": 38000,
-          "bucket_start_ms": 0.038,
-          "messages": 303,
-          "throughput_msgs_per_s": 303000000.0
-        },
-        {
-          "bucket_idx": 39,
-          "bucket_start_ns": 39000,
-          "bucket_start_ms": 0.039,
-          "messages": 275,
-          "throughput_msgs_per_s": 275000000.0
-        },
-        {
-          "bucket_idx": 40,
-          "bucket_start_ns": 40000,
-          "bucket_start_ms": 0.04,
-          "messages": 287,
-          "throughput_msgs_per_s": 287000000.0
-        },
-        {
-          "bucket_idx": 41,
-          "bucket_start_ns": 41000,
-          "bucket_start_ms": 0.041,
-          "messages": 272,
-          "throughput_msgs_per_s": 272000000.0
-        },
-        {
-          "bucket_idx": 42,
-          "bucket_start_ns": 42000,
-          "bucket_start_ms": 0.042,
-          "messages": 274,
-          "throughput_msgs_per_s": 274000000.0
-        },
-        {
-          "bucket_idx": 43,
-          "bucket_start_ns": 43000,
-          "bucket_start_ms": 0.043,
-          "messages": 311,
-          "throughput_msgs_per_s": 311000000.0
-        },
-        {
-          "bucket_idx": 44,
-          "bucket_start_ns": 44000,
-          "bucket_start_ms": 0.044,
-          "messages": 309,
-          "throughput_msgs_per_s": 309000000.0
-        },
-        {
-          "bucket_idx": 45,
-          "bucket_start_ns": 45000,
-          "bucket_start_ms": 0.045,
-          "messages": 304,
-          "throughput_msgs_per_s": 304000000.0
-        },
-        {
-          "bucket_idx": 46,
-          "bucket_start_ns": 46000,
-          "bucket_start_ms": 0.046,
-          "messages": 295,
-          "throughput_msgs_per_s": 295000000.0
-        },
-        {
-          "bucket_idx": 47,
-          "bucket_start_ns": 47000,
-          "bucket_start_ms": 0.047,
-          "messages": 256,
-          "throughput_msgs_per_s": 256000000.0
-        },
-        {
-          "bucket_idx": 48,
-          "bucket_start_ns": 48000,
-          "bucket_start_ms": 0.048,
-          "messages": 304,
-          "throughput_msgs_per_s": 304000000.0
-        },
-        {
-          "bucket_idx": 49,
-          "bucket_start_ns": 49000,
-          "bucket_start_ms": 0.049,
-          "messages": 310,
-          "throughput_msgs_per_s": 310000000.0
-        },
-        {
-          "bucket_idx": 50,
-          "bucket_start_ns": 50000,
-          "bucket_start_ms": 0.05,
-          "messages": 243,
-          "throughput_msgs_per_s": 243000000.0
-        },
-        {
-          "bucket_idx": 51,
-          "bucket_start_ns": 51000,
-          "bucket_start_ms": 0.051,
-          "messages": 274,
-          "throughput_msgs_per_s": 274000000.0
-        },
-        {
-          "bucket_idx": 52,
-          "bucket_start_ns": 52000,
-          "bucket_start_ms": 0.052,
-          "messages": 307,
-          "throughput_msgs_per_s": 307000000.0
-        },
-        {
-          "bucket_idx": 53,
-          "bucket_start_ns": 53000,
-          "bucket_start_ms": 0.053,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 54,
-          "bucket_start_ns": 54000,
-          "bucket_start_ms": 0.054,
-          "messages": 292,
-          "throughput_msgs_per_s": 292000000.0
-        },
-        {
-          "bucket_idx": 55,
-          "bucket_start_ns": 55000,
-          "bucket_start_ms": 0.055,
-          "messages": 282,
-          "throughput_msgs_per_s": 282000000.0
-        },
-        {
-          "bucket_idx": 56,
-          "bucket_start_ns": 56000,
-          "bucket_start_ms": 0.056,
-          "messages": 276,
-          "throughput_msgs_per_s": 276000000.0
-        },
-        {
-          "bucket_idx": 57,
-          "bucket_start_ns": 57000,
-          "bucket_start_ms": 0.057,
-          "messages": 261,
-          "throughput_msgs_per_s": 261000000.0
-        },
-        {
-          "bucket_idx": 58,
-          "bucket_start_ns": 58000,
-          "bucket_start_ms": 0.058,
-          "messages": 275,
-          "throughput_msgs_per_s": 275000000.0
-        },
-        {
-          "bucket_idx": 59,
-          "bucket_start_ns": 59000,
-          "bucket_start_ms": 0.059,
-          "messages": 269,
-          "throughput_msgs_per_s": 269000000.0
-        },
-        {
-          "bucket_idx": 60,
-          "bucket_start_ns": 60000,
-          "bucket_start_ms": 0.06,
-          "messages": 250,
-          "throughput_msgs_per_s": 250000000.0
-        },
-        {
-          "bucket_idx": 61,
-          "bucket_start_ns": 61000,
-          "bucket_start_ms": 0.061,
-          "messages": 286,
-          "throughput_msgs_per_s": 286000000.0
-        },
-        {
-          "bucket_idx": 62,
-          "bucket_start_ns": 62000,
-          "bucket_start_ms": 0.062,
-          "messages": 295,
-          "throughput_msgs_per_s": 295000000.0
-        },
-        {
-          "bucket_idx": 63,
-          "bucket_start_ns": 63000,
-          "bucket_start_ms": 0.063,
-          "messages": 274,
-          "throughput_msgs_per_s": 274000000.0
-        },
-        {
-          "bucket_idx": 64,
-          "bucket_start_ns": 64000,
-          "bucket_start_ms": 0.064,
-          "messages": 309,
-          "throughput_msgs_per_s": 309000000.0
-        },
-        {
-          "bucket_idx": 65,
-          "bucket_start_ns": 65000,
-          "bucket_start_ms": 0.065,
-          "messages": 300,
-          "throughput_msgs_per_s": 300000000.0
-        },
-        {
-          "bucket_idx": 66,
-          "bucket_start_ns": 66000,
-          "bucket_start_ms": 0.066,
-          "messages": 298,
-          "throughput_msgs_per_s": 298000000.0
-        },
-        {
-          "bucket_idx": 67,
-          "bucket_start_ns": 67000,
-          "bucket_start_ms": 0.067,
-          "messages": 271,
-          "throughput_msgs_per_s": 271000000.0
-        },
-        {
-          "bucket_idx": 68,
-          "bucket_start_ns": 68000,
-          "bucket_start_ms": 0.068,
-          "messages": 281,
-          "throughput_msgs_per_s": 281000000.0
-        },
-        {
-          "bucket_idx": 69,
-          "bucket_start_ns": 69000,
-          "bucket_start_ms": 0.069,
-          "messages": 271,
-          "throughput_msgs_per_s": 271000000.0
-        },
-        {
-          "bucket_idx": 70,
-          "bucket_start_ns": 70000,
-          "bucket_start_ms": 0.07,
-          "messages": 307,
-          "throughput_msgs_per_s": 307000000.0
-        },
-        {
-          "bucket_idx": 71,
-          "bucket_start_ns": 71000,
-          "bucket_start_ms": 0.071,
-          "messages": 281,
-          "throughput_msgs_per_s": 281000000.0
-        },
-        {
-          "bucket_idx": 72,
-          "bucket_start_ns": 72000,
-          "bucket_start_ms": 0.072,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 73,
-          "bucket_start_ns": 73000,
-          "bucket_start_ms": 0.073,
-          "messages": 272,
-          "throughput_msgs_per_s": 272000000.0
-        },
-        {
-          "bucket_idx": 74,
-          "bucket_start_ns": 74000,
-          "bucket_start_ms": 0.074,
-          "messages": 314,
-          "throughput_msgs_per_s": 314000000.0
-        },
-        {
-          "bucket_idx": 75,
-          "bucket_start_ns": 75000,
-          "bucket_start_ms": 0.075,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 76,
-          "bucket_start_ns": 76000,
-          "bucket_start_ms": 0.076,
-          "messages": 305,
-          "throughput_msgs_per_s": 305000000.0
-        },
-        {
-          "bucket_idx": 77,
-          "bucket_start_ns": 77000,
-          "bucket_start_ms": 0.077,
-          "messages": 278,
-          "throughput_msgs_per_s": 278000000.0
-        },
-        {
-          "bucket_idx": 78,
-          "bucket_start_ns": 78000,
-          "bucket_start_ms": 0.078,
-          "messages": 298,
-          "throughput_msgs_per_s": 298000000.0
-        },
-        {
-          "bucket_idx": 79,
-          "bucket_start_ns": 79000,
-          "bucket_start_ms": 0.079,
-          "messages": 277,
-          "throughput_msgs_per_s": 277000000.0
-        },
-        {
-          "bucket_idx": 80,
-          "bucket_start_ns": 80000,
-          "bucket_start_ms": 0.08,
-          "messages": 310,
-          "throughput_msgs_per_s": 310000000.0
-        },
-        {
-          "bucket_idx": 81,
-          "bucket_start_ns": 81000,
-          "bucket_start_ms": 0.081,
-          "messages": 351,
-          "throughput_msgs_per_s": 351000000.0
-        },
-        {
-          "bucket_idx": 82,
-          "bucket_start_ns": 82000,
-          "bucket_start_ms": 0.082,
-          "messages": 288,
-          "throughput_msgs_per_s": 288000000.0
-        },
-        {
-          "bucket_idx": 83,
-          "bucket_start_ns": 83000,
-          "bucket_start_ms": 0.083,
-          "messages": 234,
-          "throughput_msgs_per_s": 234000000.0
-        },
-        {
-          "bucket_idx": 84,
-          "bucket_start_ns": 84000,
-          "bucket_start_ms": 0.084,
-          "messages": 284,
-          "throughput_msgs_per_s": 284000000.0
-        },
-        {
-          "bucket_idx": 85,
-          "bucket_start_ns": 85000,
-          "bucket_start_ms": 0.085,
-          "messages": 257,
-          "throughput_msgs_per_s": 257000000.0
-        },
-        {
-          "bucket_idx": 86,
-          "bucket_start_ns": 86000,
-          "bucket_start_ms": 0.086,
-          "messages": 284,
-          "throughput_msgs_per_s": 284000000.0
-        },
-        {
-          "bucket_idx": 87,
-          "bucket_start_ns": 87000,
-          "bucket_start_ms": 0.087,
-          "messages": 294,
-          "throughput_msgs_per_s": 294000000.0
-        },
-        {
-          "bucket_idx": 88,
-          "bucket_start_ns": 88000,
-          "bucket_start_ms": 0.088,
-          "messages": 295,
-          "throughput_msgs_per_s": 295000000.0
-        },
-        {
-          "bucket_idx": 89,
-          "bucket_start_ns": 89000,
-          "bucket_start_ms": 0.089,
-          "messages": 269,
-          "throughput_msgs_per_s": 269000000.0
-        },
-        {
-          "bucket_idx": 90,
-          "bucket_start_ns": 90000,
-          "bucket_start_ms": 0.09,
-          "messages": 267,
-          "throughput_msgs_per_s": 267000000.0
-        },
-        {
-          "bucket_idx": 91,
-          "bucket_start_ns": 91000,
-          "bucket_start_ms": 0.091,
-          "messages": 276,
-          "throughput_msgs_per_s": 276000000.0
-        },
-        {
-          "bucket_idx": 92,
-          "bucket_start_ns": 92000,
-          "bucket_start_ms": 0.092,
-          "messages": 305,
-          "throughput_msgs_per_s": 305000000.0
-        },
-        {
-          "bucket_idx": 93,
-          "bucket_start_ns": 93000,
-          "bucket_start_ms": 0.093,
-          "messages": 266,
-          "throughput_msgs_per_s": 266000000.0
-        },
-        {
-          "bucket_idx": 94,
-          "bucket_start_ns": 94000,
-          "bucket_start_ms": 0.094,
-          "messages": 284,
-          "throughput_msgs_per_s": 284000000.0
-        },
-        {
-          "bucket_idx": 95,
-          "bucket_start_ns": 95000,
-          "bucket_start_ms": 0.095,
-          "messages": 301,
-          "throughput_msgs_per_s": 301000000.0
-        },
-        {
-          "bucket_idx": 96,
-          "bucket_start_ns": 96000,
-          "bucket_start_ms": 0.096,
-          "messages": 260,
-          "throughput_msgs_per_s": 260000000.0
-        },
-        {
-          "bucket_idx": 97,
-          "bucket_start_ns": 97000,
-          "bucket_start_ms": 0.097,
-          "messages": 314,
-          "throughput_msgs_per_s": 314000000.0
-        },
-        {
-          "bucket_idx": 98,
-          "bucket_start_ns": 98000,
-          "bucket_start_ms": 0.098,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 99,
-          "bucket_start_ns": 99000,
-          "bucket_start_ms": 0.099,
-          "messages": 322,
-          "throughput_msgs_per_s": 322000000.0
-        },
-        {
-          "bucket_idx": 100,
-          "bucket_start_ns": 100000,
-          "bucket_start_ms": 0.1,
-          "messages": 299,
-          "throughput_msgs_per_s": 299000000.0
-        },
-        {
-          "bucket_idx": 101,
-          "bucket_start_ns": 101000,
-          "bucket_start_ms": 0.101,
-          "messages": 236,
-          "throughput_msgs_per_s": 236000000.0
-        },
-        {
-          "bucket_idx": 102,
-          "bucket_start_ns": 102000,
-          "bucket_start_ms": 0.102,
-          "messages": 278,
-          "throughput_msgs_per_s": 278000000.0
-        },
-        {
-          "bucket_idx": 103,
-          "bucket_start_ns": 103000,
-          "bucket_start_ms": 0.103,
-          "messages": 316,
-          "throughput_msgs_per_s": 316000000.0
-        },
-        {
-          "bucket_idx": 104,
-          "bucket_start_ns": 104000,
-          "bucket_start_ms": 0.104,
-          "messages": 274,
-          "throughput_msgs_per_s": 274000000.0
-        },
-        {
-          "bucket_idx": 105,
-          "bucket_start_ns": 105000,
-          "bucket_start_ms": 0.105,
-          "messages": 296,
-          "throughput_msgs_per_s": 296000000.0
-        },
-        {
-          "bucket_idx": 106,
-          "bucket_start_ns": 106000,
-          "bucket_start_ms": 0.106,
-          "messages": 297,
-          "throughput_msgs_per_s": 297000000.0
-        },
-        {
-          "bucket_idx": 107,
-          "bucket_start_ns": 107000,
-          "bucket_start_ms": 0.107,
-          "messages": 302,
-          "throughput_msgs_per_s": 302000000.0
-        },
-        {
-          "bucket_idx": 108,
-          "bucket_start_ns": 108000,
-          "bucket_start_ms": 0.108,
-          "messages": 286,
-          "throughput_msgs_per_s": 286000000.0
-        },
-        {
-          "bucket_idx": 109,
-          "bucket_start_ns": 109000,
-          "bucket_start_ms": 0.109,
-          "messages": 271,
-          "throughput_msgs_per_s": 271000000.0
-        },
-        {
-          "bucket_idx": 110,
-          "bucket_start_ns": 110000,
-          "bucket_start_ms": 0.11,
-          "messages": 304,
-          "throughput_msgs_per_s": 304000000.0
-        },
-        {
-          "bucket_idx": 111,
-          "bucket_start_ns": 111000,
-          "bucket_start_ms": 0.111,
-          "messages": 271,
-          "throughput_msgs_per_s": 271000000.0
-        },
-        {
-          "bucket_idx": 112,
-          "bucket_start_ns": 112000,
-          "bucket_start_ms": 0.112,
-          "messages": 277,
-          "throughput_msgs_per_s": 277000000.0
-        },
-        {
-          "bucket_idx": 113,
-          "bucket_start_ns": 113000,
-          "bucket_start_ms": 0.113,
-          "messages": 298,
-          "throughput_msgs_per_s": 298000000.0
-        },
-        {
-          "bucket_idx": 114,
-          "bucket_start_ns": 114000,
-          "bucket_start_ms": 0.114,
-          "messages": 286,
-          "throughput_msgs_per_s": 286000000.0
-        },
-        {
-          "bucket_idx": 115,
-          "bucket_start_ns": 115000,
-          "bucket_start_ms": 0.115,
-          "messages": 308,
-          "throughput_msgs_per_s": 308000000.0
-        },
-        {
-          "bucket_idx": 116,
-          "bucket_start_ns": 116000,
-          "bucket_start_ms": 0.116,
-          "messages": 276,
-          "throughput_msgs_per_s": 276000000.0
-        },
-        {
-          "bucket_idx": 117,
-          "bucket_start_ns": 117000,
-          "bucket_start_ms": 0.117,
-          "messages": 286,
-          "throughput_msgs_per_s": 286000000.0
-        },
-        {
-          "bucket_idx": 118,
-          "bucket_start_ns": 118000,
-          "bucket_start_ms": 0.118,
-          "messages": 256,
-          "throughput_msgs_per_s": 256000000.0
-        },
-        {
-          "bucket_idx": 119,
-          "bucket_start_ns": 119000,
-          "bucket_start_ms": 0.119,
-          "messages": 263,
-          "throughput_msgs_per_s": 263000000.0
-        },
-        {
-          "bucket_idx": 120,
-          "bucket_start_ns": 120000,
-          "bucket_start_ms": 0.12,
-          "messages": 298,
-          "throughput_msgs_per_s": 298000000.0
-        },
-        {
-          "bucket_idx": 121,
-          "bucket_start_ns": 121000,
-          "bucket_start_ms": 0.121,
-          "messages": 265,
-          "throughput_msgs_per_s": 265000000.0
-        },
-        {
-          "bucket_idx": 122,
-          "bucket_start_ns": 122000,
-          "bucket_start_ms": 0.122,
-          "messages": 292,
-          "throughput_msgs_per_s": 292000000.0
-        },
-        {
-          "bucket_idx": 123,
-          "bucket_start_ns": 123000,
-          "bucket_start_ms": 0.123,
-          "messages": 271,
-          "throughput_msgs_per_s": 271000000.0
-        },
-        {
-          "bucket_idx": 124,
-          "bucket_start_ns": 124000,
-          "bucket_start_ms": 0.124,
-          "messages": 304,
-          "throughput_msgs_per_s": 304000000.0
-        },
-        {
-          "bucket_idx": 125,
-          "bucket_start_ns": 125000,
-          "bucket_start_ms": 0.125,
-          "messages": 288,
-          "throughput_msgs_per_s": 288000000.0
-        },
-        {
-          "bucket_idx": 126,
-          "bucket_start_ns": 126000,
-          "bucket_start_ms": 0.126,
-          "messages": 305,
-          "throughput_msgs_per_s": 305000000.0
-        },
-        {
-          "bucket_idx": 127,
-          "bucket_start_ns": 127000,
-          "bucket_start_ms": 0.127,
-          "messages": 274,
-          "throughput_msgs_per_s": 274000000.0
-        },
-        {
-          "bucket_idx": 128,
-          "bucket_start_ns": 128000,
-          "bucket_start_ms": 0.128,
-          "messages": 277,
-          "throughput_msgs_per_s": 277000000.0
-        },
-        {
-          "bucket_idx": 129,
-          "bucket_start_ns": 129000,
-          "bucket_start_ms": 0.129,
-          "messages": 324,
-          "throughput_msgs_per_s": 324000000.0
-        },
-        {
-          "bucket_idx": 130,
-          "bucket_start_ns": 130000,
-          "bucket_start_ms": 0.13,
-          "messages": 267,
-          "throughput_msgs_per_s": 267000000.0
-        },
-        {
-          "bucket_idx": 131,
-          "bucket_start_ns": 131000,
-          "bucket_start_ms": 0.131,
-          "messages": 261,
-          "throughput_msgs_per_s": 261000000.0
-        },
-        {
-          "bucket_idx": 132,
-          "bucket_start_ns": 132000,
-          "bucket_start_ms": 0.132,
-          "messages": 319,
-          "throughput_msgs_per_s": 319000000.0
-        },
-        {
-          "bucket_idx": 133,
-          "bucket_start_ns": 133000,
-          "bucket_start_ms": 0.133,
-          "messages": 278,
-          "throughput_msgs_per_s": 278000000.0
-        },
-        {
-          "bucket_idx": 134,
-          "bucket_start_ns": 134000,
-          "bucket_start_ms": 0.134,
-          "messages": 320,
-          "throughput_msgs_per_s": 320000000.0
-        },
-        {
-          "bucket_idx": 135,
-          "bucket_start_ns": 135000,
-          "bucket_start_ms": 0.135,
-          "messages": 284,
-          "throughput_msgs_per_s": 284000000.0
-        },
-        {
-          "bucket_idx": 136,
-          "bucket_start_ns": 136000,
-          "bucket_start_ms": 0.136,
-          "messages": 264,
-          "throughput_msgs_per_s": 264000000.0
-        },
-        {
-          "bucket_idx": 137,
-          "bucket_start_ns": 137000,
-          "bucket_start_ms": 0.137,
-          "messages": 250,
-          "throughput_msgs_per_s": 250000000.0
-        },
-        {
-          "bucket_idx": 138,
-          "bucket_start_ns": 138000,
-          "bucket_start_ms": 0.138,
-          "messages": 301,
-          "throughput_msgs_per_s": 301000000.0
-        },
-        {
-          "bucket_idx": 139,
-          "bucket_start_ns": 139000,
-          "bucket_start_ms": 0.139,
-          "messages": 267,
-          "throughput_msgs_per_s": 267000000.0
-        },
-        {
-          "bucket_idx": 140,
-          "bucket_start_ns": 140000,
-          "bucket_start_ms": 0.14,
-          "messages": 250,
-          "throughput_msgs_per_s": 250000000.0
-        },
-        {
-          "bucket_idx": 141,
-          "bucket_start_ns": 141000,
-          "bucket_start_ms": 0.141,
-          "messages": 299,
-          "throughput_msgs_per_s": 299000000.0
-        },
-        {
-          "bucket_idx": 142,
-          "bucket_start_ns": 142000,
-          "bucket_start_ms": 0.142,
-          "messages": 310,
-          "throughput_msgs_per_s": 310000000.0
-        },
-        {
-          "bucket_idx": 143,
-          "bucket_start_ns": 143000,
-          "bucket_start_ms": 0.143,
-          "messages": 274,
-          "throughput_msgs_per_s": 274000000.0
-        },
-        {
-          "bucket_idx": 144,
-          "bucket_start_ns": 144000,
-          "bucket_start_ms": 0.144,
-          "messages": 281,
-          "throughput_msgs_per_s": 281000000.0
-        },
-        {
-          "bucket_idx": 145,
-          "bucket_start_ns": 145000,
-          "bucket_start_ms": 0.145,
-          "messages": 288,
-          "throughput_msgs_per_s": 288000000.0
-        },
-        {
-          "bucket_idx": 146,
-          "bucket_start_ns": 146000,
-          "bucket_start_ms": 0.146,
-          "messages": 300,
-          "throughput_msgs_per_s": 300000000.0
-        },
-        {
-          "bucket_idx": 147,
-          "bucket_start_ns": 147000,
-          "bucket_start_ms": 0.147,
-          "messages": 314,
-          "throughput_msgs_per_s": 314000000.0
-        },
-        {
-          "bucket_idx": 148,
-          "bucket_start_ns": 148000,
-          "bucket_start_ms": 0.148,
-          "messages": 327,
-          "throughput_msgs_per_s": 327000000.0
-        },
-        {
-          "bucket_idx": 149,
-          "bucket_start_ns": 149000,
-          "bucket_start_ms": 0.149,
-          "messages": 281,
-          "throughput_msgs_per_s": 281000000.0
-        },
-        {
-          "bucket_idx": 150,
-          "bucket_start_ns": 150000,
-          "bucket_start_ms": 0.15,
-          "messages": 324,
-          "throughput_msgs_per_s": 324000000.0
-        },
-        {
-          "bucket_idx": 151,
-          "bucket_start_ns": 151000,
-          "bucket_start_ms": 0.151,
-          "messages": 301,
-          "throughput_msgs_per_s": 301000000.0
-        },
-        {
-          "bucket_idx": 152,
-          "bucket_start_ns": 152000,
-          "bucket_start_ms": 0.152,
-          "messages": 281,
-          "throughput_msgs_per_s": 281000000.0
-        },
-        {
-          "bucket_idx": 153,
-          "bucket_start_ns": 153000,
-          "bucket_start_ms": 0.153,
-          "messages": 264,
-          "throughput_msgs_per_s": 264000000.0
-        },
-        {
-          "bucket_idx": 154,
-          "bucket_start_ns": 154000,
-          "bucket_start_ms": 0.154,
-          "messages": 258,
-          "throughput_msgs_per_s": 258000000.0
-        },
-        {
-          "bucket_idx": 155,
-          "bucket_start_ns": 155000,
-          "bucket_start_ms": 0.155,
-          "messages": 332,
-          "throughput_msgs_per_s": 332000000.0
-        },
-        {
-          "bucket_idx": 156,
-          "bucket_start_ns": 156000,
-          "bucket_start_ms": 0.156,
-          "messages": 277,
-          "throughput_msgs_per_s": 277000000.0
-        },
-        {
-          "bucket_idx": 157,
-          "bucket_start_ns": 157000,
-          "bucket_start_ms": 0.157,
-          "messages": 285,
-          "throughput_msgs_per_s": 285000000.0
-        },
-        {
-          "bucket_idx": 158,
-          "bucket_start_ns": 158000,
-          "bucket_start_ms": 0.158,
-          "messages": 329,
-          "throughput_msgs_per_s": 329000000.0
-        },
-        {
-          "bucket_idx": 159,
-          "bucket_start_ns": 159000,
-          "bucket_start_ms": 0.159,
-          "messages": 307,
-          "throughput_msgs_per_s": 307000000.0
-        },
-        {
-          "bucket_idx": 160,
-          "bucket_start_ns": 160000,
-          "bucket_start_ms": 0.16,
-          "messages": 291,
-          "throughput_msgs_per_s": 291000000.0
-        },
-        {
-          "bucket_idx": 161,
-          "bucket_start_ns": 161000,
-          "bucket_start_ms": 0.161,
-          "messages": 277,
-          "throughput_msgs_per_s": 277000000.0
-        },
-        {
-          "bucket_idx": 162,
-          "bucket_start_ns": 162000,
-          "bucket_start_ms": 0.162,
-          "messages": 327,
-          "throughput_msgs_per_s": 327000000.0
-        },
-        {
-          "bucket_idx": 163,
-          "bucket_start_ns": 163000,
-          "bucket_start_ms": 0.163,
-          "messages": 272,
-          "throughput_msgs_per_s": 272000000.0
-        },
-        {
-          "bucket_idx": 164,
-          "bucket_start_ns": 164000,
-          "bucket_start_ms": 0.164,
-          "messages": 335,
-          "throughput_msgs_per_s": 335000000.0
-        },
-        {
-          "bucket_idx": 165,
-          "bucket_start_ns": 165000,
-          "bucket_start_ms": 0.165,
-          "messages": 284,
-          "throughput_msgs_per_s": 284000000.0
-        },
-        {
-          "bucket_idx": 166,
-          "bucket_start_ns": 166000,
-          "bucket_start_ms": 0.166,
-          "messages": 275,
-          "throughput_msgs_per_s": 275000000.0
-        },
-        {
-          "bucket_idx": 167,
-          "bucket_start_ns": 167000,
-          "bucket_start_ms": 0.167,
-          "messages": 319,
-          "throughput_msgs_per_s": 319000000.0
-        },
-        {
-          "bucket_idx": 168,
-          "bucket_start_ns": 168000,
-          "bucket_start_ms": 0.168,
-          "messages": 296,
-          "throughput_msgs_per_s": 296000000.0
-        },
-        {
-          "bucket_idx": 169,
-          "bucket_start_ns": 169000,
-          "bucket_start_ms": 0.169,
-          "messages": 285,
-          "throughput_msgs_per_s": 285000000.0
-        },
-        {
-          "bucket_idx": 170,
-          "bucket_start_ns": 170000,
-          "bucket_start_ms": 0.17,
-          "messages": 304,
-          "throughput_msgs_per_s": 304000000.0
-        },
-        {
-          "bucket_idx": 171,
-          "bucket_start_ns": 171000,
-          "bucket_start_ms": 0.171,
-          "messages": 305,
-          "throughput_msgs_per_s": 305000000.0
-        },
-        {
-          "bucket_idx": 172,
-          "bucket_start_ns": 172000,
-          "bucket_start_ms": 0.172,
-          "messages": 294,
-          "throughput_msgs_per_s": 294000000.0
-        },
-        {
-          "bucket_idx": 173,
-          "bucket_start_ns": 173000,
-          "bucket_start_ms": 0.173,
-          "messages": 275,
-          "throughput_msgs_per_s": 275000000.0
-        },
-        {
-          "bucket_idx": 174,
-          "bucket_start_ns": 174000,
-          "bucket_start_ms": 0.174,
-          "messages": 320,
-          "throughput_msgs_per_s": 320000000.0
-        },
-        {
-          "bucket_idx": 175,
-          "bucket_start_ns": 175000,
-          "bucket_start_ms": 0.175,
-          "messages": 299,
-          "throughput_msgs_per_s": 299000000.0
-        },
-        {
-          "bucket_idx": 176,
-          "bucket_start_ns": 176000,
-          "bucket_start_ms": 0.176,
-          "messages": 247,
-          "throughput_msgs_per_s": 247000000.0
-        },
-        {
-          "bucket_idx": 177,
-          "bucket_start_ns": 177000,
-          "bucket_start_ms": 0.177,
-          "messages": 272,
-          "throughput_msgs_per_s": 272000000.0
-        },
-        {
-          "bucket_idx": 178,
-          "bucket_start_ns": 178000,
-          "bucket_start_ms": 0.178,
-          "messages": 266,
-          "throughput_msgs_per_s": 266000000.0
-        },
-        {
-          "bucket_idx": 179,
-          "bucket_start_ns": 179000,
-          "bucket_start_ms": 0.179,
-          "messages": 270,
-          "throughput_msgs_per_s": 270000000.0
-        },
-        {
-          "bucket_idx": 180,
-          "bucket_start_ns": 180000,
-          "bucket_start_ms": 0.18,
-          "messages": 265,
-          "throughput_msgs_per_s": 265000000.0
-        },
-        {
-          "bucket_idx": 181,
-          "bucket_start_ns": 181000,
-          "bucket_start_ms": 0.181,
-          "messages": 300,
-          "throughput_msgs_per_s": 300000000.0
-        },
-        {
-          "bucket_idx": 182,
-          "bucket_start_ns": 182000,
-          "bucket_start_ms": 0.182,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 183,
-          "bucket_start_ns": 183000,
-          "bucket_start_ms": 0.183,
-          "messages": 307,
-          "throughput_msgs_per_s": 307000000.0
-        },
-        {
-          "bucket_idx": 184,
-          "bucket_start_ns": 184000,
-          "bucket_start_ms": 0.184,
-          "messages": 302,
-          "throughput_msgs_per_s": 302000000.0
-        },
-        {
-          "bucket_idx": 185,
-          "bucket_start_ns": 185000,
-          "bucket_start_ms": 0.185,
-          "messages": 272,
-          "throughput_msgs_per_s": 272000000.0
-        },
-        {
-          "bucket_idx": 186,
-          "bucket_start_ns": 186000,
-          "bucket_start_ms": 0.186,
-          "messages": 310,
-          "throughput_msgs_per_s": 310000000.0
-        },
-        {
-          "bucket_idx": 187,
-          "bucket_start_ns": 187000,
-          "bucket_start_ms": 0.187,
-          "messages": 314,
-          "throughput_msgs_per_s": 314000000.0
-        },
-        {
-          "bucket_idx": 188,
-          "bucket_start_ns": 188000,
-          "bucket_start_ms": 0.188,
-          "messages": 296,
-          "throughput_msgs_per_s": 296000000.0
-        },
-        {
-          "bucket_idx": 189,
-          "bucket_start_ns": 189000,
-          "bucket_start_ms": 0.189,
-          "messages": 305,
-          "throughput_msgs_per_s": 305000000.0
-        },
-        {
-          "bucket_idx": 190,
-          "bucket_start_ns": 190000,
-          "bucket_start_ms": 0.19,
-          "messages": 313,
-          "throughput_msgs_per_s": 313000000.0
-        },
-        {
-          "bucket_idx": 191,
-          "bucket_start_ns": 191000,
-          "bucket_start_ms": 0.191,
-          "messages": 288,
-          "throughput_msgs_per_s": 288000000.0
-        },
-        {
-          "bucket_idx": 192,
-          "bucket_start_ns": 192000,
-          "bucket_start_ms": 0.192,
-          "messages": 268,
-          "throughput_msgs_per_s": 268000000.0
-        },
-        {
-          "bucket_idx": 193,
-          "bucket_start_ns": 193000,
-          "bucket_start_ms": 0.193,
-          "messages": 294,
-          "throughput_msgs_per_s": 294000000.0
-        },
-        {
-          "bucket_idx": 194,
-          "bucket_start_ns": 194000,
-          "bucket_start_ms": 0.194,
-          "messages": 278,
-          "throughput_msgs_per_s": 278000000.0
-        },
-        {
-          "bucket_idx": 195,
-          "bucket_start_ns": 195000,
-          "bucket_start_ms": 0.195,
-          "messages": 287,
-          "throughput_msgs_per_s": 287000000.0
-        },
-        {
-          "bucket_idx": 196,
-          "bucket_start_ns": 196000,
-          "bucket_start_ms": 0.196,
-          "messages": 284,
-          "throughput_msgs_per_s": 284000000.0
-        },
-        {
-          "bucket_idx": 197,
-          "bucket_start_ns": 197000,
-          "bucket_start_ms": 0.197,
-          "messages": 289,
-          "throughput_msgs_per_s": 289000000.0
-        },
-        {
-          "bucket_idx": 198,
-          "bucket_start_ns": 198000,
-          "bucket_start_ms": 0.198,
-          "messages": 261,
-          "throughput_msgs_per_s": 261000000.0
-        },
-        {
-          "bucket_idx": 199,
-          "bucket_start_ns": 199000,
-          "bucket_start_ms": 0.199,
-          "messages": 322,
-          "throughput_msgs_per_s": 322000000.0
-        }
-      ],
-      "summary": {
-        "symbol": "SIM",
-        "realized_pnl": 0.0,
-        "unrealized_pnl": 0.0,
-        "inventory": 0.0,
-        "order_count": 0,
-        "fill_count": 57398,
-        "order_volume": 0.0,
-        "fill_volume": 95983.65599999847,
-        "order_to_trade_ratio": 0.0,
-        "fill_efficiency": null,
-        "avg_latency_ns": null,
-        "p95_latency_ns": null,
-        "max_latency_ns": null,
-        "start_timestamp_ns": 14,
-        "end_timestamp_ns": 199995,
-        "duration_ns": 199981,
-        "digest": "bdb68d28a3e36efb9e42611146e717c045169c09b6d223552b28ffa5f7a3d4e6",
-        "timings": {
-          "matching": {
-            "label": "matching",
-            "count": 200000,
-            "total_ns": 1326806502188,
-            "avg_ns": 6634032.51094,
-            "p95_ns": 19976875,
-            "p99_ns": 94442667,
-            "max_ns": 815036333
-          },
-          "message_handling": {
-            "label": "message_handling",
-            "count": 200000,
-            "total_ns": 1334840340115,
-            "avg_ns": 6674201.700575,
-            "p95_ns": 20031250,
-            "p99_ns": 94489750,
-            "max_ns": 815162000
-          },
-          "pnl_logging": {
-            "label": "pnl_logging",
-            "count": 57398,
-            "total_ns": 2534659059,
-            "avg_ns": 44159.3619812537,
-            "p95_ns": 87292,
-            "p99_ns": 129500,
-            "max_ns": 25553541
+        ],
+        "summary": {
+          "symbol": "SIM",
+          "realized_pnl": 0.0,
+          "unrealized_pnl": 0.0,
+          "inventory": 0.0,
+          "order_count": 0,
+          "fill_count": 5531,
+          "order_volume": 0.0,
+          "fill_volume": 9348.471000000027,
+          "order_to_trade_ratio": 0.0,
+          "fill_efficiency": null,
+          "avg_latency_ns": null,
+          "p95_latency_ns": null,
+          "max_latency_ns": null,
+          "start_timestamp_ns": 7,
+          "end_timestamp_ns": 19994,
+          "duration_ns": 19987,
+          "digest": "de8c75204bfeb454e19b17a85132718f67166e4371d5f6be4aefe07da0bffba9",
+          "timings": {
+            "matching": {
+              "label": "matching",
+              "count": 20000,
+              "total_ns": 12441258826,
+              "avg_ns": 622062.9413,
+              "p95_ns": 2110125,
+              "p99_ns": 2899084,
+              "max_ns": 16827833
+            },
+            "message_handling": {
+              "label": "message_handling",
+              "count": 20000,
+              "total_ns": 13062526551,
+              "avg_ns": 653126.32755,
+              "p95_ns": 2137834,
+              "p99_ns": 2934542,
+              "max_ns": 16869583
+            },
+            "pnl_logging": {
+              "label": "pnl_logging",
+              "count": 5531,
+              "total_ns": 168568129,
+              "avg_ns": 30476.97143373712,
+              "p95_ns": 71666,
+              "p99_ns": 101125,
+              "max_ns": 2779750
+            }
           }
         }
       }
-    },
-    {
-      "run_id": "run_1x",
-      "series": [
-        {
-          "bucket_idx": 0,
-          "bucket_start_ns": 0,
-          "bucket_start_ms": 0.0,
-          "messages": 288,
-          "throughput_msgs_per_s": 288000000.0
-        },
-        {
-          "bucket_idx": 1,
-          "bucket_start_ns": 1000,
-          "bucket_start_ms": 0.001,
-          "messages": 272,
-          "throughput_msgs_per_s": 272000000.0
-        },
-        {
-          "bucket_idx": 2,
-          "bucket_start_ns": 2000,
-          "bucket_start_ms": 0.002,
-          "messages": 267,
-          "throughput_msgs_per_s": 267000000.0
-        },
-        {
-          "bucket_idx": 3,
-          "bucket_start_ns": 3000,
-          "bucket_start_ms": 0.003,
-          "messages": 293,
-          "throughput_msgs_per_s": 293000000.0
-        },
-        {
-          "bucket_idx": 4,
-          "bucket_start_ns": 4000,
-          "bucket_start_ms": 0.004,
-          "messages": 264,
-          "throughput_msgs_per_s": 264000000.0
-        },
-        {
-          "bucket_idx": 5,
-          "bucket_start_ns": 5000,
-          "bucket_start_ms": 0.005,
-          "messages": 267,
-          "throughput_msgs_per_s": 267000000.0
-        },
-        {
-          "bucket_idx": 6,
-          "bucket_start_ns": 6000,
-          "bucket_start_ms": 0.006,
-          "messages": 280,
-          "throughput_msgs_per_s": 280000000.0
-        },
-        {
-          "bucket_idx": 7,
-          "bucket_start_ns": 7000,
-          "bucket_start_ms": 0.007,
-          "messages": 275,
-          "throughput_msgs_per_s": 275000000.0
-        },
-        {
-          "bucket_idx": 8,
-          "bucket_start_ns": 8000,
-          "bucket_start_ms": 0.008,
-          "messages": 230,
-          "throughput_msgs_per_s": 230000000.0
-        },
-        {
-          "bucket_idx": 9,
-          "bucket_start_ns": 9000,
-          "bucket_start_ms": 0.009,
-          "messages": 296,
-          "throughput_msgs_per_s": 296000000.0
-        },
-        {
-          "bucket_idx": 10,
-          "bucket_start_ns": 10000,
-          "bucket_start_ms": 0.01,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 11,
-          "bucket_start_ns": 11000,
-          "bucket_start_ms": 0.011,
-          "messages": 280,
-          "throughput_msgs_per_s": 280000000.0
-        },
-        {
-          "bucket_idx": 12,
-          "bucket_start_ns": 12000,
-          "bucket_start_ms": 0.012,
-          "messages": 334,
-          "throughput_msgs_per_s": 334000000.0
-        },
-        {
-          "bucket_idx": 13,
-          "bucket_start_ns": 13000,
-          "bucket_start_ms": 0.013,
-          "messages": 279,
-          "throughput_msgs_per_s": 279000000.0
-        },
-        {
-          "bucket_idx": 14,
-          "bucket_start_ns": 14000,
-          "bucket_start_ms": 0.014,
-          "messages": 273,
-          "throughput_msgs_per_s": 273000000.0
-        },
-        {
-          "bucket_idx": 15,
-          "bucket_start_ns": 15000,
-          "bucket_start_ms": 0.015,
-          "messages": 261,
-          "throughput_msgs_per_s": 261000000.0
-        },
-        {
-          "bucket_idx": 16,
-          "bucket_start_ns": 16000,
-          "bucket_start_ms": 0.016,
-          "messages": 255,
-          "throughput_msgs_per_s": 255000000.0
-        },
-        {
-          "bucket_idx": 17,
-          "bucket_start_ns": 17000,
-          "bucket_start_ms": 0.017,
-          "messages": 264,
-          "throughput_msgs_per_s": 264000000.0
-        },
-        {
-          "bucket_idx": 18,
-          "bucket_start_ns": 18000,
-          "bucket_start_ms": 0.018,
-          "messages": 263,
-          "throughput_msgs_per_s": 263000000.0
-        },
-        {
-          "bucket_idx": 19,
-          "bucket_start_ns": 19000,
-          "bucket_start_ms": 0.019,
-          "messages": 311,
-          "throughput_msgs_per_s": 311000000.0
-        }
-      ],
-      "summary": {
-        "symbol": "SIM",
-        "realized_pnl": 0.0,
-        "unrealized_pnl": 0.0,
-        "inventory": 0.0,
-        "order_count": 0,
-        "fill_count": 5531,
-        "order_volume": 0.0,
-        "fill_volume": 9348.471000000027,
-        "order_to_trade_ratio": 0.0,
-        "fill_efficiency": null,
-        "avg_latency_ns": null,
-        "p95_latency_ns": null,
-        "max_latency_ns": null,
-        "start_timestamp_ns": 7,
-        "end_timestamp_ns": 19994,
-        "duration_ns": 19987,
-        "digest": "de8c75204bfeb454e19b17a85132718f67166e4371d5f6be4aefe07da0bffba9",
-        "timings": {
-          "matching": {
-            "label": "matching",
-            "count": 20000,
-            "total_ns": 12441258826,
-            "avg_ns": 622062.9413,
-            "p95_ns": 2110125,
-            "p99_ns": 2899084,
-            "max_ns": 16827833
-          },
-          "message_handling": {
-            "label": "message_handling",
-            "count": 20000,
-            "total_ns": 13062526551,
-            "avg_ns": 653126.32755,
-            "p95_ns": 2137834,
-            "p99_ns": 2934542,
-            "max_ns": 16869583
-          },
-          "pnl_logging": {
-            "label": "pnl_logging",
-            "count": 5531,
-            "total_ns": 168568129,
-            "avg_ns": 30476.97143373712,
-            "p95_ns": 71666,
-            "p99_ns": 101125,
-            "max_ns": 2779750
-          }
-        }
-      }
-    }
-  ],
-  "bucket_ns": 1000
+    ],
+    "bucket_ns": 1000
+  }
 }

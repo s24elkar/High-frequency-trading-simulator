@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "schema_version": "hftsim/v0",
+    "generated_at": "2025-10-11T09:07:35Z",
+    "generator": "run_benchmarks",
+    "git_commit": "49af07a467d90379be5f54eea7e6224265297b1c",
+    "seed": 42,
+    "extra": {
+      "baseline_messages": 2000,
+      "symbol": "AAPL",
+      "data_path": "data/lobster/LOBSTER_SampleFile_AAPL_2012-06-21_10/AAPL_2012-06-21_34200000_57600000_message_10.csv"
+    }
+  },
+  "data": {
+    "run_config": {
+      "symbol": "AAPL",
+      "seed": 42,
+      "baseline_messages": 2000,
+      "data_path": "data/lobster/LOBSTER_SampleFile_AAPL_2012-06-21_10/AAPL_2012-06-21_34200000_57600000_message_10.csv"
+    },
+    "scenarios": [
+      {
+        "label": "baseline",
+        "message_count": 2000
+      },
+      {
+        "label": "x10",
+        "message_count": 20000
+      },
+      {
+        "label": "x100",
+        "message_count": 200000
+      }
+    ],
+    "results": [
+      {
+        "label": "baseline",
+        "events": 2000,
+        "wall_time_s": 0.15318783299881034,
+        "throughput_msg_s": 13055.867172006618,
+        "latency_avg_us": 0.0,
+        "latency_p95_us": 0.0,
+        "latency_p99_us": 0.0,
+        "latency_max_us": 0.0,
+        "matching_avg_ns": 32220.2105,
+        "matching_p95_ns": 34750,
+        "matching_p99_ns": 44958,
+        "matching_max_ns": 68667,
+        "message_avg_ns": 73264.1805,
+        "message_p95_ns": 112500,
+        "message_p99_ns": 124625,
+        "message_max_ns": 171166,
+        "digest": "2af7f0ea3fba436dd0539c578f76536faaac249dc34aac5e70008c4e6197ec54"
+      },
+      {
+        "label": "x10",
+        "events": 20000,
+        "wall_time_s": 1.5657947910076473,
+        "throughput_msg_s": 12773.065867162104,
+        "latency_avg_us": 0.0,
+        "latency_p95_us": 0.0,
+        "latency_p99_us": 0.0,
+        "latency_max_us": 0.0,
+        "matching_avg_ns": 28121.7268,
+        "matching_p95_ns": 33625,
+        "matching_p99_ns": 37458,
+        "matching_max_ns": 123291,
+        "message_avg_ns": 75053.6353,
+        "message_p95_ns": 104417,
+        "message_p99_ns": 116709,
+        "message_max_ns": 13506917,
+        "digest": "79067c526bee82c945448810817a8e7fba9c91f9e86caf6a7111c44ca11ccba4"
+      },
+      {
+        "label": "x100",
+        "events": 200000,
+        "wall_time_s": 17.046315291008796,
+        "throughput_msg_s": 11732.740864267098,
+        "latency_avg_us": 0.0,
+        "latency_p95_us": 0.0,
+        "latency_p99_us": 0.0,
+        "latency_max_us": 0.0,
+        "matching_avg_ns": 30082.502305,
+        "matching_p95_ns": 34959,
+        "matching_p99_ns": 42583,
+        "matching_max_ns": 246084,
+        "message_avg_ns": 81761.8151,
+        "message_p95_ns": 108750,
+        "message_p99_ns": 127584,
+        "message_max_ns": 77916917,
+        "digest": "3784cc0d9e1d2813d25132d1674fde11393d858c3b59f9d70b9b53dd75f50796"
+      }
+    ]
+  }
+}

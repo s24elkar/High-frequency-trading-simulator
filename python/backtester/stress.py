@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
-import cProfile
-import io
 import logging
-import pstats
 import random
 import time
-import tracemalloc
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 import math
+
+try:  # pragma: no cover - allow import when package layout differs
+    from ..analysis import Hotspot, profile_capture, stats_to_hotspots
+except (ImportError, ValueError):  # pragma: no cover - fallback for flat layout
+    from analysis import Hotspot, profile_capture, stats_to_hotspots  # type: ignore[import-not-found]
 
 from .backtester import MarketEvent, MarketSnapshot
 from .order_book import PythonOrderBook
@@ -42,14 +43,6 @@ class StressConfig:
     burst: Optional[BurstConfig] = None
     validate_sequence: bool = False
     record_latency: bool = False
-
-
-@dataclass(slots=True)
-class Hotspot:
-    location: str
-    primitive_calls: int
-    total_calls: int
-    cumulative_time_s: float
 
 
 @dataclass(slots=True)
@@ -179,12 +172,7 @@ def run_order_book_stress(
     )
     latencies_ns: Optional[List[int]] = [] if config.record_latency else None
 
-    tracemalloc.start()
-    start = time.perf_counter()
-    profiler = cProfile.Profile()
-    profiler.enable()
-
-    try:
+    with profile_capture(profiler_output, print_limit=25) as profile_result:
         if config.poisson is not None:
             generator = PoissonOrderFlowGenerator(
                 config.poisson, burst_config=config.burst
@@ -258,22 +246,8 @@ def run_order_book_stress(
                     if active_orders:
                         active_orders.pop(exec_idx)
                 processed += 1
-    finally:
-        profiler.disable()
-        wall_time_s = time.perf_counter() - start
-        current, peak = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
 
-    stats = pstats.Stats(profiler).sort_stats("cumulative")
-    hotspots = _collect_hotspots(stats)
-
-    if profiler_output is not None:
-        profiler_path = Path(profiler_output)
-        profiler_path.parent.mkdir(parents=True, exist_ok=True)
-        buffer = io.StringIO()
-        stats.stream = buffer
-        stats.print_stats(25)
-        profiler_path.write_text(buffer.getvalue(), encoding="utf-8")
+    hotspots = stats_to_hotspots(profile_result.stats, limit=10)
 
     snapshot: MarketSnapshot = book.snapshot(config.depth)
     final_depth = len(snapshot.depth)
@@ -300,8 +274,8 @@ def run_order_book_stress(
             latency_histogram = _latency_histogram_from_sorted(sorted_latencies)
 
     metrics = StressMetrics(
-        wall_time_s=wall_time_s,
-        peak_memory_kb=peak / 1024.0,
+        wall_time_s=profile_result.wall_time_s,
+        peak_memory_kb=profile_result.peak_memory_kb,
         message_count=total_messages,
         final_depth=final_depth,
         hotspots=hotspots,
@@ -326,25 +300,6 @@ def run_order_book_stress(
     )
 
     return metrics
-
-
-def _collect_hotspots(stats: pstats.Stats, limit: int = 10) -> List[Hotspot]:
-    entries: List[Hotspot] = []
-    for func, (primitive_calls, total_calls, _, cumulative_time, _) in sorted(
-        stats.stats.items(), key=lambda item: item[1][3], reverse=True
-    )[:limit]:
-        filename, line, name = func
-        location = f"{filename}:{line}:{name}"
-        entries.append(
-            Hotspot(
-                location=location,
-                primitive_calls=primitive_calls,
-                total_calls=total_calls,
-                cumulative_time_s=cumulative_time,
-            )
-        )
-    return entries
-
 
 __all__ = [
     "StressConfig",

@@ -1,0 +1,9 @@
+{
+  "schema_version": "hftsim/v0",
+  "generated_at": "2025-10-11T09:13:22Z",
+  "generator": "aggregate_stress_metrics",
+  "git_commit": "49af07a467d90379be5f54eea7e6224265297b1c",
+  "extra": {
+    "bucket_ns": 1000
+  }
+}

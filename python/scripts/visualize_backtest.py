@@ -4,23 +4,24 @@ from __future__ import annotations
 
 import argparse
 import math
-from pathlib import Path
 import sys
-import os
+from pathlib import Path
 from typing import Iterable, Optional, Sequence
 
 import numpy as np
 
-# Ensure Matplotlib can create its cache even in locked-down environments.
-if "MPLCONFIGDIR" not in os.environ:
-    _mpl_cache = Path.cwd() / ".matplotlib_cache"
-    _mpl_cache.mkdir(parents=True, exist_ok=True)
-    os.environ["MPLCONFIGDIR"] = str(_mpl_cache)
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
-if __package__ is None or __package__ == "":
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+if __package__ in (None, ""):
+    sys.path.insert(0, str(REPO_ROOT))
 
-from backtester.reports import BacktestRun, load_run
+from python.analysis import (
+    ArtifactWriter,
+    ReportMetadata,
+    detect_git_commit,
+    ensure_matplotlib_backend,
+)
+from python.backtester.reports import BacktestRun, load_run
 
 
 def _to_seconds(timestamps: Sequence[int]) -> np.ndarray:
@@ -200,7 +201,12 @@ def _summary_dict(run: BacktestRun) -> dict[str, float | int | None]:
     }
 
 
-def visualise_run(run: BacktestRun, output: Path | None, plt_module) -> None:
+def visualise_run(
+    run: BacktestRun,
+    output: Path | None,
+    plt_module,
+    writer: ArtifactWriter | None = None,
+) -> None:
     fig, axes = plt_module.subplots(3, 1, sharex=True, figsize=(10, 11))
     _plot_mid_price(axes[0], run)
     _plot_order_activity(axes[1], run)
@@ -224,6 +230,8 @@ def visualise_run(run: BacktestRun, output: Path | None, plt_module) -> None:
     if output is not None:
         output.parent.mkdir(parents=True, exist_ok=True)
         fig.savefig(output, dpi=150)
+        if writer is not None:
+            writer.attach_metadata(output, relative=False)
         print(f"Saved visualisation to {output}")
     else:
         plt_module.show()
@@ -244,21 +252,31 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Optional path to save the figure instead of displaying it",
     )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Allow overwriting existing outputs",
+    )
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
 def main(argv: Iterable[str] | None = None) -> None:
     args = parse_args(argv)
+    writer: ArtifactWriter | None = None
     if args.output is not None:
-        import matplotlib
-
-        matplotlib.use("Agg")
+        ensure_matplotlib_backend()
+        metadata = ReportMetadata(
+            generator="visualize_backtest",
+            git_commit=detect_git_commit(REPO_ROOT),
+            extra={"log_path": str(args.log)},
+        )
+        writer = ArtifactWriter(args.output.parent, metadata, overwrite=args.overwrite)
     import matplotlib.pyplot as plt
 
     run = load_run(args.log)
     if run.summary is None:
         print("Warning: no run_summary event found; plot may be incomplete")
-    visualise_run(run, args.output, plt)
+    visualise_run(run, args.output, plt, writer)
 
 
 if __name__ == "__main__":
