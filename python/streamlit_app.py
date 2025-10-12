@@ -85,9 +85,15 @@ DEFAULTS: Dict[str, object] = {
 
 
 PRESET_DESCRIPTIONS: Dict[str, str] = {
-    "Calm market": "Low background activity with quickly fading memory — a sleepy tape.",
-    "Frenzy": "High base flow and long memory that create persistent bursts of trading.",
-    "Flash crash": "Moderate base flow but strong self-excitation for sudden cascades.",
+    "Calm market": (
+        "Low background activity with quickly fading memory — a sleepy tape."
+    ),
+    "Frenzy": (
+        "High base flow and long memory that create persistent bursts of trading."
+    ),
+    "Flash crash": (
+        "Moderate base flow but strong self-excitation for sudden cascades."
+    ),
 }
 
 
@@ -149,7 +155,10 @@ def _exp_controls(key_prefix: str = "") -> Dict[str, float]:
         ),
         step=0.01,
         key=f"{key_prefix}exp_alpha",
-        help="Higher α means each trade boosts the intensity of follow-on trades more strongly.",
+        help=(
+            "Higher α means each trade boosts the intensity of follow-on trades "
+            "more strongly."
+        ),
     )
     beta = st.sidebar.slider(
         "β — memory decay",
@@ -160,7 +169,10 @@ def _exp_controls(key_prefix: str = "") -> Dict[str, float]:
         ),
         step=0.01,
         key=f"{key_prefix}exp_beta",
-        help="Controls how quickly the excitement fades. Larger β means the market cools off faster.",
+        help=(
+            "Controls how quickly the excitement fades. Larger β means the market "
+            "cools off faster."
+        ),
     )
     return {"alpha": alpha, "beta": beta}
 
@@ -184,7 +196,10 @@ def _powerlaw_controls(key_prefix: str = "") -> Dict[str, float]:
         value=float(st.session_state.get(f"{key_prefix}power_c", DEFAULTS["power_c"])),
         step=0.01,
         key=f"{key_prefix}power_c",
-        help="Acts like a time offset preventing the intensity from blowing up immediately after an event.",
+        help=(
+            "Acts like a time offset preventing the intensity from blowing up "
+            "immediately after an event."
+        ),
     )
     gamma = st.sidebar.slider(
         "γ — memory tail",
@@ -263,7 +278,10 @@ def _mark_sampler_controls() -> MarkSamplerConfig:
         value=float(st.session_state.get("mark_value", DEFAULTS["mark_value"])),
         step=0.01,
         key="mark_value",
-        help="All trades use the same mark size — useful for stress-testing the timing model alone.",
+        help=(
+            "All trades use the same mark size — useful for stress-testing the "
+            "timing model alone."
+        ),
     )
 
     return {"kind": "Deterministic", "value": value}
@@ -523,17 +541,22 @@ def main() -> None:
     st.title("High-Frequency Order Flow Simulator")
     st.caption("Visualizing clustered order arrivals with Hawkes processes")
     st.markdown(
-        'This app simulates how trades in a market can "snowball", where one trade nudges the next.'
+        (
+            'This app simulates how trades in a market can "snowball", where one '
+            "trade nudges the next."
+        )
     )
 
     with st.expander("Learn more"):
         st.write(
             """
-            Hawkes processes model event clustering in finance, seismology, and even social media. In
-            markets they describe bursts of trading activity: a burst of orders today makes another burst
-            more likely a moment later. Experiment with the base activity (μ), how long memory lasts, and the
-            distribution of order sizes to see calm periods, frenzies, or near-critical cascades emerge.
-            No prior microstructure knowledge is needed: just move the sliders and watch how the timeline reacts.
+            Hawkes processes model event clustering in finance, seismology, and even
+            social media. In markets they describe bursts of trading activity: a burst
+            of orders today makes another burst more likely a moment later. Experiment
+            with the base activity (μ), how long memory lasts, and the distribution of
+            order sizes to see calm periods, frenzies, or near-critical cascades
+            emerge. No prior microstructure knowledge is needed—just move the sliders
+            and watch how the timeline reacts.
             """
         )
 
@@ -543,7 +566,10 @@ def main() -> None:
         "Choose a regime",
         list(PRESET_SCENARIOS.keys()),
         key="preset_choice",
-        help="Pick a canned market regime to auto-fill parameters or stay on Custom to explore freely.",
+        help=(
+            "Pick a canned market regime to auto-fill parameters or stay on Custom "
+            "to explore freely."
+        ),
     )
     if preset_name != "Custom" and st.sidebar.button(
         f"Load '{preset_name}'",
@@ -557,7 +583,10 @@ def main() -> None:
         "Kernel",
         ("Exponential", "Power-law"),
         key="kernel_choice",
-        help="Exponential forgets quickly; power-law keeps long memory and heavier clustering.",
+        help=(
+            "Exponential forgets quickly; power-law keeps long memory and heavier "
+            "clustering."
+        ),
     )
     mu = st.sidebar.slider(
         "Base intensity μ",
@@ -591,7 +620,10 @@ def main() -> None:
         value=int(st.session_state.get("seed", DEFAULTS["seed"])),
         step=1,
         key="seed",
-        help="Fix the random seed so runs are repeatable. Change it for a fresh sample path.",
+        help=(
+            "Fix the random seed so runs are repeatable. Change it for a fresh "
+            "sample path."
+        ),
     )
     mark_config = _mark_sampler_controls()
 
@@ -628,7 +660,10 @@ def main() -> None:
             "Overlay a second kernel",
             value=bool(st.session_state.get("compare_enabled", False)),
             key="compare_enabled",
-            help="Run a second set of parameters and plot both on the same charts to compare regimes.",
+            help=(
+                "Run a second set of parameters and plot both on the same charts to "
+                "compare regimes."
+            ),
         )
         if compare_enabled:
             compare_kernel_choice = st.selectbox(
@@ -839,12 +874,18 @@ def main() -> None:
         st.sidebar.markdown("---")
         st.sidebar.subheader("Go deeper")
         st.sidebar.info(
-            "See how we calibrate Hawkes models on real Binance order flow and synthetic data."
+            (
+                "See how we calibrate Hawkes models on real Binance order flow and "
+                "synthetic data."
+            )
         )
         for notebook_path in notebooks_dir.glob("*.ipynb"):
             notebook_bytes = notebook_path.read_bytes()
             st.sidebar.download_button(
-                label=f"Download {notebook_path.stem.replace('_', ' ').title()} notebook",
+                label=(
+                    "Download "
+                    f"{notebook_path.stem.replace('_', ' ').title()} notebook"
+                ),
                 data=notebook_bytes,
                 file_name=notebook_path.name,
                 mime="application/x-ipynb+json",

@@ -54,7 +54,10 @@ def normalise_row(
     row: dict[str, object], fields: tuple[str, ...]
 ) -> dict[str, object | str]:
     """Project a dict onto the requested schema, filling missing values with blanks."""
-    return {field: row.get(field, "") if row.get(field) is not None else "" for field in fields}
+    return {
+        field: row.get(field, "") if row.get(field) is not None else ""
+        for field in fields
+    }
 
 
 __all__ = [

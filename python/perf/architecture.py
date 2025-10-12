@@ -45,7 +45,9 @@ class ArchitectureRun:
     message_avg_ns: float | None
 
     def to_row(self) -> Dict[str, object]:
-        return {field: getattr(self, field) for field in ARCHITECTURE_CSV_FIELDS}
+        return {
+            field: getattr(self, field) for field in ARCHITECTURE_CSV_FIELDS
+        }
 
 
 def rows_for_csv(runs: Iterable[ArchitectureRun]) -> List[Dict[str, object]]:
