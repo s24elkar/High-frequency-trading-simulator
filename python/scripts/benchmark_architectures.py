@@ -4,13 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import random
 import sys
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
 from itertools import islice
 from pathlib import Path
-from statistics import mean
-from typing import Dict, Iterable, List, Tuple
+from typing import Iterable, List, Tuple
+
+import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -38,6 +40,12 @@ try:
     from python.strategies.market_maker import (
         MarketMakingConfig,
         MarketMakingStrategy,
+    )
+    from python.perf import (
+        ARCHITECTURE_CSV_FIELDS,
+        ArchitectureRun,
+        architecture_rows_for_csv,
+        summarise_by_variant,
     )
 except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
@@ -69,24 +77,12 @@ except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
         MarketMakingConfig,
         MarketMakingStrategy,
     )
-
-
-@dataclass(slots=True)
-class RunMetrics:
-    variant: str
-    iteration: int
-    message_count: int
-    wall_time_s: float
-    throughput_msg_s: float
-    digest: str
-    fill_count: int
-    fill_volume: float
-    avg_latency_ns: float | None
-    p95_latency_ns: float | None
-    p99_latency_ns: float | None
-    max_latency_ns: float | None
-    matching_avg_ns: float | None
-    message_avg_ns: float | None
+    from python.perf import (  # type: ignore[import-not-found]
+        ARCHITECTURE_CSV_FIELDS,
+        ArchitectureRun,
+        architecture_rows_for_csv,
+        summarise_by_variant,
+    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -146,6 +142,11 @@ def _latency_fields(
     )
 
 
+def _configure_rngs(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+
+
 def _build_backtester(
     symbol: str, depth: int, seed: int, metrics: MetricsLogger
 ) -> Backtester:
@@ -180,7 +181,8 @@ def run_variant(
     events: List[object],
     message_count: int,
     seed: int,
-) -> RunMetrics:
+) -> ArchitectureRun:
+    _configure_rngs(seed)
     metrics = MetricsLogger()
     backtester = _build_backtester(symbol, depth=10, seed=seed, metrics=metrics)
     replay = replay_from_lobster(events)
@@ -208,7 +210,7 @@ def run_variant(
     matching_avg = matching_summary.avg_ns if matching_summary else None
     message_avg = message_summary.avg_ns if message_summary else None
 
-    return RunMetrics(
+    return ArchitectureRun(
         variant=variant,
         iteration=iteration,
         message_count=message_count,
@@ -226,46 +228,15 @@ def run_variant(
     )
 
 
-def summarise(results: List[RunMetrics]) -> Dict[str, dict]:
-    summary: Dict[str, dict] = {}
-    by_variant: Dict[str, List[RunMetrics]] = {}
-    for result in results:
-        by_variant.setdefault(result.variant, []).append(result)
-
-    for variant, runs in by_variant.items():
-        digests = {run.digest for run in runs}
-        summary[variant] = {
-            "runs": len(runs),
-            "unique_digests": len(digests),
-            "avg_wall_time_s": mean(run.wall_time_s for run in runs),
-            "avg_throughput_msg_s": mean(run.throughput_msg_s for run in runs),
-            "avg_matching_ns": (
-                mean(
-                    run.matching_avg_ns
-                    for run in runs
-                    if run.matching_avg_ns is not None
-                )
-                if any(run.matching_avg_ns is not None for run in runs)
-                else None
-            ),
-            "avg_message_ns": (
-                mean(
-                    run.message_avg_ns for run in runs if run.message_avg_ns is not None
-                )
-                if any(run.message_avg_ns is not None for run in runs)
-                else None
-            ),
-        }
-    return summary
-
-
 def main() -> None:
     args = parse_args()
     messages = _materialise_events(
         load_lobster_csv(args.data, symbol=args.symbol), args.message_count
     )
 
-    results: List[RunMetrics] = []
+    _configure_rngs(args.seed)
+
+    results: List[ArchitectureRun] = []
     variants = ("single", "concurrent")
 
     for variant in variants:
@@ -284,7 +255,7 @@ def main() -> None:
                 f"{variant:<11} iter={iteration} digest={run.digest[:8]} throughput={run.throughput_msg_s:,.1f} msg/s"
             )
 
-    summary = summarise(results)
+    summary = summarise_by_variant(results)
 
     payload = {
         "parameters": {
@@ -310,8 +281,8 @@ def main() -> None:
     writer = ArtifactWriter(args.output.parent, metadata, overwrite=args.overwrite)
     writer.write_json(args.output.name, payload)
 
-    csv_rows = [asdict(run) for run in results]
-    csv_headers = list(RunMetrics.__dataclass_fields__.keys()) if results else []
+    csv_rows = architecture_rows_for_csv(results)
+    csv_headers = list(ARCHITECTURE_CSV_FIELDS)
     if args.output_csv.parent == args.output.parent:
         writer.write_csv(args.output_csv.name, csv_rows, headers=csv_headers)
     else:

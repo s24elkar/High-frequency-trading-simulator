@@ -1,0 +1,9 @@
+# Fdb version 4
+["pdflatex"] 0 "docs/paper/main.tex" "main.pdf" "main" 0 -1
+  "docs/paper/main.tex" 0 -1 0 ""
+  "main.aux" 0 -1 0 "pdflatex"
+  (generated)
+  "main.aux"
+  "main.log"
+  "main.pdf"
+  (rewritten before read)

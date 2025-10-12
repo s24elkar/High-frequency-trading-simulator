@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -dynamiclib -Wl,-headerpad_max_install_names -o lib/libhawkes_bridge.dylib -install_name @rpath/libhawkes_bridge.dylib CMakeFiles/hawkes_bridge.dir/src/hawkes_c_api.cpp.o  libhft_core.a

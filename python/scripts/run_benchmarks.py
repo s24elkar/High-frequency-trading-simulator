@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import random
 import sys
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
 from itertools import islice
 from pathlib import Path
 from typing import Dict, List
+
+import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -35,6 +38,11 @@ try:
     from python.strategies.market_maker import (
         MarketMakingConfig,
         MarketMakingStrategy,
+    )
+    from python.perf import (
+        BENCHMARK_CSV_FIELDS,
+        BenchmarkResult,
+        benchmark_rows_for_csv,
     )
 except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
@@ -63,48 +71,11 @@ except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
         MarketMakingConfig,
         MarketMakingStrategy,
     )
-
-
-@dataclass(slots=True)
-class BenchmarkResult:
-    label: str
-    events: int
-    wall_time_s: float
-    throughput_msg_s: float
-    latency_avg_us: float | None
-    latency_p95_us: float | None
-    latency_p99_us: float | None
-    latency_max_us: float | None
-    matching_avg_ns: float | None
-    matching_p95_ns: int | None
-    matching_p99_ns: int | None
-    matching_max_ns: int | None
-    message_avg_ns: float | None
-    message_p95_ns: int | None
-    message_p99_ns: int | None
-    message_max_ns: int | None
-    digest: str
-
-
-_CSV_FIELDS: List[str] = [
-    "label",
-    "events",
-    "wall_time_s",
-    "throughput_msg_s",
-    "latency_avg_us",
-    "latency_p95_us",
-    "latency_p99_us",
-    "latency_max_us",
-    "matching_avg_ns",
-    "matching_p95_ns",
-    "matching_p99_ns",
-    "matching_max_ns",
-    "message_avg_ns",
-    "message_p95_ns",
-    "message_p99_ns",
-    "message_max_ns",
-    "digest",
-]
+    from python.perf import (  # type: ignore[import-not-found]
+        BENCHMARK_CSV_FIELDS,
+        BenchmarkResult,
+        benchmark_rows_for_csv,
+    )
 
 
 def _latency_us(value_ns: float | int | None) -> float | None:
@@ -127,6 +98,12 @@ def _timing_metrics(summary: Dict[str, object], key: str):
         int(p99_ns) if p99_ns is not None else None,
         int(max_ns) if max_ns is not None else None,
     )
+
+
+def _configure_rngs(seed: int) -> None:
+    """Standardise RNG state for deterministic downstream libraries."""
+    random.seed(seed)
+    np.random.seed(seed)
 
 
 def run_case(
@@ -244,6 +221,8 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    _configure_rngs(args.seed)
+
     scenarios = {
         "baseline": args.baseline,
         "x10": args.baseline * 10,
@@ -291,10 +270,10 @@ def main() -> None:
         "results": [asdict(result) for result in results],
     }
     writer.write_json(args.output.name, payload)
-    csv_rows = [
-        {field: getattr(result, field) for field in _CSV_FIELDS} for result in results
-    ]
-    writer.write_csv(f"{args.output.stem}.csv", csv_rows, headers=_CSV_FIELDS)
+    csv_rows = benchmark_rows_for_csv(results)
+    writer.write_csv(
+        f"{args.output.stem}.csv", csv_rows, headers=list(BENCHMARK_CSV_FIELDS)
+    )
     if not args.no_plot:
         plot_path = args.plot_output
         labels = [result.label for result in results]

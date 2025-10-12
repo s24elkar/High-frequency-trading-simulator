@@ -14,6 +14,7 @@ try:
     from .bridge_utils import ensure_bridge_path
     from .kernels import ExpKernel, PowerLawKernel
     from .timeline_dashboard import (
+        SimulationTimeline,
         plot_timeline_interactive,
         simulate_exp_timeline,
         simulate_powerlaw_timeline,
@@ -29,6 +30,7 @@ except (ImportError, ValueError):
     from bridge_utils import ensure_bridge_path
     from kernels import ExpKernel, PowerLawKernel
     from timeline_dashboard import (
+        SimulationTimeline,
         plot_timeline_interactive,
         simulate_exp_timeline,
         simulate_powerlaw_timeline,
@@ -36,6 +38,21 @@ except (ImportError, ValueError):
 
 
 ensure_bridge_path()
+
+COLORWAY = [
+    "#4af699",
+    "#f94f6d",
+    "#ffd166",
+    "#4d9de0",
+    "#ff9f1c",
+    "#9f7aea",
+    "#00c2d1",
+    "#f67280",
+]
+PLOT_BG_HEX = "#0b1220"
+GRID_HEX = "#1f2a3c"
+FONT_HEX = "#e6edf7"
+FONT_FAMILY = '"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif'
 
 
 DEFAULTS: Dict[str, object] = {
@@ -61,6 +78,9 @@ DEFAULTS: Dict[str, object] = {
     "compare_power_alpha": 0.18,
     "compare_power_c": 0.08,
     "compare_power_gamma": 1.6,
+    "candle_seconds": 10,
+    "price_scale": 0.25,
+    "base_price": 100.0,
 }
 
 
@@ -352,6 +372,150 @@ def _simulate_hawkes(
     return timeline, summary
 
 
+def _interpolate_intensity(
+    timeline: SimulationTimeline, default_value: float = 0.0
+) -> np.ndarray:
+    if timeline.intensity_grid.size == 0 or timeline.grid_times.size == 0:
+        return np.full(timeline.times.shape, default_value)
+    return np.interp(
+        timeline.times,
+        timeline.grid_times,
+        timeline.intensity_grid,
+        left=timeline.intensity_grid[0],
+        right=timeline.intensity_grid[-1],
+    )
+
+
+def _trades_3d_figure(
+    timeline: SimulationTimeline,
+    primary_label: str,
+    comparison: SimulationTimeline | None = None,
+    comparison_label: str | None = None,
+) -> go.Figure:
+    """Three-dimensional view of the simulated order flow."""
+
+    fig = go.Figure()
+
+    if timeline.times.size:
+        primary_intensity = _interpolate_intensity(timeline)
+        primary_volume = np.cumsum(timeline.marks) if timeline.marks.size else np.zeros(
+            timeline.times.shape
+        )
+        fig.add_trace(
+            go.Scatter3d(
+                x=timeline.times,
+                y=primary_volume,
+                z=primary_intensity,
+                mode="markers",
+                name=primary_label,
+                marker=dict(
+                    size=4,
+                    color=primary_intensity,
+                    colorscale="Viridis",
+                    opacity=0.85,
+                    colorbar=dict(
+                        title=dict(
+                            text="λ(t)",
+                            font=dict(color=FONT_HEX, family=FONT_FAMILY),
+                        ),
+                        tickfont=dict(color=FONT_HEX, family=FONT_FAMILY),
+                        bgcolor="rgba(11,18,32,0.8)",
+                    ),
+                ),
+                hovertemplate=(
+                    "t = %{x:.2f}s<br>Cumulative volume = %{y:.3f}"
+                    "<br>λ(t) = %{z:.3f}<extra></extra>"
+                ),
+            )
+        )
+
+    if comparison is not None and comparison.times.size:
+        comparison_intensity = _interpolate_intensity(comparison)
+        comparison_volume = (
+            np.cumsum(comparison.marks)
+            if comparison.marks.size
+            else np.zeros(comparison.times.shape)
+        )
+        fig.add_trace(
+            go.Scatter3d(
+                x=comparison.times,
+                y=comparison_volume,
+                z=comparison_intensity,
+                mode="markers",
+                name=comparison_label or "Comparison",
+                marker=dict(
+                    size=4,
+                    color=OVERLAY_INTENSITY_COLOR,
+                    opacity=0.6,
+                ),
+                hovertemplate=(
+                    "t = %{x:.2f}s<br>Cumulative volume = %{y:.3f}"
+                    "<br>λ(t) = %{z:.3f}<extra></extra>"
+                ),
+            )
+        )
+
+    fig.update_layout(
+        title="3D order flow projection",
+        scene=dict(
+            xaxis=dict(
+                title=dict(
+                    text="Time (s)",
+                    font=dict(color=FONT_HEX, family=FONT_FAMILY),
+                ),
+                backgroundcolor="rgba(17,26,44,0.6)",
+                gridcolor=GRID_HEX,
+                zerolinecolor=GRID_HEX,
+                tickfont=dict(color=FONT_HEX, family=FONT_FAMILY),
+            ),
+            yaxis=dict(
+                title=dict(
+                    text="Cumulative volume",
+                    font=dict(color=FONT_HEX, family=FONT_FAMILY),
+                ),
+                backgroundcolor="rgba(17,26,44,0.6)",
+                gridcolor=GRID_HEX,
+                zerolinecolor=GRID_HEX,
+                tickfont=dict(color=FONT_HEX, family=FONT_FAMILY),
+            ),
+            zaxis=dict(
+                title=dict(
+                    text="Intensity λ(t)",
+                    font=dict(color=FONT_HEX, family=FONT_FAMILY),
+                ),
+                backgroundcolor="rgba(17,26,44,0.6)",
+                gridcolor=GRID_HEX,
+                zerolinecolor=GRID_HEX,
+                tickfont=dict(color=FONT_HEX, family=FONT_FAMILY),
+            ),
+        ),
+        paper_bgcolor=PLOT_BG_HEX,
+        font=dict(color=FONT_HEX, family=FONT_FAMILY),
+        margin=dict(l=0, r=0, t=50, b=0),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            bgcolor="rgba(11, 18, 32, 0.85)",
+            bordercolor=GRID_HEX,
+            borderwidth=1,
+        ),
+    )
+    if not fig.data:
+        fig.add_annotation(
+            text="No events to display",
+            xref="paper",
+            yref="paper",
+            x=0.5,
+            y=0.5,
+            showarrow=False,
+            font=dict(color=FONT_HEX, family=FONT_FAMILY, size=16),
+        )
+    return fig
+
+
 def main() -> None:
     _init_defaults()
 
@@ -506,13 +670,25 @@ def main() -> None:
 
     col_plot, col_data = st.columns((2.2, 1))
     with col_plot:
-        fig = plot_timeline_interactive(
-            timeline,
-            title=f"{kernel_choice} Hawkes Simulation",
-            comparison=comparison_timeline,
-            labels=(kernel_choice, comparison_label or "Comparison"),
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        timeline_tab, view3d_tab = st.tabs(["Timeline", "3D flow"])
+
+        with timeline_tab:
+            fig = plot_timeline_interactive(
+                timeline,
+                title=f"{kernel_choice} Hawkes Simulation",
+                comparison=comparison_timeline,
+                labels=(kernel_choice, comparison_label or "Comparison"),
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+        with view3d_tab:
+            fig3d = _trades_3d_figure(
+                timeline,
+                kernel_choice,
+                comparison=comparison_timeline,
+                comparison_label=comparison_label,
+            )
+            st.plotly_chart(fig3d, use_container_width=True)
 
     with col_data:
         st.subheader("Summary")
@@ -611,23 +787,25 @@ def main() -> None:
 
         if timeline.marks.size:
             hist_fig = go.Figure()
+            base_color = COLORWAY[0]
             hist_fig.add_trace(
                 go.Histogram(
                     x=timeline.marks,
                     name=kernel_choice,
                     nbinsx=min(30, max(5, int(len(timeline.marks) / 5))),
                     opacity=0.75,
-                    marker_color="#1f77b4",
+                    marker_color=base_color,
                 )
             )
             if comparison_timeline is not None and comparison_timeline.marks.size:
+                comparison_color = COLORWAY[1]
                 hist_fig.add_trace(
                     go.Histogram(
                         x=comparison_timeline.marks,
                         name=comparison_label or "Comparison",
                         nbinsx=min(30, max(5, int(len(comparison_timeline.marks) / 5))),
                         opacity=0.6,
-                        marker_color="#9467bd",
+                        marker_color=comparison_color,
                     )
                 )
                 hist_fig.update_layout(barmode="overlay")
@@ -635,7 +813,15 @@ def main() -> None:
                 title="Order size distribution",
                 xaxis_title="Mark value",
                 yaxis_title="Frequency",
+                template=None,
+                colorway=COLORWAY,
+                plot_bgcolor=PLOT_BG_HEX,
+                paper_bgcolor=PLOT_BG_HEX,
+                font=dict(color=FONT_HEX),
+                bargap=0.15,
             )
+            hist_fig.update_xaxes(gridcolor=GRID_HEX, zerolinecolor=GRID_HEX)
+            hist_fig.update_yaxes(gridcolor=GRID_HEX, zerolinecolor=GRID_HEX)
             st.plotly_chart(hist_fig, use_container_width=True)
 
         st.download_button(

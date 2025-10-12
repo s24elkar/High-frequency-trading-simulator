@@ -1,0 +1,100 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Problem statement.}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Contributions.}{1}{section*.2}\protected@file@percent }
+\citation{Bacry2015}
+\citation{ContKukanovStoikov2014}
+\citation{MeiEisner2017}
+\citation{Zuo2020}
+\citation{BremaudMassoulie1996}
+\citation{JaissonRosenbaum2015}
+\citation{BremaudMassoulie1996}
+\citation{ContLarrard2013}
+\citation{HuangLehalleRosenbaum2015}
+\citation{Tick}
+\@writefile{toc}{\contentsline {paragraph}{Roadmap.}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background and related work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Background and related work}{section.2}{}}
+\newlabel{sec:related@cref}{{[section][2][]2}{[1][2][]2}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Hawkes processes in market microstructure}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Stability and nearly-unstable regimes}{2}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Limit order book simulators and baselines}{2}{subsection.2.3}\protected@file@percent }
+\citation{BremaudMassoulie1996}
+\citation{DaleyVereJones2003}
+\citation{BremaudMassoulie1996}
+\citation{Ogata1981}
+\citation{LewisShedler1979}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Simulator overview}{3}{section.3}\protected@file@percent }
+\newlabel{sec:simulator}{{3}{3}{Simulator overview}{section.3}{}}
+\newlabel{sec:simulator@cref}{{[section][3][]3}{[1][2][]3}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Order book core.}{3}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Order flow model.}{3}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Kernels.}{3}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Theoretical foundations}{3}{section.4}\protected@file@percent }
+\newlabel{sec:theory}{{4}{3}{Theoretical foundations}{section.4}{}}
+\newlabel{sec:theory@cref}{{[section][4][]4}{[1][3][]3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Existence and stability}{3}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:stability}{{4.1}{3}{Existence and stability}{subsection.4.1}{}}
+\newlabel{sec:stability@cref}{{[subsection][1][4]4.1}{[1][3][]3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Simulation correctness and diagnostics}{3}{subsection.4.2}\protected@file@percent }
+\citation{MollerRasmussen2005}
+\citation{JaissonRosenbaum2015}
+\citation{BinanceData}
+\citation{LOBSTER}
+\citation{HuangLehalleRosenbaum2015}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Nearly-unstable scaling}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental methodology}{4}{section.5}\protected@file@percent }
+\newlabel{sec:methodology}{{5}{4}{Experimental methodology}{section.5}{}}
+\newlabel{sec:methodology@cref}{{[section][5][]5}{[1][4][]4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Datasets}{4}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Binance BTCUSDT.}{4}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{LOBSTER AAPL Level-X.}{4}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Calibration pipeline}{4}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Queue-reactive baseline}{4}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results}{5}{section.6}\protected@file@percent }
+\newlabel{sec:results}{{6}{5}{Results}{section.6}{}}
+\newlabel{sec:results@cref}{{[section][6][]6}{[1][4][]5}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Hawkes simulation timeline.} Event arrivals, marks, intensity $\lambda (t)$, and binned counts for the calibrated exponential kernel on Binance BTCUSDT. A power-law overlay (purple) is available via the released scripts.}}{5}{figure.1}\protected@file@percent }
+\newlabel{fig:timeline}{{1}{5}{\textbf {Hawkes simulation timeline.} Event arrivals, marks, intensity $\lambda (t)$, and binned counts for the calibrated exponential kernel on Binance BTCUSDT. A power-law overlay (purple) is available via the released scripts}{figure.1}{}}
+\newlabel{fig:timeline@cref}{{[figure][1][]1}{[1][4][]5}{}{}{}}
+\citation{MeiEisner2017}
+\citation{Zuo2020}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces \textbf  {Benchmark summary on Binance BTCUSDT (validation slice).} Metrics are computed on 200-second simulation horizons regenerated with the released seeds. NLL is per-event, KS is the supremum distance on rescaled uniforms, and ACF(1) measures lag-one autocorrelation of 0.5-second arrival bins.}}{6}{table.1}\protected@file@percent }
+\newlabel{tab:benchmarks}{{1}{6}{\textbf {Benchmark summary on Binance BTCUSDT (validation slice).} Metrics are computed on 200-second simulation horizons regenerated with the released seeds. NLL is per-event, KS is the supremum distance on rescaled uniforms, and ACF(1) measures lag-one autocorrelation of 0.5-second arrival bins}{table.1}{}}
+\newlabel{tab:benchmarks@cref}{{[table][1][]1}{[1][6][]6}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Residual diagnostics.} Time-rescaling QQ plot (left) and KS empirical CDF (right) for the exponential kernel fit on Binance BTCUSDT. Deviations from the diagonal indicate under-dispersion of long gaps.}}{6}{figure.2}\protected@file@percent }
+\newlabel{fig:qqks}{{2}{6}{\textbf {Residual diagnostics.} Time-rescaling QQ plot (left) and KS empirical CDF (right) for the exponential kernel fit on Binance BTCUSDT. Deviations from the diagonal indicate under-dispersion of long gaps}{figure.2}{}}
+\newlabel{fig:qqks@cref}{{[figure][2][]2}{[1][5][]6}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Interpretation.}{6}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Comparative analysis.}{6}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion and limitations}{6}{section.7}\protected@file@percent }
+\newlabel{sec:discussion}{{7}{6}{Discussion and limitations}{section.7}{}}
+\newlabel{sec:discussion@cref}{{[section][7][]7}{[1][6][]6}{}{}{}}
+\citation{BinanceData}
+\citation{LOBSTER}
+\bibcite{Bacry2015}{1}
+\bibcite{BremaudMassoulie1996}{2}
+\bibcite{JaissonRosenbaum2015}{3}
+\bibcite{ContLarrard2013}{4}
+\bibcite{HuangLehalleRosenbaum2015}{5}
+\bibcite{Ogata1981}{6}
+\bibcite{LewisShedler1979}{7}
+\bibcite{Brown2002}{8}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Reproducibility checklist}{7}{section.8}\protected@file@percent }
+\newlabel{sec:repro}{{8}{7}{Reproducibility checklist}{section.8}{}}
+\newlabel{sec:repro@cref}{{[section][8][]8}{[1][7][]7}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{7}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Availability.}{7}{section*.11}\protected@file@percent }
+\bibcite{DaleyVereJones2003}{9}
+\bibcite{LOBSTER}{10}
+\bibcite{BinanceData}{11}
+\bibcite{ContKukanovStoikov2014}{12}
+\bibcite{GouldBonart2015}{13}
+\bibcite{MollerRasmussen2005}{14}
+\bibcite{MeiEisner2017}{15}
+\bibcite{Zuo2020}{16}
+\bibcite{Tick}{17}
+\gdef \@abspage@last{8}

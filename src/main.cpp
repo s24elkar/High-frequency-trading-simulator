@@ -4,6 +4,7 @@
 
 #include "Order.hpp"
 #include "OrderBook.hpp"
+#include "perf/ScopedTimer.hpp"
 
 int main() {
     using namespace std::chrono;
@@ -18,7 +19,14 @@ int main() {
     };
 
     OrderBook book;
-    for (const auto& order : orders) book.addLimitOrder(order);
+    {
+        perf::ScopedTimer load_timer([](double micros) {
+            std::cout << "Loaded book in " << micros << " microseconds\n";
+        });
+        for (const auto& order : orders) {
+            book.addLimitOrder(order);
+        }
+    }
 
     std::cout << "Best bid : "
               << (book.bestBid() ? to_string(*book.bestBid()) : std::string{"<none>"})

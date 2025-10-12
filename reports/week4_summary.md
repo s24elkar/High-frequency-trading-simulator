@@ -1,22 +1,22 @@
 # Week 4 Technical Report
 
 ## 1. Profiling & Performance Results
-- Re-ran deterministic order-book benchmarks (`python/scripts/run_benchmarks.py`) with `seed=42`. Baseline throughput rose to **13.1k msg/s** (wall time 0.153s), up ~6.9% vs. the prior logs snapshot (`logs/benchmarks/order_book_benchmarks.json`). The 10× and 100× scenarios improved by 8.1% and 4.9% respectively, lowering wall clock by 4.6–7.5%.
-- Normalised benchmark artefacts now live under `results/week4/perf/` with paired metadata (JSON + CSV + plot). `analysis.profiling` consolidates cProfile/tracemalloc capture while `analysis.plots` standardises chart generation.
-- Added `scripts/run_ci_checks.sh` so CI and local runs share the black/flake8/pytest sequence with the same deterministic Matplotlib cache.
+- Introduced the `python/perf` package (shared dataclasses, schema helpers, CSV normalisation) and a header-only `perf::ScopedTimer` for C++; benchmark runners and the Streamlit bridge now consume the shared utilities.
+- Re-ran deterministic order-book benchmarks with `seed=42`. Throughput improved to **12.4k msg/s** (+1.9%) for baseline, **12.4k msg/s** (+4.8%) for ×10, and **11.3k msg/s** (+1.0%) for ×100 scenarios compared with `logs/benchmarks/order_book_benchmarks.json`; matching digests confirm reproducibility.
+- CI gained a smoke-test stage that executes the throughput and stress scripts in a temporary directory under a fixed Matplotlib cache, ensuring the artefact pipeline stays deterministic.
 
 ## 2. Stress Testing & Validation
-- Regenerated the Poisson/burst stress suite via `python/scripts/run_stress_suite.py` (seed 2024). Throughput scaled linearly: ×1 = **21.1k msg/s**, ×10 = **21.7k msg/s**, ×100 = **22.5k msg/s** with avg latency holding at 28–30 µs. Outputs+figures reside in `results/week4/stress/analysis/` with metadata sidecars.
-- Aggregated log integrity and throughput distributions (`perf_run_summary.csv`) confirm deterministic digests (`de8c7…`, `bdb68…`) and zero orphan cancels/executes.
-- Architecture comparison (`benchmark_architectures.py`) shows single-thread loop sustaining **13.1k msg/s** vs **7.4k msg/s** for the concurrent runner (3 seeds), flagging queue hand-off overhead. All runs share digest `79067c52…`, evidencing reproducibility.
-- Added deterministic JSON logging (sorted keys) and Matplotlib cache handling; full Python test suite now passes with the new imports and schema changes.
+- `run_stress_suite.py` now fixes RNG seeding via `_configure_rngs` and replays Poisson/burst mixes with zero orphan events; scenario throughput landed at **20.3–21.9k msg/s** with 29–32 µs average latency.
+- `aggregate_stress_metrics.py` writes scenario, throughput-series, and PnL summaries using canonical headers (`STRESS_SCENARIO_FIELDS`, `THROUGHPUT_SERIES_FIELDS`, `PERF_RUN_SUMMARY_FIELDS`) and regenerates all figures with metadata sidecars.
+- Architecture comparison (seed ladder) shows the single-thread loop averaging **12.6k msg/s** versus **7.0k msg/s** for the concurrent runner; identical digests across six runs validate determinism.
+- Full Python test suite (`pytest tests/python`) passes on the refactored codebase, providing regression coverage for the new modules.
 
-## 3. Key Lessons & Next Week Plan
-- Consolidating profiling utilities into `python/analysis` cut duplication and made cross-language tooling (C++/Python) easier to extend.
-- Metadata-wrapped artefacts simplified validation and will streamline tagging/publishing for v0.9-beta.
-- Matplotlib/fontconfig friction still exists on shared environments—keeping `MPLCONFIGDIR` explicit prevents flaky CI.
+## 3. Key Lessons & Plan for Week 5
+- Centralising performance schemas removed ad-hoc CSV ordering and will simplify future diff tooling (e.g., verifying latency regressions via schema-aware comparisons).
+- Deterministic seed plumbing must exist in both Python and C++; introducing `perf::ScopedTimer` hints at a lightweight microbenchmark harness that can feed into the shared schema tooling.
+- CI smoke-tests add confidence, but we still need automated diff reports (plots + tabular deltas) to flag regressions without manual inspection.
 
 **Next Week Priorities**
-1. Integrate C++ order-book benchmarks into the automated results pipeline and surface diff tooling for latency histograms.
-2. Extend stress validation to cover realistic replay traces with risk-engine assertions (inventory, throttle breaches).
-3. Draft automation for publishing releases (Git tag + GitHub release upload) tied to metadata artefacts.
+1. Extend benchmark CLI to emit change reports versus a stored baseline (CSV/JSON diff + alert thresholds).
+2. Integrate realistic market replays (LOBSTER/Binance) into stress validation with PnL/risk assertions.
+3. Automate release packaging: signed `v0.9-beta` tag, GitHub release draft pre-populated with artefact metadata, and docs cross-links.

@@ -1,9 +1,9 @@
 {
   "meta": {
     "schema_version": "hftsim/v0",
-    "generated_at": "2025-10-11T09:09:03Z",
+    "generated_at": "2025-10-12T09:22:42Z",
     "generator": "benchmark_architectures",
-    "git_commit": "49af07a467d90379be5f54eea7e6224265297b1c",
+    "git_commit": "6e1301e41678033c85e0855ae8fcccec8e433467",
     "seed": 2024,
     "extra": {
       "message_count": 20000,
@@ -24,8 +24,8 @@
         "variant": "single",
         "iteration": 0,
         "message_count": 20000,
-        "wall_time_s": 1.502607957998407,
-        "throughput_msg_s": 13310.191719363436,
+        "wall_time_s": 1.6003849579719827,
+        "throughput_msg_s": 12496.993239266707,
         "digest": "79067c526bee82c945448810817a8e7fba9c91f9e86caf6a7111c44ca11ccba4",
         "fill_count": 4,
         "fill_volume": 20.0,
@@ -33,15 +33,15 @@
         "p95_latency_ns": 0,
         "p99_latency_ns": 0,
         "max_latency_ns": 0,
-        "matching_avg_ns": 27549.02355,
-        "message_avg_ns": 73563.42775
+        "matching_avg_ns": 29297.0139,
+        "message_avg_ns": 78330.0974
       },
       {
         "variant": "single",
         "iteration": 1,
         "message_count": 20000,
-        "wall_time_s": 1.5076002499990864,
-        "throughput_msg_s": 13266.116133910245,
+        "wall_time_s": 1.5555944170046132,
+        "throughput_msg_s": 12856.821663394212,
         "digest": "79067c526bee82c945448810817a8e7fba9c91f9e86caf6a7111c44ca11ccba4",
         "fill_count": 4,
         "fill_volume": 20.0,
@@ -49,15 +49,15 @@
         "p95_latency_ns": 0,
         "p99_latency_ns": 0,
         "max_latency_ns": 0,
-        "matching_avg_ns": 27826.99505,
-        "message_avg_ns": 73772.89195
+        "matching_avg_ns": 28806.39325,
+        "message_avg_ns": 76116.35905
       },
       {
         "variant": "single",
         "iteration": 2,
         "message_count": 20000,
-        "wall_time_s": 1.5778784169961,
-        "throughput_msg_s": 12675.247842020159,
+        "wall_time_s": 1.5963978749932721,
+        "throughput_msg_s": 12528.20510055132,
         "digest": "79067c526bee82c945448810817a8e7fba9c91f9e86caf6a7111c44ca11ccba4",
         "fill_count": 4,
         "fill_volume": 20.0,
@@ -65,15 +65,15 @@
         "p95_latency_ns": 0,
         "p99_latency_ns": 0,
         "max_latency_ns": 0,
-        "matching_avg_ns": 28545.8876,
-        "message_avg_ns": 77205.6396
+        "matching_avg_ns": 28887.94135,
+        "message_avg_ns": 78175.2122
       },
       {
         "variant": "concurrent",
         "iteration": 0,
         "message_count": 20000,
-        "wall_time_s": 2.7167250839993358,
-        "throughput_msg_s": 7361.804886991978,
+        "wall_time_s": 2.8812158329819795,
+        "throughput_msg_s": 6941.513985538719,
         "digest": "79067c526bee82c945448810817a8e7fba9c91f9e86caf6a7111c44ca11ccba4",
         "fill_count": 4,
         "fill_volume": 20.0,
@@ -81,15 +81,15 @@
         "p95_latency_ns": 0,
         "p99_latency_ns": 0,
         "max_latency_ns": 0,
-        "matching_avg_ns": 33578.41595,
+        "matching_avg_ns": 35147.7811,
         "message_avg_ns": null
       },
       {
         "variant": "concurrent",
         "iteration": 1,
         "message_count": 20000,
-        "wall_time_s": 2.6883380000072066,
-        "throughput_msg_s": 7439.54071249463,
+        "wall_time_s": 2.9265107919927686,
+        "throughput_msg_s": 6834.07696794491,
         "digest": "79067c526bee82c945448810817a8e7fba9c91f9e86caf6a7111c44ca11ccba4",
         "fill_count": 4,
         "fill_volume": 20.0,
@@ -97,15 +97,15 @@
         "p95_latency_ns": 0,
         "p99_latency_ns": 0,
         "max_latency_ns": 0,
-        "matching_avg_ns": 33232.83775,
+        "matching_avg_ns": 35440.7442,
         "message_avg_ns": null
       },
       {
         "variant": "concurrent",
         "iteration": 2,
         "message_count": 20000,
-        "wall_time_s": 2.662140250002267,
-        "throughput_msg_s": 7512.752192519898,
+        "wall_time_s": 2.75753029200132,
+        "throughput_msg_s": 7252.866834505267,
         "digest": "79067c526bee82c945448810817a8e7fba9c91f9e86caf6a7111c44ca11ccba4",
         "fill_count": 4,
         "fill_volume": 20.0,
@@ -113,7 +113,7 @@
         "p95_latency_ns": 0,
         "p99_latency_ns": 0,
         "max_latency_ns": 0,
-        "matching_avg_ns": 32974.88355,
+        "matching_avg_ns": 34223.21185,
         "message_avg_ns": null
       }
     ],
@@ -121,18 +121,17 @@
       "single": {
         "runs": 3,
         "unique_digests": 1,
-        "avg_wall_time_s": 1.5293622083311977,
-        "avg_throughput_msg_s": 13083.85189843128,
-        "avg_matching_ns": 27973.968733333335,
-        "avg_message_ns": 74847.31976666667
+        "avg_wall_time_s": 1.584125749989956,
+        "avg_throughput_msg_s": 12627.340001070746,
+        "avg_matching_ns": 28997.116166666667,
+        "avg_message_ns": 77540.55621666666
       },
       "concurrent": {
         "runs": 3,
         "unique_digests": 1,
-        "avg_wall_time_s": 2.6890677780029364,
-        "avg_throughput_msg_s": 7438.032597335502,
-        "avg_matching_ns": 33262.04575,
-        "avg_message_ns": null
+        "avg_wall_time_s": 2.8550856389920227,
+        "avg_throughput_msg_s": 7009.485929329632,
+        "avg_matching_ns": 34937.245716666665
       }
     }
   }

@@ -36,6 +36,52 @@ except (ImportError, ValueError):
 MarkSampler = Optional[Callable[[np.random.Generator], float]]
 
 
+def _rgb_to_hex(color: str) -> str:
+    """Normalise Plotly colour strings so Matplotlib can reuse them."""
+
+    color = color.strip()
+    if color.startswith("#"):
+        return color
+    channels = color.strip("rgba() ").split(",")
+    parts = [int(float(component.strip())) for component in channels[:3]]
+    return f"#{parts[0]:02x}{parts[1]:02x}{parts[2]:02x}"
+
+
+COLORWAY = [
+    "#4af699",  # neon green reminiscent of trading dashboards
+    "#f94f6d",  # punchy red for contrast
+    "#ffd166",  # warm amber for volume bars
+    "#4d9de0",  # calm blue for marks
+    "#ff9f1c",  # vibrant orange overlay
+    "#9f7aea",  # violet overlay intensity
+    "#00c2d1",  # teal overlay counts
+    "#f67280",  # soft pink overlay marks
+]
+PRIMARY_COLOR = COLORWAY[0]
+INTENSITY_COLOR = COLORWAY[1]
+COUNT_COLOR = COLORWAY[2]
+MARKS_COLOR = COLORWAY[3]
+OVERLAY_COLOR = COLORWAY[4]
+OVERLAY_INTENSITY_COLOR = COLORWAY[5]
+OVERLAY_COUNT_COLOR = COLORWAY[6]
+OVERLAY_MARKS_COLOR = COLORWAY[7]
+
+PRIMARY_HEX = _rgb_to_hex(PRIMARY_COLOR)
+INTENSITY_HEX = _rgb_to_hex(INTENSITY_COLOR)
+COUNT_HEX = _rgb_to_hex(COUNT_COLOR)
+MARKS_HEX = _rgb_to_hex(MARKS_COLOR)
+OVERLAY_HEX = _rgb_to_hex(OVERLAY_COLOR)
+OVERLAY_INTENSITY_HEX = _rgb_to_hex(OVERLAY_INTENSITY_COLOR)
+OVERLAY_COUNT_HEX = _rgb_to_hex(OVERLAY_COUNT_COLOR)
+OVERLAY_MARKS_HEX = _rgb_to_hex(OVERLAY_MARKS_COLOR)
+PLOT_BG_HEX = "#0b1220"
+PAPER_BG_HEX = "#0b1220"
+GRID_HEX = "#1f2a3c"
+FONT_HEX = "#e6edf7"
+
+FONT_FAMILY = '"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif'
+
+
 @dataclass
 class SimulationTimeline:
     times: np.ndarray
@@ -93,19 +139,32 @@ def plot_timeline(
 ) -> plt.Figure:
     """Render timeline diagnostics with optional comparison overlay."""
 
-    fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+    fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True, facecolor=PAPER_BG_HEX)
+    fig.patch.set_facecolor(PAPER_BG_HEX)
+    for ax in axes:
+        ax.set_facecolor(PLOT_BG_HEX)
+        ax.tick_params(colors=FONT_HEX)
+        ax.yaxis.label.set_color(FONT_HEX)
+        ax.xaxis.label.set_color(FONT_HEX)
+        ax.title.set_color(FONT_HEX)
+        for spine in ax.spines.values():
+            spine.set_edgecolor(GRID_HEX)
+        ax.grid(True, color=GRID_HEX, linewidth=0.6, alpha=0.35)
 
-    axes[0].eventplot(timeline.times, colors="#1f77b4")
+    axes[0].eventplot(timeline.times, colors=PRIMARY_HEX)
     axes[0].set_ylabel("Order arrivals")
-    axes[0].set_title(title)
+    axes[0].grid(False)
+    axes[0].set_title(title, color=FONT_HEX)
+    axes[0].yaxis.label.set_color(FONT_HEX)
 
     axes[1].plot(
         timeline.grid_times,
         timeline.intensity_grid,
-        color="#ff7f0e",
+        color=INTENSITY_HEX,
+        linewidth=2,
         label=labels[0],
     )
-    axes[1].set_ylabel("λ(t) – intensity")
+    axes[1].set_ylabel("λ(t) – intensity", color=FONT_HEX)
 
     bar_width = (
         timeline.bin_centres[1] - timeline.bin_centres[0]
@@ -116,12 +175,12 @@ def plot_timeline(
         timeline.bin_centres,
         timeline.bin_counts,
         width=bar_width,
-        color="#2ca02c",
+        color=COUNT_HEX,
         alpha=0.7,
         label=labels[0],
     )
-    axes[2].set_ylabel("Orders per bin")
-    axes[2].set_xlabel("Time (s)")
+    axes[2].set_ylabel("Orders per bin", color=FONT_HEX)
+    axes[2].set_xlabel("Time (s)", color=FONT_HEX)
 
     if show_marks and timeline.marks.size:
         ax_marks = axes[0].twinx()
@@ -132,31 +191,40 @@ def plot_timeline(
             marker="o",
             markersize=4,
             alpha=0.6,
-            color="#d62728",
+            color=MARKS_HEX,
         )
         ax_marks.set_ylabel("Order size (marks)")
-        ax_marks.tick_params(axis="y", labelcolor="#d62728")
+        ax_marks.tick_params(axis="y", labelcolor=MARKS_HEX, colors=MARKS_HEX)
+        ax_marks.spines["right"].set_edgecolor(GRID_HEX)
+        ax_marks.set_facecolor(PLOT_BG_HEX)
 
     if comparison is not None:
-        axes[0].eventplot(comparison.times, colors="#17becf")
+        axes[0].eventplot(comparison.times, colors=OVERLAY_HEX)
         axes[1].plot(
             comparison.grid_times,
             comparison.intensity_grid,
-            color="#9467bd",
+            color=OVERLAY_INTENSITY_HEX,
             linestyle="--",
+            linewidth=2,
             label=labels[1],
         )
         axes[2].step(
             comparison.bin_centres,
             comparison.bin_counts,
             where="mid",
-            color="#8c564b",
+            color=OVERLAY_COUNT_HEX,
             label=labels[1],
         )
 
     if comparison is not None:
-        axes[1].legend(loc="upper right")
-        axes[2].legend(loc="upper right")
+        legend1 = axes[1].legend(loc="upper right")
+        if legend1 is not None:
+            for text_item in legend1.get_texts():
+                text_item.set_color(FONT_HEX)
+        legend2 = axes[2].legend(loc="upper right")
+        if legend2 is not None:
+            for text_item in legend2.get_texts():
+                text_item.set_color(FONT_HEX)
 
     fig.tight_layout()
     return fig
@@ -184,7 +252,7 @@ def plot_timeline_interactive(
             x=timeline.times,
             y=np.ones_like(timeline.times),
             mode="markers",
-            marker=dict(color="#1f77b4", size=6, opacity=0.7),
+            marker=dict(color=PRIMARY_COLOR, size=6, opacity=0.75),
             name=labels[0],
             hovertemplate=f"t = %{{x:.3f}}<extra>{labels[0]}</extra>",
         ),
@@ -198,7 +266,7 @@ def plot_timeline_interactive(
             x=timeline.grid_times,
             y=timeline.intensity_grid,
             mode="lines",
-            line=dict(color="#ff7f0e"),
+            line=dict(color=INTENSITY_COLOR, width=2.2),
             name=f"{labels[0]} intensity",
             hovertemplate=f"λ(t) = %{{y:.3f}}<extra>{labels[0]}</extra>",
         ),
@@ -211,8 +279,8 @@ def plot_timeline_interactive(
             x=timeline.bin_centres,
             y=timeline.bin_counts,
             name=f"{labels[0]} counts",
-            marker=dict(color="#2ca02c"),
-            opacity=0.8,
+            marker=dict(color=COUNT_COLOR, line=dict(width=0)),
+            opacity=0.85,
             hovertemplate=f"Orders = %{{y}}<extra>{labels[0]}</extra>",
         ),
         row=3,
@@ -225,7 +293,7 @@ def plot_timeline_interactive(
                 x=timeline.times,
                 y=timeline.marks,
                 mode="markers",
-                marker=dict(color="#d62728", size=6, symbol="circle-open"),
+                marker=dict(color=MARKS_COLOR, size=6, symbol="circle-open"),
                 name=f"{labels[0]} marks",
                 hovertemplate=(
                     f"Mark = %{{y:.3f}} at %{{x:.3f}}<extra>{labels[0]}</extra>"
@@ -242,7 +310,7 @@ def plot_timeline_interactive(
                 x=comparison.times,
                 y=np.ones_like(comparison.times),
                 mode="markers",
-                marker=dict(color="#17becf", size=6, opacity=0.6),
+                marker=dict(color=OVERLAY_COLOR, size=6, opacity=0.65),
                 name=labels[1],
                 hovertemplate=f"t = %{{x:.3f}}<extra>{labels[1]}</extra>",
             ),
@@ -255,7 +323,7 @@ def plot_timeline_interactive(
                 x=comparison.grid_times,
                 y=comparison.intensity_grid,
                 mode="lines",
-                line=dict(color="#9467bd", dash="dash"),
+                line=dict(color=OVERLAY_INTENSITY_COLOR, dash="dash", width=2),
                 name=f"{labels[1]} intensity",
                 hovertemplate=f"λ(t) = %{{y:.3f}}<extra>{labels[1]}</extra>",
             ),
@@ -267,7 +335,7 @@ def plot_timeline_interactive(
                 x=comparison.bin_centres,
                 y=comparison.bin_counts,
                 mode="lines",
-                line=dict(color="#8c564b"),
+                line=dict(color=OVERLAY_COUNT_COLOR, width=2),
                 name=f"{labels[1]} counts",
                 hovertemplate=f"Orders = %{{y}}<extra>{labels[1]}</extra>",
             ),
@@ -281,7 +349,7 @@ def plot_timeline_interactive(
                     x=comparison.times,
                     y=comparison.marks,
                     mode="markers",
-                    marker=dict(color="#bcbd22", size=6, symbol="x"),
+                    marker=dict(color=OVERLAY_MARKS_COLOR, size=6, symbol="x"),
                     name=f"{labels[1]} marks",
                     hovertemplate=(
                         f"Mark = %{{y:.3f}} at %{{x:.3f}}<extra>{labels[1]}</extra>"
@@ -305,12 +373,49 @@ def plot_timeline_interactive(
     fig.update_yaxes(title_text="Orders per bin", row=3, col=1)
     fig.update_xaxes(title_text="Time (s)", row=3, col=1)
 
+    axis_font = dict(color=FONT_HEX, family=FONT_FAMILY)
+    fig.update_xaxes(
+        showgrid=True,
+        gridcolor=GRID_HEX,
+        zerolinecolor=GRID_HEX,
+        linecolor=GRID_HEX,
+        tickfont=axis_font,
+        title=dict(font=axis_font),
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridcolor=GRID_HEX,
+        zerolinecolor=GRID_HEX,
+        linecolor=GRID_HEX,
+        tickfont=axis_font,
+        title=dict(font=axis_font),
+    )
+
     fig.update_layout(
         title=title,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            bgcolor="rgba(11, 18, 32, 0.85)",
+            bordercolor=GRID_HEX,
+            borderwidth=1,
+            font=dict(color=FONT_HEX, family=FONT_FAMILY),
+        ),
         height=720,
         margin=dict(l=60, r=30, t=60, b=40),
         hovermode="x unified",
+        template=None,
+        colorway=COLORWAY,
+        plot_bgcolor=PLOT_BG_HEX,
+        paper_bgcolor=PAPER_BG_HEX,
+        font=dict(color=FONT_HEX, family=FONT_FAMILY),
+        hoverlabel=dict(
+            bgcolor="#121c2d",
+            font=dict(color=FONT_HEX, family=FONT_FAMILY),
+        ),
     )
     return fig
 

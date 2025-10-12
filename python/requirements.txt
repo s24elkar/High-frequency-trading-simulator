@@ -5,3 +5,6 @@ pandas>=1.5
 PyYAML>=6.0
 scipy>=1.11
 statsmodels>=0.14
+plotly>=5.18
+
+Pillow>=9.5

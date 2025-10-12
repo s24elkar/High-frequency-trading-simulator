@@ -1,9 +1,9 @@
 {
   "meta": {
     "schema_version": "hftsim/v0",
-    "generated_at": "2025-10-11T09:13:22Z",
+    "generated_at": "2025-10-12T09:23:42Z",
     "generator": "aggregate_stress_metrics",
-    "git_commit": "49af07a467d90379be5f54eea7e6224265297b1c",
+    "git_commit": "6e1301e41678033c85e0855ae8fcccec8e433467",
     "extra": {
       "bucket_ns": 1000
     }
@@ -13,13 +13,13 @@
       {
         "multiplier": 1,
         "message_count": 10000,
-        "wall_time_s": 0.4730704999965383,
-        "peak_memory_kb": 421.19921875,
-        "throughput_msgs_per_s": 21138.498384644943,
-        "avg_latency_ns": 29822.8949,
-        "p95_latency_ns": 36792,
-        "p99_latency_ns": 45709,
-        "max_latency_ns": 152500,
+        "wall_time_s": 0.4931781660125125,
+        "peak_memory_kb": 421.197265625,
+        "throughput_msgs_per_s": 20276.64785092349,
+        "avg_latency_ns": 31155.2235,
+        "p95_latency_ns": 40041,
+        "p99_latency_ns": 59083,
+        "max_latency_ns": 169459,
         "sequence_ok": true,
         "orphan_cancels": 0,
         "orphan_executes": 0,
@@ -56,19 +56,19 @@
           },
           {
             "upper_ns": 25000,
-            "count": 2744
+            "count": 2581
           },
           {
             "upper_ns": 50000,
-            "count": 7207
+            "count": 7248
           },
           {
             "upper_ns": 100000,
-            "count": 48
+            "count": 141
           },
           {
             "upper_ns": 250000,
-            "count": 1
+            "count": 30
           }
         ],
         "add_order_events": 5000,
@@ -79,13 +79,13 @@
       {
         "multiplier": 10,
         "message_count": 100000,
-        "wall_time_s": 4.599269958009245,
-        "peak_memory_kb": 3543.52734375,
-        "throughput_msgs_per_s": 21742.581086343573,
-        "avg_latency_ns": 29970.08637,
-        "p95_latency_ns": 37041,
-        "p99_latency_ns": 43167,
-        "max_latency_ns": 372291,
+        "wall_time_s": 4.856534458027454,
+        "peak_memory_kb": 3543.3701171875,
+        "throughput_msgs_per_s": 20590.81447156381,
+        "avg_latency_ns": 31543.56532,
+        "p95_latency_ns": 41250,
+        "p99_latency_ns": 65541,
+        "max_latency_ns": 1018834,
         "sequence_ok": true,
         "orphan_cancels": 0,
         "orphan_executes": 0,
@@ -122,22 +122,30 @@
           },
           {
             "upper_ns": 25000,
-            "count": 21285
+            "count": 20288
           },
           {
             "upper_ns": 50000,
-            "count": 78218
+            "count": 77401
           },
           {
             "upper_ns": 100000,
-            "count": 488
+            "count": 2008
           },
           {
             "upper_ns": 250000,
-            "count": 8
+            "count": 287
           },
           {
             "upper_ns": 500000,
+            "count": 10
+          },
+          {
+            "upper_ns": 1000000,
+            "count": 5
+          },
+          {
+            "upper_ns": 2500000,
             "count": 1
           }
         ],
@@ -149,13 +157,13 @@
       {
         "multiplier": 100,
         "message_count": 1000000,
-        "wall_time_s": 44.37998324999353,
-        "peak_memory_kb": 35624.3916015625,
-        "throughput_msgs_per_s": 22532.680879282347,
-        "avg_latency_ns": 28662.015867,
-        "p95_latency_ns": 34625,
-        "p99_latency_ns": 37292,
-        "max_latency_ns": 2622917,
+        "wall_time_s": 45.68678433299647,
+        "peak_memory_kb": 35624.3955078125,
+        "throughput_msgs_per_s": 21888.167762285862,
+        "avg_latency_ns": 29456.762627,
+        "p95_latency_ns": 36167,
+        "p99_latency_ns": 47416,
+        "max_latency_ns": 8917375,
         "sequence_ok": true,
         "orphan_cancels": 0,
         "orphan_executes": 0,
@@ -192,34 +200,38 @@
           },
           {
             "upper_ns": 25000,
-            "count": 282655
+            "count": 275239
           },
           {
             "upper_ns": 50000,
-            "count": 716412
+            "count": 716879
           },
           {
             "upper_ns": 100000,
-            "count": 880
+            "count": 6942
           },
           {
             "upper_ns": 250000,
-            "count": 50
+            "count": 900
           },
           {
             "upper_ns": 500000,
-            "count": 0
+            "count": 23
           },
           {
             "upper_ns": 1000000,
-            "count": 1
+            "count": 11
           },
           {
             "upper_ns": 2500000,
-            "count": 1
+            "count": 4
           },
           {
             "upper_ns": 5000000,
+            "count": 1
+          },
+          {
+            "upper_ns": 10000000,
             "count": 1
           }
         ],

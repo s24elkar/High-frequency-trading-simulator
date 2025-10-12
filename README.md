@@ -112,6 +112,13 @@ MPLCONFIGDIR=.matplotlib python3 -m demo
 ```
 The demo prints branching ratios, generates intensity/ACF plots saved to `docs/images/`, and exports event streams to `data/runs/`.
 
+Generate the order book showcase GIF straight from the repository root:
+
+```bash
+make demo
+```
+This replays the miniature feed in `data/sample/` and writes `assets/demo.gif` for quick sharing.
+
 ### Run the Backtester
 ```bash
 python -m backtester.run --config configs/backtest_demo.json
@@ -230,6 +237,11 @@ Each run logs deterministic seeds and checkpoints. Artefacts land in `experiment
 ## Example Outputs
 
 Below are sample outputs from the Hawkes simulator, comparing exponential and power-law kernels.
+
+### Order book replay demo
+
+![Order book depth and trade tape](assets/demo.gif)
+
 
 ### Intensity Paths
 - **Exponential kernel Hawkes**

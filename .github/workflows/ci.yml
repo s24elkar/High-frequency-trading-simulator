@@ -42,6 +42,24 @@ jobs:
       - name: Run tests
         run: pytest tests/python --cov=python --cov-report=xml
 
+      - name: Smoke-test deterministic benchmarks
+        env:
+          MPLCONFIGDIR: ${{ runner.temp }}/mpl-cache
+        run: |
+          temp_dir=$(mktemp -d)
+          python python/scripts/run_benchmarks.py \
+            --baseline 500 \
+            --output "$temp_dir/benchmarks.json" \
+            --plot-output "$temp_dir/benchmarks.png" \
+            --no-plot \
+            --overwrite
+          python python/scripts/run_stress_suite.py \
+            --output-dir "$temp_dir/stress" \
+            --base-messages 200 \
+            --base-rate-hz 500.0 \
+            --symbol CI-SMOKE \
+            --overwrite
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:

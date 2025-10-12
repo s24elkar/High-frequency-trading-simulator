@@ -21,6 +21,13 @@ try:
         plot_order_trade_ratio,
         plot_throughput_series,
     )
+    from python.perf import (
+        LATENCY_HISTOGRAM_FIELDS,
+        PERF_RUN_SUMMARY_FIELDS,
+        STRESS_SCENARIO_FIELDS,
+        THROUGHPUT_SERIES_FIELDS,
+        normalise_row,
+    )
 except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     sys.path.insert(0, str(REPO_ROOT))
     from python.analysis import (  # type: ignore[import-not-found]
@@ -30,6 +37,13 @@ except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
         plot_latency_histogram,
         plot_order_trade_ratio,
         plot_throughput_series,
+    )
+    from python.perf import (  # type: ignore[import-not-found]
+        LATENCY_HISTOGRAM_FIELDS,
+        PERF_RUN_SUMMARY_FIELDS,
+        STRESS_SCENARIO_FIELDS,
+        THROUGHPUT_SERIES_FIELDS,
+        normalise_row,
     )
 
 
@@ -142,38 +156,44 @@ def aggregate() -> None:
     # Scenario level dataset
     scenario_rows: List[dict] = []
     for scenario in scenarios:
-        scenario_rows.append(
-            {
-                "multiplier": scenario.get("multiplier"),
-                "message_count": scenario.get("message_count"),
-                "wall_time_s": scenario.get("wall_time_s"),
-                "throughput_msgs_per_s": scenario.get("throughput_msgs_per_s"),
-                "avg_latency_ns": scenario.get("avg_latency_ns"),
-                "p95_latency_ns": scenario.get("p95_latency_ns"),
-                "p99_latency_ns": scenario.get("p99_latency_ns"),
-                "max_latency_ns": scenario.get("max_latency_ns"),
-                "add_order_events": scenario.get("add_order_events"),
-                "delete_order_events": scenario.get("delete_order_events"),
-                "execute_order_events": scenario.get("execute_order_events"),
-                "order_to_trade_ratio": scenario.get("order_to_trade_ratio"),
-                "orphan_cancels": scenario.get("orphan_cancels"),
-                "orphan_executes": scenario.get("orphan_executes"),
-                "duplicate_order_ids": scenario.get("duplicate_order_ids"),
-            }
-        )
+        scenario_payload = {
+            "multiplier": scenario.get("multiplier"),
+            "message_count": scenario.get("message_count"),
+            "wall_time_s": scenario.get("wall_time_s"),
+            "throughput_msgs_per_s": scenario.get("throughput_msgs_per_s"),
+            "avg_latency_ns": scenario.get("avg_latency_ns"),
+            "p95_latency_ns": scenario.get("p95_latency_ns"),
+            "p99_latency_ns": scenario.get("p99_latency_ns"),
+            "max_latency_ns": scenario.get("max_latency_ns"),
+            "add_order_events": scenario.get("add_order_events"),
+            "delete_order_events": scenario.get("delete_order_events"),
+            "execute_order_events": scenario.get("execute_order_events"),
+            "order_to_trade_ratio": scenario.get("order_to_trade_ratio"),
+            "orphan_cancels": scenario.get("orphan_cancels"),
+            "orphan_executes": scenario.get("orphan_executes"),
+            "duplicate_order_ids": scenario.get("duplicate_order_ids"),
+        }
+        scenario_rows.append(normalise_row(scenario_payload, STRESS_SCENARIO_FIELDS))
 
     if scenario_rows:
-        writer.write_csv("scenario_metrics.csv", scenario_rows)
+        writer.write_csv(
+            "scenario_metrics.csv",
+            scenario_rows,
+            headers=list(STRESS_SCENARIO_FIELDS),
+        )
 
     # Persist latency histograms per scenario
     for scenario in scenarios:
         histogram = scenario.get("latency_histogram") or []
         if not histogram:
             continue
+        histogram_rows = [
+            normalise_row(entry, LATENCY_HISTOGRAM_FIELDS) for entry in histogram
+        ]
         writer.write_csv(
             f"latency_histogram_x{scenario.get('multiplier')}.csv",
-            histogram,
-            headers=("upper_ns", "count"),
+            histogram_rows,
+            headers=list(LATENCY_HISTOGRAM_FIELDS),
         )
         figure_path = (
             figures_dir / f"latency_histogram_x{scenario.get('multiplier')}.png"
@@ -220,33 +240,37 @@ def aggregate() -> None:
         for run in perf_runs:
             run_id = run["run_id"]
             for record in run["series"]:
-                throughput_rows.append({"run_id": run_id, **record})
+                throughput_payload = {"run_id": run_id, **record}
+                throughput_rows.append(
+                    normalise_row(throughput_payload, THROUGHPUT_SERIES_FIELDS)
+                )
             summary = run.get("summary") or {}
             if summary:
+                summary_payload = {
+                    "run_id": run_id,
+                    "symbol": summary.get("symbol"),
+                    "realized_pnl": summary.get("realized_pnl"),
+                    "unrealized_pnl": summary.get("unrealized_pnl"),
+                    "inventory": summary.get("inventory"),
+                    "order_volume": summary.get("order_volume"),
+                    "fill_volume": summary.get("fill_volume"),
+                    "order_to_trade_ratio": summary.get("order_to_trade_ratio"),
+                    "fill_efficiency": summary.get("fill_efficiency"),
+                    "avg_latency_ns": summary.get("avg_latency_ns"),
+                    "p95_latency_ns": summary.get("p95_latency_ns"),
+                    "p99_latency_ns": summary.get("p99_latency_ns"),
+                    "max_latency_ns": summary.get("max_latency_ns"),
+                    "duration_ns": summary.get("duration_ns"),
+                    "digest": summary.get("digest"),
+                }
                 summary_rows.append(
-                    {
-                        "run_id": run_id,
-                        "symbol": summary.get("symbol"),
-                        "realized_pnl": summary.get("realized_pnl"),
-                        "unrealized_pnl": summary.get("unrealized_pnl"),
-                        "inventory": summary.get("inventory"),
-                        "order_volume": summary.get("order_volume"),
-                        "fill_volume": summary.get("fill_volume"),
-                        "order_to_trade_ratio": summary.get("order_to_trade_ratio"),
-                        "fill_efficiency": summary.get("fill_efficiency"),
-                        "avg_latency_ns": summary.get("avg_latency_ns"),
-                        "p95_latency_ns": summary.get("p95_latency_ns"),
-                        "p99_latency_ns": summary.get("p99_latency_ns"),
-                        "max_latency_ns": summary.get("max_latency_ns"),
-                        "duration_ns": summary.get("duration_ns"),
-                        "digest": summary.get("digest"),
-                    }
+                    normalise_row(summary_payload, PERF_RUN_SUMMARY_FIELDS)
                 )
         if throughput_rows:
             writer.write_csv(
                 "throughput_timeseries.csv",
                 throughput_rows,
-                headers=throughput_rows[0].keys(),
+                headers=list(THROUGHPUT_SERIES_FIELDS),
             )
             figure_path = figures_dir / "throughput_timeseries.png"
             plot_throughput_series(
@@ -263,7 +287,11 @@ def aggregate() -> None:
             )
             writer.attach_metadata(figure_path, relative=False)
         if summary_rows:
-            writer.write_csv("perf_run_summary.csv", summary_rows)
+            writer.write_csv(
+                "perf_run_summary.csv",
+                summary_rows,
+                headers=list(PERF_RUN_SUMMARY_FIELDS),
+            )
 
     ratios = []
     labels = []

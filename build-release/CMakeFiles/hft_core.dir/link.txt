@@ -1,0 +1,2 @@
+/usr/bin/ar qc libhft_core.a CMakeFiles/hft_core.dir/src/OrderBook.cpp.o
+/usr/bin/ranlib libhft_core.a

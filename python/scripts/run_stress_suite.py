@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import sys
 from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List
+
+import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -32,6 +35,11 @@ except ModuleNotFoundError:  # pragma: no cover - fallback for CLI usage
     )
 
 
+def _configure_rngs(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+
+
 def _scenario_config(
     multiplier: int,
     *,
@@ -40,11 +48,13 @@ def _scenario_config(
     seed: int,
     symbol: str,
 ) -> StressConfig:
+    scenario_seed = seed + multiplier
+    _configure_rngs(scenario_seed)
     poisson = PoissonOrderFlowConfig(
         symbol=symbol,
         message_count=base_messages * multiplier,
         base_rate_hz=base_rate_hz * multiplier,
-        seed=seed + multiplier,
+        seed=scenario_seed,
         include_metadata=True,
     )
     burst = BurstConfig(
@@ -62,7 +72,7 @@ def _scenario_config(
         burst=burst,
         validate_sequence=True,
         record_latency=True,
-        seed=seed + multiplier,
+        seed=scenario_seed,
     )
 
 
@@ -75,6 +85,7 @@ def run_suite(
     symbol: str = "SYN-STRESS",
     overwrite: bool = False,
 ) -> Dict[str, List[Dict[str, object]]]:
+    _configure_rngs(seed)
     scenarios: List[Dict[str, object]] = []
     for multiplier in (1, 10, 100):
         config = _scenario_config(

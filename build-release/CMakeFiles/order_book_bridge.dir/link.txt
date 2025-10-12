@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -dynamiclib -Wl,-headerpad_max_install_names -o lib/liborder_book_bridge.dylib -install_name @rpath/liborder_book_bridge.dylib CMakeFiles/order_book_bridge.dir/src/order_book_c_api.cpp.o  libhft_core.a

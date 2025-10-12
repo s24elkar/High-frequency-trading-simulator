@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/hawkes_example.dir/src/hawkes_example.cpp.o -o hawkes_example  libhft_core.a

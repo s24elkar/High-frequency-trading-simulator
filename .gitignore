@@ -44,3 +44,9 @@ build/
 .matplotlib_cache/
 .tmp/
 pytest.log
+
+# Python virtual environments and caches
+.venv/
+python/.venv/
+.pytest_cache/
+__pycache__/

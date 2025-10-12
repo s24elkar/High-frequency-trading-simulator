@@ -1,8 +1,8 @@
 {
   "schema_version": "hftsim/v0",
-  "generated_at": "2025-10-11T09:07:35Z",
+  "generated_at": "2025-10-12T09:22:24Z",
   "generator": "run_benchmarks",
-  "git_commit": "49af07a467d90379be5f54eea7e6224265297b1c",
+  "git_commit": "6e1301e41678033c85e0855ae8fcccec8e433467",
   "seed": 42,
   "extra": {
     "baseline_messages": 2000,
