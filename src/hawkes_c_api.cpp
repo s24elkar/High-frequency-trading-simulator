@@ -1,11 +1,13 @@
-#include "hawkes.hpp"
+#include "order_flow/OrderFlow.hpp"
 
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <exception>
+#include <memory>
 #include <random>
 #include <string>
+#include <utility>
 
 namespace {
 
@@ -27,8 +29,8 @@ struct CallbackSampler {
     }
 };
 
-inline std::size_t copy_result(const hawkes::Result& R, double** times_out, double** marks_out) {
-    const std::size_t n = R.t.size();
+inline std::size_t copy_stream(const order_flow::EventStream& stream, double** times_out, double** marks_out) {
+    const std::size_t n = stream.size();
     double* times = nullptr;
     double* marks = nullptr;
     if (n > 0) {
@@ -39,8 +41,11 @@ inline std::size_t copy_result(const hawkes::Result& R, double** times_out, doub
             std::free(marks);
             throw std::bad_alloc();
         }
-        std::memcpy(times, R.t.data(), n * sizeof(double));
-        std::memcpy(marks, R.v.data(), n * sizeof(double));
+        const auto& data = stream.data();
+        for (std::size_t i = 0; i < n; ++i) {
+            times[i] = data[i].time;
+            marks[i] = data[i].mark;
+        }
     }
     *times_out = times;
     *marks_out = marks;
@@ -70,10 +75,16 @@ std::size_t hawkes_simulate_exp(double mu, double alpha, double beta, double hor
             return handle_failure(times_out, marks_out, "null output pointer");
         }
         g_last_error.clear();
-        hawkes::ExpKernel kernel{alpha, beta};
+        auto kernel = std::make_shared<order_flow::ExponentialKernel>(alpha, beta);
+        order_flow::HawkesProcess process(mu, kernel);
         CallbackSampler cb{sampler, sampler_ctx};
-        auto result = hawkes::simulate_exp(mu, kernel, cb, horizon, seed);
-        return copy_result(result, times_out, marks_out);
+        if (sampler) {
+            process.set_mark_sampler(
+                [cb](std::mt19937_64& rng) mutable { return cb(rng); }
+            );
+        }
+        auto result = process.simulate(horizon, seed);
+        return copy_stream(result, times_out, marks_out);
     } catch (const std::exception& ex) {
         return handle_failure(times_out, marks_out, ex.what());
     } catch (...) {
@@ -89,10 +100,37 @@ std::size_t hawkes_simulate_powerlaw(double mu, double alpha, double c, double g
             return handle_failure(times_out, marks_out, "null output pointer");
         }
         g_last_error.clear();
-        hawkes::PowerLawKernel kernel{alpha, c, gamma};
+        auto kernel = std::make_shared<order_flow::PowerLawKernel>(alpha, c, gamma);
+        order_flow::HawkesProcess process(mu, kernel);
         CallbackSampler cb{sampler, sampler_ctx};
-        auto result = hawkes::simulate_general(mu, kernel, cb, horizon, seed);
-        return copy_result(result, times_out, marks_out);
+        if (sampler) {
+            process.set_mark_sampler(
+                [cb](std::mt19937_64& rng) mutable { return cb(rng); }
+            );
+        }
+        auto result = process.simulate(horizon, seed);
+        return copy_stream(result, times_out, marks_out);
+    } catch (const std::exception& ex) {
+        return handle_failure(times_out, marks_out, ex.what());
+    } catch (...) {
+        return handle_failure(times_out, marks_out, "unknown error");
+    }
+}
+
+std::size_t hawkes_simulate_poisson(double mu, double horizon, std::uint64_t seed,
+                                    HawkesMarkCallback sampler, void* sampler_ctx,
+                                    double** times_out, double** marks_out) {
+    try {
+        if (!times_out || !marks_out) {
+            return handle_failure(times_out, marks_out, "null output pointer");
+        }
+        g_last_error.clear();
+        order_flow::PoissonProcess process(mu);
+        CallbackSampler cb{sampler, sampler_ctx};
+        order_flow::PoissonProcess::MarkSampler mark_sampler =
+            [cb](std::mt19937_64& rng) mutable { return cb(rng); };
+        auto result = process.simulate(horizon, mark_sampler, seed);
+        return copy_stream(result, times_out, marks_out);
     } catch (const std::exception& ex) {
         return handle_failure(times_out, marks_out, ex.what());
     } catch (...) {

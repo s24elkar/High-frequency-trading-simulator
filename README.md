@@ -266,9 +266,10 @@ Below are sample outputs from the Hawkes simulator, comparing exponential and po
 - When contributing kernels or strategies, add tests under `tests/` and plots/examples under `docs/` so results stay reproducible.
 
 ## Roadmap Ideas
-1. Extend the order book with latency models and queue-position analytics.
-2. Expose a REST/gRPC shim for streaming orders to the simulator.
-3. Package the Python tooling for pip installation and add notebook tutorials.
-4. Wire CI (Catch2 + lint + demo smoke test) to keep the repo production-ready.
+1. Order-flow modelling: baseline Poisson generator, Hawkes kernels, and calibration notebooks (see `docs/5_intro.md`).
+2. Extend the order book with latency models and queue-position analytics.
+3. Expose a REST/gRPC shim for streaming orders to the simulator.
+4. Package the Python tooling for pip installation and add notebook tutorials.
+5. Wire CI (Catch2 + lint + demo smoke test) to keep the repo production-ready.
 
 Feel free to fork and adapt—this project is meant to be a sandbox for experimentation as much as a reference implementation.

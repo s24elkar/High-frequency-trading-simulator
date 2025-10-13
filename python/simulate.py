@@ -136,6 +136,17 @@ def _configure_signatures(lib: ctypes.CDLL) -> None:
     ]
     lib.hawkes_simulate_powerlaw.restype = ctypes.c_size_t
 
+    lib.hawkes_simulate_poisson.argtypes = [
+        ctypes.c_double,
+        ctypes.c_double,
+        ctypes.c_uint64,
+        ctypes.c_void_p,
+        ctypes.c_void_p,
+        ctypes.POINTER(ctypes.POINTER(ctypes.c_double)),
+        ctypes.POINTER(ctypes.POINTER(ctypes.c_double)),
+    ]
+    lib.hawkes_simulate_poisson.restype = ctypes.c_size_t
+
     lib.hawkes_free.argtypes = [ctypes.c_void_p]
     lib.hawkes_free.restype = None
 
@@ -325,6 +336,28 @@ def _simulate_general_python(
     return np.asarray(times, dtype=float), np.asarray(marks, dtype=float)
 
 
+def _simulate_poisson_python(
+    mu: float,
+    mark_sampler: Optional[Callable[[np.random.Generator], float]],
+    T: float,
+    seed: int,
+) -> Tuple[np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    sampler = _normalise_sampler(mark_sampler)
+    t = 0.0
+    times: list[float] = []
+    marks: list[float] = []
+
+    while t < T:
+        t += rng.exponential(1.0 / mu)
+        if t > T:
+            break
+        times.append(t)
+        marks.append(sampler(rng))
+
+    return np.asarray(times, dtype=float), np.asarray(marks, dtype=float)
+
+
 def simulate_thinning_exp_fast(
     mu: float,
     kernel: ExpKernel,
@@ -367,7 +400,22 @@ def simulate_thinning_general(
     )
 
 
+def simulate_poisson_process(
+    mu: float,
+    mark_sampler: Optional[Callable[[np.random.Generator], float]] = None,
+    T: float = 1.0,
+    seed: int = 12345,
+) -> Tuple[np.ndarray, np.ndarray]:
+    lib = _load_bridge()
+    if lib is None:
+        _warn_fallback()
+        return _simulate_poisson_python(mu, mark_sampler, T, seed)
+    params = (float(mu), float(T), int(seed))
+    return _run_simulation(lib, lib.hawkes_simulate_poisson, params, mark_sampler, seed)
+
+
 __all__ = [
     "simulate_thinning_exp_fast",
     "simulate_thinning_general",
+    "simulate_poisson_process",
 ]

@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/sohaib/Desktop/High-frequency-trading-simulator-main
+CMAKE_SOURCE_DIR = "/Users/sohaib/Downloads/untitled folder/High-frequency-trading-simulator-main"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build
+CMAKE_BINARY_DIR = "/Users/sohaib/Downloads/untitled folder/High-frequency-trading-simulator-main/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/sohaib/Downloads/untitled folder/High-frequency-trading-simulator-main/build/CMakeFiles" "/Users/sohaib/Downloads/untitled folder/High-frequency-trading-simulator-main/build//CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sohaib/Desktop/High-frequency-trading-simulator-main/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/sohaib/Downloads/untitled folder/High-frequency-trading-simulator-main/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -128,6 +128,19 @@ hft_core: cmake_check_build_system
 hft_core/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/build
 .PHONY : hft_core/fast
+
+#=============================================================================
+# Target rules for targets named order_book_bridge
+
+# Build rule for target.
+order_book_bridge: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 order_book_bridge
+.PHONY : order_book_bridge
+
+# fast build rule for target.
+order_book_bridge/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/order_book_bridge.dir/build.make CMakeFiles/order_book_bridge.dir/build
+.PHONY : order_book_bridge/fast
 
 #=============================================================================
 # Target rules for targets named hawkes_bridge
@@ -264,6 +277,54 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_sim.dir/build.make CMakeFiles/hft_sim.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/order_book_c_api.o: src/order_book_c_api.cpp.o
+.PHONY : src/order_book_c_api.o
+
+# target to build an object file
+src/order_book_c_api.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/order_book_bridge.dir/build.make CMakeFiles/order_book_bridge.dir/src/order_book_c_api.cpp.o
+.PHONY : src/order_book_c_api.cpp.o
+
+src/order_book_c_api.i: src/order_book_c_api.cpp.i
+.PHONY : src/order_book_c_api.i
+
+# target to preprocess a source file
+src/order_book_c_api.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/order_book_bridge.dir/build.make CMakeFiles/order_book_bridge.dir/src/order_book_c_api.cpp.i
+.PHONY : src/order_book_c_api.cpp.i
+
+src/order_book_c_api.s: src/order_book_c_api.cpp.s
+.PHONY : src/order_book_c_api.s
+
+# target to generate assembly for a file
+src/order_book_c_api.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/order_book_bridge.dir/build.make CMakeFiles/order_book_bridge.dir/src/order_book_c_api.cpp.s
+.PHONY : src/order_book_c_api.cpp.s
+
+src/order_flow/OrderFlow.o: src/order_flow/OrderFlow.cpp.o
+.PHONY : src/order_flow/OrderFlow.o
+
+# target to build an object file
+src/order_flow/OrderFlow.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/src/order_flow/OrderFlow.cpp.o
+.PHONY : src/order_flow/OrderFlow.cpp.o
+
+src/order_flow/OrderFlow.i: src/order_flow/OrderFlow.cpp.i
+.PHONY : src/order_flow/OrderFlow.i
+
+# target to preprocess a source file
+src/order_flow/OrderFlow.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/src/order_flow/OrderFlow.cpp.i
+.PHONY : src/order_flow/OrderFlow.cpp.i
+
+src/order_flow/OrderFlow.s: src/order_flow/OrderFlow.cpp.s
+.PHONY : src/order_flow/OrderFlow.s
+
+# target to generate assembly for a file
+src/order_flow/OrderFlow.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hft_core.dir/build.make CMakeFiles/hft_core.dir/src/order_flow/OrderFlow.cpp.s
+.PHONY : src/order_flow/OrderFlow.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -276,6 +337,7 @@ help:
 	@echo "... hawkes_example"
 	@echo "... hft_core"
 	@echo "... hft_sim"
+	@echo "... order_book_bridge"
 	@echo "... src/OrderBook.o"
 	@echo "... src/OrderBook.i"
 	@echo "... src/OrderBook.s"
@@ -288,6 +350,12 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/order_book_c_api.o"
+	@echo "... src/order_book_c_api.i"
+	@echo "... src/order_book_c_api.s"
+	@echo "... src/order_flow/OrderFlow.o"
+	@echo "... src/order_flow/OrderFlow.i"
+	@echo "... src/order_flow/OrderFlow.s"
 .PHONY : help
 
 
