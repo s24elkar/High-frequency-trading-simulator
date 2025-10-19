@@ -47,6 +47,8 @@ def binned_counts(times, T, bin_width):
 
 def acf(x, max_lag):
     x = np.asarray(x, float)
+    if x.size == 0:
+        raise ValueError("Autocorrelation is undefined for an empty input array.")
     x = x - x.mean()
     ac = np.correlate(x, x, mode="full")
     ac = ac[ac.size // 2 :]
@@ -75,6 +77,15 @@ def plot_counts_acf(times, T, bin_w=0.1, max_lag=50, title="ACF of binned arriva
 
 
 def plot_mark_acf(marks, max_lag=50, title="ACF of marks (volumes)"):
+    marks = np.asarray(marks, float)
+    if marks.size == 0:
+        plt.figure()
+        plt.title(title)
+        plt.text(0.5, 0.5, "No marks available", ha="center", va="center")
+        plt.axis("off")
+        plt.tight_layout()
+        return
+
     rho = acf(marks, max_lag)
     plt.figure()
     _stem(np.arange(len(rho)), rho)

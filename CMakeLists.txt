@@ -14,6 +14,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_library(hft_core STATIC
     src/OrderBook.cpp
     src/order_flow/OrderFlow.cpp
+    src/order_flow/hawkes_mle.cpp
+    src/hawkes_engine.cpp
+    src/simulator_core.cpp
 )
 target_include_directories(hft_core PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(hft_core PRIVATE -O2 -Wall -Wextra -Wpedantic)
@@ -50,6 +53,11 @@ target_include_directories(hft_sim PRIVATE ${CMAKE_SOURCE_DIR}/src)
 add_executable(hawkes_example src/hawkes_example.cpp)
 target_link_libraries(hawkes_example PRIVATE hft_core)
 target_include_directories(hawkes_example PRIVATE ${CMAKE_SOURCE_DIR}/src)
+
+add_executable(hawkes_validation src/hawkes_validation.cpp)
+target_link_libraries(hawkes_validation PRIVATE hft_core)
+target_include_directories(hawkes_validation PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(hawkes_validation PRIVATE -O2 -Wall -Wextra -Wpedantic)
 
 if(ENABLE_DOCS)
     find_package(Doxygen REQUIRED)

@@ -124,11 +124,12 @@ def _configure_signatures(lib: ctypes.CDLL) -> None:
     lib.hawkes_simulate_exp.restype = ctypes.c_size_t
 
     lib.hawkes_simulate_powerlaw.argtypes = [
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_uint64,
+        ctypes.c_double,  # mu
+        ctypes.c_double,  # alpha
+        ctypes.c_double,  # c
+        ctypes.c_double,  # gamma
+        ctypes.c_double,  # horizon
+        ctypes.c_uint64,  # seed
         ctypes.c_void_p,
         ctypes.c_void_p,
         ctypes.POINTER(ctypes.POINTER(ctypes.c_double)),
@@ -393,6 +394,7 @@ def simulate_thinning_general(
         float(kernel.alpha),
         float(kernel.c),
         float(kernel.gamma),
+        float(T),
         int(seed),
     )
     return _run_simulation(

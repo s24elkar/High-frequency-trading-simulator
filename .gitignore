@@ -50,3 +50,8 @@ pytest.log
 python/.venv/
 .pytest_cache/
 __pycache__/
+
+# OS / tooling artefacts
+.DS_Store
+.matplotlib/
+*.ipynb_checkpoints/
