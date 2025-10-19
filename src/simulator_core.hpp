@@ -3,6 +3,7 @@
 #include "hawkes_engine.hpp"
 #include "latency_model.hpp"
 #include "OrderBook.hpp"
+#include "execution_cost.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -21,6 +22,9 @@ struct SimulationConfig {
     double latency_mean_us{120.0};
     std::uint64_t seed{1337};
     std::filesystem::path event_log_path{};
+    ExecutionCostConfig execution_cost{};
+    double base_aggressiveness{1.0};
+    std::int32_t aggressive_order_size{1};
 };
 
 struct IntensitySample {
@@ -44,6 +48,14 @@ struct SimulationResult {
     double mean_interarrival{};
     double variance_interarrival{};
     double mean_intensity{};
+    std::vector<ExecutionRecord> executions;
+    double cumulative_execution_cost{};
+    double cumulative_temporary_cost{};
+    double cumulative_permanent_cost{};
+    double cumulative_shortfall{};
+    double mean_slippage{};
+    double cost_variance{};
+    double mean_aggressiveness{};
 };
 
 class SimulatorCore {
@@ -64,6 +76,7 @@ private:
     SimulationConfig config_;
     ExponentialLatencyModel latency_model_;
     mutable std::uint64_t next_order_id_{1};
+    ExecutionEngine execution_engine_;
 };
 
 SimulationConfig default_btcusdt_config();

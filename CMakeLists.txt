@@ -13,6 +13,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library(hft_core STATIC
     src/OrderBook.cpp
+    src/execution_cost.cpp
     src/order_flow/OrderFlow.cpp
     src/order_flow/hawkes_mle.cpp
     src/hawkes_engine.cpp
@@ -59,6 +60,11 @@ target_link_libraries(hawkes_validation PRIVATE hft_core)
 target_include_directories(hawkes_validation PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(hawkes_validation PRIVATE -O2 -Wall -Wextra -Wpedantic)
 
+add_executable(execution_cost_runner src/execution_cost_runner.cpp)
+target_link_libraries(execution_cost_runner PRIVATE hft_core)
+target_include_directories(execution_cost_runner PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(execution_cost_runner PRIVATE -O2 -Wall -Wextra -Wpedantic)
+
 if(ENABLE_DOCS)
     find_package(Doxygen REQUIRED)
     set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/Doxyfile)
@@ -86,4 +92,9 @@ if(HFT_ENABLE_TESTS)
     target_link_libraries(order_tests PRIVATE Catch2::Catch2WithMain hft_core)
     target_include_directories(order_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
     add_test(NAME order_tests COMMAND order_tests)
+
+    add_executable(execution_cost_test tests/execution_cost_test.cpp)
+    target_link_libraries(execution_cost_test PRIVATE Catch2::Catch2WithMain hft_core)
+    target_include_directories(execution_cost_test PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    add_test(NAME execution_cost_test COMMAND execution_cost_test)
 endif()

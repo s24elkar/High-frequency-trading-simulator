@@ -1,6 +1,7 @@
 #include "simulator_core.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <numeric>
@@ -30,6 +31,10 @@ SimulationConfig make_default_config() {
     cfg.latency_mean_us = 120.0;
     cfg.seed = 20240607;
     cfg.event_log_path = std::filesystem::path("results/week6/simulation_arrivals.csv");
+    cfg.execution_cost.temporary_eta = 0.015;
+    cfg.execution_cost.permanent_gamma = 2.5e-6;
+    cfg.base_aggressiveness = 1.0;
+    cfg.aggressive_order_size = 1;
     return cfg;
 }
 
@@ -50,7 +55,8 @@ SimulationConfig default_btcusdt_config() {
 
 SimulatorCore::SimulatorCore(SimulationConfig config)
     : config_(std::move(config)),
-      latency_model_(config_.latency_mean_us) {}
+      latency_model_(config_.latency_mean_us),
+      execution_engine_(config_.execution_cost) {}
 
 void SimulatorCore::seed_order_book(OrderBook& book) {
     for (std::size_t level = 0; level < kSeedDepth; ++level) {
@@ -105,8 +111,27 @@ SimulationResult SimulatorCore::run() {
             record.intensity_dimension = entry.payload.event.intensity_dimension;
 
             const Side side = side_from_dimension(record.dimension);
-            const std::int32_t quantity = 1;
+            const std::int32_t quantity = std::max<std::int32_t>(1, config_.aggressive_order_size);
             const std::int64_t ts_ns = to_nanoseconds(record.arrival_time);
+
+            double reference_price = kMidPrice;
+            auto best_bid = book.bestBid();
+            auto best_ask = book.bestAsk();
+            if (best_bid && best_ask) {
+                reference_price = (best_bid->price + best_ask->price) * 0.5;
+            } else if (best_bid) {
+                reference_price = best_bid->price;
+            } else if (best_ask) {
+                reference_price = best_ask->price;
+            }
+
+            Order market_order{
+                static_cast<std::int64_t>(next_order_id_++),
+                side,
+                reference_price,
+                quantity,
+                ts_ns
+            };
 
             auto fills = book.match(side, 0.0, quantity);
             if (fills.empty()) {
@@ -133,6 +158,14 @@ SimulationResult SimulatorCore::run() {
                 });
             }
 
+            const ExecutionRecord exec_record = execution_engine_.record_execution(
+                market_order,
+                reference_price,
+                config_.base_aggressiveness,
+                fills
+            );
+            result.executions.push_back(exec_record);
+
             result.arrivals.push_back(record);
         }
     };
@@ -156,6 +189,11 @@ SimulationResult SimulatorCore::run() {
     }
 
     flush_ready(config_.session_length);
+
+    result.cumulative_execution_cost = execution_engine_.cumulative_cost();
+    result.cumulative_temporary_cost = execution_engine_.cumulative_temporary_cost();
+    result.cumulative_permanent_cost = execution_engine_.cumulative_permanent_cost();
+    result.cumulative_shortfall = execution_engine_.cumulative_shortfall();
 
     update_summary_metrics(result);
     write_event_log(result);
@@ -196,6 +234,31 @@ void SimulatorCore::update_summary_metrics(SimulationResult& result) const {
 
     const double event_count = static_cast<double>(result.arrivals.size());
     result.mean_intensity = (result.horizon > 0.0) ? event_count / result.horizon : 0.0;
+
+    if (result.executions.empty()) {
+        result.mean_slippage = 0.0;
+        result.cost_variance = 0.0;
+        result.mean_aggressiveness = 0.0;
+        return;
+    }
+
+    double sum_slippage = 0.0;
+    double sum_aggressiveness = 0.0;
+    double sum_cost = 0.0;
+    double sum_cost_sq = 0.0;
+    for (const auto& exec : result.executions) {
+        sum_slippage += exec.order.slippage;
+        sum_aggressiveness += exec.aggressiveness;
+        sum_cost += exec.total_cost;
+        sum_cost_sq += exec.total_cost * exec.total_cost;
+    }
+
+    const double n_exec = static_cast<double>(result.executions.size());
+    const double mean_cost = sum_cost / n_exec;
+
+    result.mean_slippage = sum_slippage / n_exec;
+    result.mean_aggressiveness = sum_aggressiveness / n_exec;
+    result.cost_variance = std::max(0.0, (sum_cost_sq / n_exec) - (mean_cost * mean_cost));
 }
 
 void SimulatorCore::write_event_log(const SimulationResult& result) const {
