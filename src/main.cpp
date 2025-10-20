@@ -1,6 +1,8 @@
+#include <filesystem>
 #include <iostream>
 
 #include "simulator_core.hpp"
+#include "perf/Profiler.hpp"
 
 int main() {
     using namespace simulator;
@@ -22,5 +24,13 @@ int main() {
     std::cout << "Mean slippage    : " << result.mean_slippage << "\n";
     std::cout << "Cost variance    : " << result.cost_variance << "\n";
     std::cout << "Arrival log      : " << config.event_log_path << '\n';
+
+#ifdef HFT_ENABLE_PROFILING
+    const std::filesystem::path report_path{"profiler_report.txt"};
+    const std::filesystem::path folded_path{"results/perf/profile.folded"};
+    perf::Profiler::instance().write_report(report_path, folded_path);
+    std::cout << "Profiler report  : " << report_path << '\n';
+    std::cout << "Folded stacks    : " << folded_path << '\n';
+#endif
     return 0;
 }

@@ -3,30 +3,50 @@ project(hft_sim LANGUAGES CXX)
 
 option(HFT_ENABLE_TESTS "Build unit tests" OFF)
 option(ENABLE_DOCS "Generate documentation with Doxygen" OFF)
+option(HFT_ENABLE_PROFILING "Enable in-simulator profiling instrumentation" OFF)
+option(HFT_USE_LEGACY_LATENCY_QUEUE "Use legacy priority_queue latency queue" OFF)
 if(HFT_ENABLE_TESTS)
     enable_testing()
 endif()
+
+find_package(ZLIB REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+set(HFT_WARNING_FLAGS -Wall -Wextra -Wpedantic)
+set(HFT_OPTIMIZATION_FLAGS -O3 -march=native -flto -fno-rtti)
+
+function(hft_apply_compile_flags target)
+    target_compile_options(${target} PRIVATE ${HFT_WARNING_FLAGS} ${HFT_OPTIMIZATION_FLAGS})
+    target_link_options(${target} PRIVATE -flto)
+endfunction()
+
 add_library(hft_core STATIC
     src/OrderBook.cpp
-    src/execution_cost.cpp
+    src/execution_engine.cpp
     src/order_flow/OrderFlow.cpp
     src/order_flow/hawkes_mle.cpp
-    src/hawkes_engine.cpp
+    src/hawkes_core.cpp
     src/simulator_core.cpp
+    src/perf/Profiler.cpp
 )
 target_include_directories(hft_core PUBLIC ${CMAKE_SOURCE_DIR}/src)
-target_compile_options(hft_core PRIVATE -O2 -Wall -Wextra -Wpedantic)
+hft_apply_compile_flags(hft_core)
+if(HFT_ENABLE_PROFILING)
+    target_compile_definitions(hft_core PUBLIC HFT_ENABLE_PROFILING=1)
+endif()
+if(HFT_USE_LEGACY_LATENCY_QUEUE)
+    target_compile_definitions(hft_core PUBLIC HFT_LEGACY_LATENCY_QUEUE=1)
+endif()
 
 add_library(order_book_bridge SHARED
     src/order_book_c_api.cpp
 )
 target_link_libraries(order_book_bridge PRIVATE hft_core)
 target_include_directories(order_book_bridge PRIVATE ${CMAKE_SOURCE_DIR}/src)
+hft_apply_compile_flags(order_book_bridge)
 set_target_properties(order_book_bridge PROPERTIES
     OUTPUT_NAME order_book_bridge
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -39,7 +59,7 @@ add_library(hawkes_bridge SHARED
 )
 target_link_libraries(hawkes_bridge PRIVATE hft_core)
 target_include_directories(hawkes_bridge PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_compile_options(hawkes_bridge PRIVATE -O2 -Wall -Wextra -Wpedantic)
+hft_apply_compile_flags(hawkes_bridge)
 set_target_properties(hawkes_bridge PROPERTIES
     OUTPUT_NAME hawkes_bridge
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -50,20 +70,32 @@ set_target_properties(hawkes_bridge PROPERTIES
 add_executable(hft_sim src/main.cpp)
 target_link_libraries(hft_sim PRIVATE hft_core)
 target_include_directories(hft_sim PRIVATE ${CMAKE_SOURCE_DIR}/src)
+hft_apply_compile_flags(hft_sim)
 
 add_executable(hawkes_example src/hawkes_example.cpp)
 target_link_libraries(hawkes_example PRIVATE hft_core)
 target_include_directories(hawkes_example PRIVATE ${CMAKE_SOURCE_DIR}/src)
+hft_apply_compile_flags(hawkes_example)
 
 add_executable(hawkes_validation src/hawkes_validation.cpp)
 target_link_libraries(hawkes_validation PRIVATE hft_core)
 target_include_directories(hawkes_validation PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_compile_options(hawkes_validation PRIVATE -O2 -Wall -Wextra -Wpedantic)
+hft_apply_compile_flags(hawkes_validation)
 
 add_executable(execution_cost_runner src/execution_cost_runner.cpp)
 target_link_libraries(execution_cost_runner PRIVATE hft_core)
 target_include_directories(execution_cost_runner PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_compile_options(execution_cost_runner PRIVATE -O2 -Wall -Wextra -Wpedantic)
+hft_apply_compile_flags(execution_cost_runner)
+
+add_executable(impact_calibration src/impact_calibration.cpp)
+target_link_libraries(impact_calibration PRIVATE hft_core ZLIB::ZLIB)
+target_include_directories(impact_calibration PRIVATE ${CMAKE_SOURCE_DIR}/src)
+hft_apply_compile_flags(impact_calibration)
+
+add_executable(perf_benchmark src/perf/Benchmark.cpp)
+target_link_libraries(perf_benchmark PRIVATE hft_core)
+target_include_directories(perf_benchmark PRIVATE ${CMAKE_SOURCE_DIR}/src)
+hft_apply_compile_flags(perf_benchmark)
 
 if(ENABLE_DOCS)
     find_package(Doxygen REQUIRED)

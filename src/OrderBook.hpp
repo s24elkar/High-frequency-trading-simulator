@@ -127,6 +127,61 @@ private:
         OrderNode* node;
     };
 
+    class LocatorTable {
+    public:
+        void set(OrderId id, const Locator& locator) {
+            if (id < 0) {
+                return;
+            }
+            const std::size_t idx = static_cast<std::size_t>(id);
+            if (idx >= storage_.size()) {
+                storage_.resize(idx + 1);
+                active_.resize(idx + 1, 0);
+            }
+            storage_[idx] = locator;
+            active_[idx] = 1;
+        }
+
+        Locator* find(OrderId id) {
+            if (id < 0) {
+                return nullptr;
+            }
+            const std::size_t idx = static_cast<std::size_t>(id);
+            if (idx >= storage_.size() || active_[idx] == 0) {
+                return nullptr;
+            }
+            return &storage_[idx];
+        }
+
+        const Locator* find(OrderId id) const {
+            if (id < 0) {
+                return nullptr;
+            }
+            const std::size_t idx = static_cast<std::size_t>(id);
+            if (idx >= storage_.size() || active_[idx] == 0) {
+                return nullptr;
+            }
+            return &storage_[idx];
+        }
+
+        bool erase(OrderId id) {
+            if (id < 0) {
+                return false;
+            }
+            const std::size_t idx = static_cast<std::size_t>(id);
+            if (idx >= storage_.size() || active_[idx] == 0) {
+                return false;
+            }
+            active_[idx] = 0;
+            storage_[idx].node = nullptr;
+            return true;
+        }
+
+    private:
+        std::vector<Locator> storage_;
+        std::vector<std::uint8_t> active_;
+    };
+
     using BidBook = FlatBook<std::greater<PriceTick>>;
     using AskBook = FlatBook<std::less<PriceTick>>;
 
@@ -141,7 +196,7 @@ private:
     BidBook bids_;
     AskBook asks_;
     OrderPool pool_;
-    std::unordered_map<OrderId, Locator> locators_;
+    LocatorTable locator_table_;
 };
 
 template <typename Compare>

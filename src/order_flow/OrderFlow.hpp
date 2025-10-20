@@ -66,6 +66,7 @@ public:
     virtual ~HawkesKernel() = default;
     virtual double evaluate(double lag, double mark) const = 0;
     virtual double integral(double mark_expectation) const = 0;
+    [[nodiscard]] virtual bool is_exponential() const noexcept { return false; }
 };
 
 class ExponentialKernel final : public HawkesKernel {
@@ -79,6 +80,7 @@ public:
 
     [[nodiscard]] double alpha() const noexcept;
     [[nodiscard]] double beta() const noexcept;
+    [[nodiscard]] bool is_exponential() const noexcept override { return true; }
 
 private:
     double alpha_;

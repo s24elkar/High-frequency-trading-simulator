@@ -1,5 +1,7 @@
 #include "simulator_core.hpp"
 
+#include "perf/Profiler.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <fstream>
@@ -84,6 +86,8 @@ SimulationResult SimulatorCore::run() {
         throw std::invalid_argument("SimulatorCore requires calibrated parameters");
     }
 
+    HFT_PROFILE_SCOPE("SimulatorCore::run");
+
     std::mt19937_64 rng(config_.seed);
     ExponentialHawkesProcess process(config_.mu, config_.alpha, config_.beta);
     process.reset(0.0);
@@ -96,7 +100,8 @@ SimulationResult SimulatorCore::run() {
 
     LatencyQueue<PendingPayload> queue;
 
-    auto flush_ready = [&](double time_limit) {
+    auto flush_ready = [&](double time_limit) -> bool {
+        HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready");
         while (!queue.empty() && queue.top().ready_time <= time_limit) {
             auto entry = queue.pop();
             if (entry.ready_time > config_.session_length) {
@@ -133,45 +138,74 @@ SimulationResult SimulatorCore::run() {
                 ts_ns
             };
 
-            auto fills = book.match(side, 0.0, quantity);
-            if (fills.empty()) {
-                seed_order_book(book);
+            std::vector<OrderBook::Fill> fills;
+            {
+                HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "OrderBook::match");
                 fills = book.match(side, 0.0, quantity);
+            }
+            if (fills.empty()) {
+                {
+                    HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "seed_order_book");
+                    seed_order_book(book);
+                }
+                {
+                    HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "OrderBook::match");
+                    fills = book.match(side, 0.0, quantity);
+                }
             }
 
             // Maintain simple liquidity replenishment
             if (side == Side::Buy) {
-                book.addLimitOrder(Order{
-                    static_cast<std::int64_t>(next_order_id_++),
-                    Side::Sell,
-                    kMidPrice + kTickSize,
-                    quantity,
-                    ts_ns
-                });
+                {
+                    HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "OrderBook::addLimitOrder");
+                    book.addLimitOrder(Order{
+                        static_cast<std::int64_t>(next_order_id_++),
+                        Side::Sell,
+                        kMidPrice + kTickSize,
+                        quantity,
+                        ts_ns
+                    });
+                }
             } else {
-                book.addLimitOrder(Order{
-                    static_cast<std::int64_t>(next_order_id_++),
-                    Side::Buy,
-                    kMidPrice - kTickSize,
-                    quantity,
-                    ts_ns
-                });
+                {
+                    HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "OrderBook::addLimitOrder");
+                    book.addLimitOrder(Order{
+                        static_cast<std::int64_t>(next_order_id_++),
+                        Side::Buy,
+                        kMidPrice - kTickSize,
+                        quantity,
+                        ts_ns
+                    });
+                }
             }
 
-            const ExecutionRecord exec_record = execution_engine_.record_execution(
-                market_order,
-                reference_price,
-                config_.base_aggressiveness,
-                fills
-            );
+            ExecutionRecord exec_record{};
+            {
+                HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "ExecutionEngine::record_execution");
+                exec_record = execution_engine_.record_execution(
+                    market_order,
+                    reference_price,
+                    config_.base_aggressiveness,
+                    fills
+                );
+            }
             result.executions.push_back(exec_record);
 
             result.arrivals.push_back(record);
+            if (config_.max_events > 0 && result.arrivals.size() >= config_.max_events) {
+                return true;
+            }
         }
+        return false;
     };
 
+    bool limit_reached = false;
     while (process.current_time() < config_.session_length) {
-        const HawkesEvent event = process.sample_next(rng);
+        HawkesEvent event{};
+        {
+            HFT_PROFILE_STACK("SimulatorCore::run", "hawkes_sample_next");
+            event = process.sample_next(rng);
+        }
 
         IntensitySample sample;
         sample.time = event.time;
@@ -180,15 +214,23 @@ SimulationResult SimulatorCore::run() {
 
         const double latency = latency_model_.sample_delay(rng);
         const double ready_time = event.time + latency;
-        queue.push(ready_time, latency, PendingPayload{event});
+        {
+            HFT_PROFILE_STACK("SimulatorCore::run", "latency_queue_push");
+            queue.push(ready_time, latency, PendingPayload{event});
+        }
 
-        flush_ready(event.time);
+        if (flush_ready(event.time)) {
+            limit_reached = true;
+            break;
+        }
         if (event.time > config_.session_length) {
             break;
         }
     }
 
-    flush_ready(config_.session_length);
+    if (!limit_reached) {
+        flush_ready(config_.session_length);
+    }
 
     result.cumulative_execution_cost = execution_engine_.cumulative_cost();
     result.cumulative_temporary_cost = execution_engine_.cumulative_temporary_cost();

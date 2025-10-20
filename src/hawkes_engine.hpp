@@ -43,20 +43,25 @@ public:
     void reset(double start_time = 0.0) override;
 
 private:
-    void validate_parameters() const;
+    void validate_parameters(const Matrix& alpha, const Matrix& beta) const;
     void decay_state(double dt);
     double total_intensity() const noexcept;
     std::size_t draw_dimension(double lambda_sum, std::mt19937_64& rng) const;
+    [[nodiscard]] inline std::size_t index(std::size_t i, std::size_t j) const noexcept {
+        return i * dim_ + j;
+    }
 
+    std::size_t dim_{0};
     std::vector<double> mu_;
-    Matrix alpha_;
-    Matrix beta_;
+    std::vector<double> alpha_flat_;
+    std::vector<double> beta_flat_;
     MarkSampler mark_sampler_;
 
     double time_;
-    Matrix excitation_;
+    std::vector<double> excitation_;
+    std::vector<double> candidate_excitation_;
     std::vector<double> lambda_;
+    std::vector<double> candidate_lambda_;
 };
 
 } // namespace simulator
-

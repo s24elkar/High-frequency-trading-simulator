@@ -1,5 +1,7 @@
 #include "OrderBook.hpp"
 
+#include "perf/Profiler.hpp"
+
 #include <algorithm>  // std::min
 #include <cmath>      // std::llround
 #include <iostream>
@@ -66,32 +68,30 @@ void OrderBook::addLimitOrder(const Order& order) {
     PriceLevel& level =
         order.side == Side::Buy ? bids_.levelFor(price) : asks_.levelFor(price);
     level.append(node);
-    locators_[order.id] = Locator{order.side, price, node};
+    locator_table_.set(order.id, Locator{order.side, price, node});
 }
 
 bool OrderBook::cancel(OrderId id) {
-    auto it = locators_.find(id);
-    if (it == locators_.end()) {
+    Locator* locator = locator_table_.find(id);
+    if (locator == nullptr) {
         return false;
     }
 
-    const Locator locator = it->second;
-    PriceLevel* level = levelBySide(locator.side, locator.price);
+    PriceLevel* level = levelBySide(locator->side, locator->price);
     if (level == nullptr) {
         return false;
     }
 
-    level->remove(locator.node);
-    pool_.release(locator.node);
+    level->remove(locator->node);
+    pool_.release(locator->node);
 
-    if (locator.side == Side::Buy) {
-        bids_.eraseIfEmpty(locator.price);
+    if (locator->side == Side::Buy) {
+        bids_.eraseIfEmpty(locator->price);
     } else {
-        asks_.eraseIfEmpty(locator.price);
+        asks_.eraseIfEmpty(locator->price);
     }
 
-    locators_.erase(it);
-    return true;
+    return locator_table_.erase(id);
 }
 
 std::optional<Order> OrderBook::bestBid() const {
@@ -115,6 +115,7 @@ std::vector<OrderBook::Fill> OrderBook::match(
     double price,
     std::int32_t quantity
 ) {
+    HFT_PROFILE_SCOPE("OrderBook::match");
     std::vector<Fill> fills;
     if (quantity <= 0) {
         return fills;
@@ -168,10 +169,7 @@ std::vector<OrderBook::Fill> OrderBook::match(
 
                 node->data.quantity = remaining_after;
                 if (remaining_after <= 0) {
-                    auto locator_it = locators_.find(fill.order.id);
-                    if (locator_it != locators_.end()) {
-                        locators_.erase(locator_it);
-                    }
+                    locator_table_.erase(fill.order.id);
                     level.remove(node);
                     pool_.release(node);
                 }

@@ -296,7 +296,9 @@ HawkesProcess::HawkesProcess(double mu, std::shared_ptr<const HawkesKernel> kern
     if (!(mark_expectation_ > 0.0)) {
         throw std::invalid_argument("HawkesProcess requires mark expectation > 0");
     }
-    exp_kernel_ = dynamic_cast<const ExponentialKernel*>(kernel_.get());
+    if (kernel_->is_exponential()) {
+        exp_kernel_ = static_cast<const ExponentialKernel*>(kernel_.get());
+    }
 }
 
 void HawkesProcess::set_mark_sampler(MarkSampler sampler) {

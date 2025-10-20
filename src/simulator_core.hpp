@@ -19,6 +19,7 @@ struct SimulationConfig {
     ExponentialHawkesProcess::Matrix alpha;
     ExponentialHawkesProcess::Matrix beta;
     double session_length{60.0};
+    std::size_t max_events{0};
     double latency_mean_us{120.0};
     std::uint64_t seed{1337};
     std::filesystem::path event_log_path{};
