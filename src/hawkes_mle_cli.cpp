@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "error.hpp"
+
 namespace {
 
 using order_flow::EventStream;
@@ -98,7 +100,7 @@ void ensure_directory(const std::filesystem::path& path) {
     if (ec) {
         std::ostringstream oss;
         oss << "Failed to create directory " << path << ": " << ec.message();
-        throw std::runtime_error(oss.str());
+        HFT_THROW(std::runtime_error(oss.str()));
     }
 }
 
@@ -119,7 +121,7 @@ struct ReplicateSummary {
 void write_summary_csv(const std::filesystem::path& path, const std::vector<ReplicateSummary>& summaries) {
     std::ofstream out(path);
     if (!out) {
-        throw std::runtime_error("Failed to open summary CSV for writing");
+        HFT_THROW(std::runtime_error("Failed to open summary CSV for writing"));
     }
     out << "replicate,seed,event_count,converged,mu_hat,alpha_hat,beta_hat,log_likelihood,gradient_norm,branching_ratio,iterations\n";
     out << std::setprecision(10);
@@ -141,7 +143,7 @@ void write_summary_csv(const std::filesystem::path& path, const std::vector<Repl
 void write_trajectory_csv(const std::filesystem::path& path, const std::vector<HawkesParameters>& trajectory) {
     std::ofstream out(path);
     if (!out) {
-        throw std::runtime_error("Failed to open trajectory CSV");
+        HFT_THROW(std::runtime_error("Failed to open trajectory CSV"));
     }
     out << "iteration,mu,alpha,beta\n";
     out << std::setprecision(10);
@@ -153,7 +155,7 @@ void write_trajectory_csv(const std::filesystem::path& path, const std::vector<H
 void write_events_csv(const std::filesystem::path& path, const EventStream& events) {
     std::ofstream out(path);
     if (!out) {
-        throw std::runtime_error("Failed to open events CSV");
+        HFT_THROW(std::runtime_error("Failed to open events CSV"));
     }
     out << "time,mark\n";
     out << std::setprecision(10);

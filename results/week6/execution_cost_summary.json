@@ -1,0 +1,7 @@
+{
+  "runs": 100,
+  "average_shortfall": 3619.54,
+  "cost_variance": 3599976.0274982993,
+  "mean_aggressiveness": 1.4625045400000003,
+  "mean_order_size": 3.38
+}

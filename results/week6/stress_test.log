@@ -1,0 +1,9 @@
+Starting stress test: 10000000 events, 60 minutes horizon, scale 8
+Generated events : 10000000
+Processed events : 10000000
+Mean latency us  : 456910
+p99 latency us   : 938173
+Max latency us   : 2.47642e+06
+Event queue retries: 7576742
+Match queue retries: 0
+Resource samples recorded: 30

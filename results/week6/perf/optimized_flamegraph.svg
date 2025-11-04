@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="82" viewBox="0 0 1200 82" font-family="Menlo,monospace" font-size="11">
+<rect width="100%" height="100%" fill="#f8f8f8"/>
+<g transform="translate(0.00,2)"><rect width="1121.96" height="18" rx="2" ry="2" fill="hsl(284,95%,56%)" stroke="#ffffff" stroke-width="0.5"/><title>SimulatorCore::run — 8695.26 μs</title>
+<text x="560.98" y="11.70" text-anchor="middle" fill="#111111">run</text>
+</g>
+<g transform="translate(0.00,22)"><rect width="234.26" height="18" rx="2" ry="2" fill="hsl(128,84%,53%)" stroke="#ffffff" stroke-width="0.5"/><title>flush_ready — 1815.55 μs</title>
+<text x="117.13" y="11.70" text-anchor="middle" fill="#111111">flush_ready</text>
+</g>
+<g transform="translate(0.00,42)"><rect width="43.78" height="18" rx="2" ry="2" fill="hsl(130,85%,57%)" stroke="#ffffff" stroke-width="0.5"/><title>ExecutionEngine::record_execution — 339.28 μs</title>
+<text x="21.89" y="11.70" text-anchor="middle" fill="#111111">reco…</text>
+</g>
+<g transform="translate(43.78,42)"><rect width="20.43" height="18" rx="2" ry="2" fill="hsl(134,60%,47%)" stroke="#ffffff" stroke-width="0.5"/><title>OrderBook::match — 158.34 μs</title>
+<text x="10.22" y="11.70" text-anchor="middle" fill="#111111">m…</text>
+</g>
+<g transform="translate(64.21,42)"><rect width="10.86" height="18" rx="2" ry="2" fill="hsl(196,79%,56%)" stroke="#ffffff" stroke-width="0.5"/><title>OrderBook::addLimitOrder — 84.17 μs</title>
+<text x="5.43" y="11.70" text-anchor="middle" fill="#111111">…</text>
+</g>
+<g transform="translate(234.26,22)"><rect width="53.87" height="18" rx="2" ry="2" fill="hsl(304,86%,62%)" stroke="#ffffff" stroke-width="0.5"/><title>hawkes_sample_next — 417.53 μs</title>
+<text x="26.94" y="11.70" text-anchor="middle" fill="#111111">hawke…</text>
+</g>
+<g transform="translate(288.14,22)"><rect width="4.95" height="18" rx="2" ry="2" fill="hsl(10,88%,45%)" stroke="#ffffff" stroke-width="0.5"/><title>latency_queue_push — 38.34 μs</title>
+</g>
+<g transform="translate(1121.96,2)"><rect width="38.81" height="18" rx="2" ry="2" fill="hsl(156,78%,50%)" stroke="#ffffff" stroke-width="0.5"/><title>Hawkes::sample_next — 300.75 μs</title>
+<text x="19.40" y="11.70" text-anchor="middle" fill="#111111">sam…</text>
+</g>
+<g transform="translate(1160.76,2)"><rect width="28.50" height="18" rx="2" ry="2" fill="hsl(130,85%,57%)" stroke="#ffffff" stroke-width="0.5"/><title>ExecutionEngine::record_execution — 220.88 μs</title>
+<text x="14.25" y="11.70" text-anchor="middle" fill="#111111">re…</text>
+</g>
+<g transform="translate(1189.26,2)"><rect width="5.73" height="18" rx="2" ry="2" fill="hsl(134,60%,47%)" stroke="#ffffff" stroke-width="0.5"/><title>OrderBook::match — 44.38 μs</title>
+</g>
+<g transform="translate(1194.99,2)"><rect width="5.01" height="18" rx="2" ry="2" fill="hsl(289,72%,57%)" stroke="#ffffff" stroke-width="0.5"/><title>Hawkes::draw_dimension — 38.84 μs</title>
+</g>
+</svg>

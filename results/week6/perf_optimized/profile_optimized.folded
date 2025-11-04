@@ -1,0 +1,11 @@
+Hawkes::draw_dimension 49.1600
+Hawkes::sample_next 397.5700
+SimulatorCore::run;hawkes_sample_next 541.6030
+SimulatorCore::run;latency_queue_push 48.4600
+SimulatorCore::run;flush_ready 1637.3540
+OrderBook::match 111.1980
+SimulatorCore::run;flush_ready;OrderBook::match 255.0290
+SimulatorCore::run;flush_ready;OrderBook::addLimitOrder 107.9920
+ExecutionEngine::record_execution 136.2850
+SimulatorCore::run;flush_ready;ExecutionEngine::record_execution 302.1100
+SimulatorCore::run 7816.1670

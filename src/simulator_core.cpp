@@ -1,12 +1,14 @@
 #include "simulator_core.hpp"
 
 #include "perf/Profiler.hpp"
+#include "error.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <numeric>
+#include <span>
 #include <stdexcept>
 
 namespace simulator {
@@ -58,7 +60,11 @@ SimulationConfig default_btcusdt_config() {
 SimulatorCore::SimulatorCore(SimulationConfig config)
     : config_(std::move(config)),
       latency_model_(config_.latency_mean_us),
-      execution_engine_(config_.execution_cost) {}
+      execution_engine_(config_.execution_cost, config_.max_events) {
+    if (config_.max_events > 0) {
+        execution_engine_.reserve(config_.max_events);
+    }
+}
 
 void SimulatorCore::seed_order_book(OrderBook& book) {
     for (std::size_t level = 0; level < kSeedDepth; ++level) {
@@ -83,7 +89,7 @@ void SimulatorCore::seed_order_book(OrderBook& book) {
 
 SimulationResult SimulatorCore::run() {
     if (config_.mu.empty()) {
-        throw std::invalid_argument("SimulatorCore requires calibrated parameters");
+        HFT_THROW(std::invalid_argument("SimulatorCore requires calibrated parameters"));
     }
 
     HFT_PROFILE_SCOPE("SimulatorCore::run");
@@ -93,12 +99,19 @@ SimulationResult SimulatorCore::run() {
     process.reset(0.0);
 
     SimulationResult result;
+    if (config_.max_events > 0) {
+        const std::size_t expected = config_.max_events;
+        result.arrivals.reserve(expected);
+        result.executions.reserve(expected);
+    }
     result.horizon = config_.session_length;
 
     OrderBook book;
     seed_order_book(book);
 
     LatencyQueue<PendingPayload> queue;
+    std::vector<OrderBook::Fill> match_buffer;
+    match_buffer.reserve(64);
 
     auto flush_ready = [&](double time_limit) -> bool {
         HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready");
@@ -138,19 +151,18 @@ SimulationResult SimulatorCore::run() {
                 ts_ns
             };
 
-            std::vector<OrderBook::Fill> fills;
             {
                 HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "OrderBook::match");
-                fills = book.match(side, 0.0, quantity);
+                book.match_into(side, 0.0, quantity, match_buffer);
             }
-            if (fills.empty()) {
+            if (match_buffer.empty()) {
                 {
                     HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "seed_order_book");
                     seed_order_book(book);
                 }
                 {
                     HFT_PROFILE_STACK("SimulatorCore::run", "flush_ready", "OrderBook::match");
-                    fills = book.match(side, 0.0, quantity);
+                    book.match_into(side, 0.0, quantity, match_buffer);
                 }
             }
 
@@ -186,7 +198,7 @@ SimulationResult SimulatorCore::run() {
                     market_order,
                     reference_price,
                     config_.base_aggressiveness,
-                    fills
+                    std::span<const OrderBook::Fill>(match_buffer)
                 );
             }
             result.executions.push_back(exec_record);
@@ -209,7 +221,8 @@ SimulationResult SimulatorCore::run() {
 
         IntensitySample sample;
         sample.time = event.time;
-        sample.lambda = process.intensities();
+        const auto& lambda_snapshot = process.intensities();
+        sample.lambda.assign(lambda_snapshot.begin(), lambda_snapshot.end());
         result.intensity_trace.push_back(std::move(sample));
 
         const double latency = latency_model_.sample_delay(rng);

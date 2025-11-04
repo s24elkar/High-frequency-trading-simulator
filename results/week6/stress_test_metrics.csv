@@ -1,0 +1,16 @@
+metric,value
+events_generated,200000
+events_processed,200000
+event_queue_retries,0
+match_queue_retries,0
+mean_latency_us,152125.592768
+p99_latency_us,290524.208000
+max_latency_us,301572.792000
+mean_arrival_latency_us,119.881977
+throughput_eps,502001.521481
+event_cpu_util,0.837442
+match_cpu_util,0.954420
+log_cpu_util,0.811709
+
+type,timestamp_s,cpu_seconds,cpu_utilization,rss_mb
+resource,0.502673,0.833707,1.582448,156.343750

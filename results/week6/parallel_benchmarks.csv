@@ -1,0 +1,3 @@
+mode,events,elapsed_seconds,throughput_eps,mean_latency_us,mean_inter_thread_latency_us,p99_inter_thread_latency_us,event_cpu_util,match_cpu_util,log_cpu_util
+single-thread,200000,0.214653,931735.434394,119.227355,0.000000,0.000000,0.999961,0.000000,0.000000
+parallel-3thread,200000,0.112909,1771336.678024,119.881977,22002.554649,33687.542000,0.978649,0.992253,0.986086

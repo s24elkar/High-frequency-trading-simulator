@@ -5,6 +5,8 @@
 #include <numeric>
 #include <sstream>
 
+#include "error.hpp"
+
 namespace order_flow {
 
 void EventStream::reserve(std::size_t n) {
@@ -13,15 +15,15 @@ void EventStream::reserve(std::size_t n) {
 
 void EventStream::add(double time, double mark) {
     if (!std::isfinite(time) || time < 0.0) {
-        throw std::invalid_argument("EventStream::add received non-finite or negative time");
+        HFT_THROW(std::invalid_argument("EventStream::add received non-finite or negative time"));
     }
     if (!std::isfinite(mark)) {
-        throw std::invalid_argument("EventStream::add received non-finite mark");
+        HFT_THROW(std::invalid_argument("EventStream::add received non-finite mark"));
     }
     if (!events_.empty() && time < events_.back().time) {
         std::ostringstream oss;
         oss << "event time " << time << " precedes last time " << events_.back().time;
-        throw std::invalid_argument(oss.str());
+        HFT_THROW(std::invalid_argument(oss.str()));
     }
     events_.push_back(Event{time, mark});
 }
@@ -81,7 +83,7 @@ double IntensityFunction::reproduction_mean(double mark_expectation) const {
 
 PoissonIntensity::PoissonIntensity(double mu) : mu_(mu) {
     if (!(mu_ > 0.0)) {
-        throw std::invalid_argument("PoissonIntensity requires mu > 0");
+        HFT_THROW(std::invalid_argument("PoissonIntensity requires mu > 0"));
     }
 }
 
@@ -92,10 +94,10 @@ double PoissonIntensity::value(double, const EventStream&) const {
 ExponentialKernel::ExponentialKernel(double alpha, double beta)
     : alpha_(alpha), beta_(beta) {
     if (!(alpha_ >= 0.0)) {
-        throw std::invalid_argument("ExponentialKernel requires alpha >= 0");
+        HFT_THROW(std::invalid_argument("ExponentialKernel requires alpha >= 0"));
     }
     if (!(beta_ > 0.0)) {
-        throw std::invalid_argument("ExponentialKernel requires beta > 0");
+        HFT_THROW(std::invalid_argument("ExponentialKernel requires beta > 0"));
     }
 }
 
@@ -137,13 +139,13 @@ double ExponentialKernel::beta() const noexcept {
 PowerLawKernel::PowerLawKernel(double alpha, double c, double gamma)
     : alpha_(alpha), c_(c), gamma_(gamma) {
     if (!(alpha_ >= 0.0)) {
-        throw std::invalid_argument("PowerLawKernel requires alpha >= 0");
+        HFT_THROW(std::invalid_argument("PowerLawKernel requires alpha >= 0"));
     }
     if (!(c_ > 0.0)) {
-        throw std::invalid_argument("PowerLawKernel requires c > 0");
+        HFT_THROW(std::invalid_argument("PowerLawKernel requires c > 0"));
     }
     if (!(gamma_ > 1.0)) {
-        throw std::invalid_argument("PowerLawKernel requires gamma > 1");
+        HFT_THROW(std::invalid_argument("PowerLawKernel requires gamma > 1"));
     }
 }
 
@@ -174,10 +176,10 @@ double PowerLawKernel::gamma() const noexcept {
 CustomKernel::CustomKernel(EvaluateFn evaluator, IntegralFn integral)
     : evaluator_(std::move(evaluator)), integral_(std::move(integral)) {
     if (!evaluator_) {
-        throw std::invalid_argument("CustomKernel requires a valid evaluator function");
+        HFT_THROW(std::invalid_argument("CustomKernel requires a valid evaluator function"));
     }
     if (!integral_) {
-        throw std::invalid_argument("CustomKernel requires a valid integral function");
+        HFT_THROW(std::invalid_argument("CustomKernel requires a valid integral function"));
     }
 }
 
@@ -195,10 +197,10 @@ double CustomKernel::integral(double mark_expectation) const {
 HawkesIntensity::HawkesIntensity(double mu, std::shared_ptr<const HawkesKernel> kernel)
     : mu_(mu), kernel_(std::move(kernel)) {
     if (!kernel_) {
-        throw std::invalid_argument("HawkesIntensity requires a kernel");
+        HFT_THROW(std::invalid_argument("HawkesIntensity requires a kernel"));
     }
     if (!(mu_ >= 0.0)) {
-        throw std::invalid_argument("HawkesIntensity requires mu >= 0");
+        HFT_THROW(std::invalid_argument("HawkesIntensity requires mu >= 0"));
     }
 }
 
@@ -228,7 +230,7 @@ const HawkesKernel& HawkesIntensity::kernel() const noexcept {
 
 PoissonProcess::PoissonProcess(double mu) : mu_(mu) {
     if (!(mu_ > 0.0)) {
-        throw std::invalid_argument("PoissonProcess requires mu > 0");
+        HFT_THROW(std::invalid_argument("PoissonProcess requires mu > 0"));
     }
 }
 
@@ -239,10 +241,10 @@ EventStream PoissonProcess::simulate(double horizon, std::uint64_t seed) const {
 
 EventStream PoissonProcess::simulate(double horizon, MarkSampler sampler, std::uint64_t seed) const {
     if (!sampler) {
-        throw std::invalid_argument("PoissonProcess::simulate requires a valid mark sampler");
+        HFT_THROW(std::invalid_argument("PoissonProcess::simulate requires a valid mark sampler"));
     }
     if (!(horizon >= 0.0)) {
-        throw std::invalid_argument("PoissonProcess::simulate requires horizon >= 0");
+        HFT_THROW(std::invalid_argument("PoissonProcess::simulate requires horizon >= 0"));
     }
 
     std::mt19937_64 rng(seed);
@@ -288,13 +290,13 @@ HawkesProcess::HawkesProcess(double mu, std::shared_ptr<const HawkesKernel> kern
       sampler_([mark_expectation](std::mt19937_64&) { return mark_expectation; }),
       exp_kernel_(nullptr) {
     if (!kernel_) {
-        throw std::invalid_argument("HawkesProcess requires a kernel");
+        HFT_THROW(std::invalid_argument("HawkesProcess requires a kernel"));
     }
     if (!(mu_ >= 0.0)) {
-        throw std::invalid_argument("HawkesProcess requires mu >= 0");
+        HFT_THROW(std::invalid_argument("HawkesProcess requires mu >= 0"));
     }
     if (!(mark_expectation_ > 0.0)) {
-        throw std::invalid_argument("HawkesProcess requires mark expectation > 0");
+        HFT_THROW(std::invalid_argument("HawkesProcess requires mark expectation > 0"));
     }
     if (kernel_->is_exponential()) {
         exp_kernel_ = static_cast<const ExponentialKernel*>(kernel_.get());
@@ -303,21 +305,21 @@ HawkesProcess::HawkesProcess(double mu, std::shared_ptr<const HawkesKernel> kern
 
 void HawkesProcess::set_mark_sampler(MarkSampler sampler) {
     if (!sampler) {
-        throw std::invalid_argument("HawkesProcess::set_mark_sampler requires a valid sampler");
+        HFT_THROW(std::invalid_argument("HawkesProcess::set_mark_sampler requires a valid sampler"));
     }
     sampler_ = std::move(sampler);
 }
 
 void HawkesProcess::set_mark_expectation(double value) {
     if (!(value > 0.0)) {
-        throw std::invalid_argument("HawkesProcess::set_mark_expectation requires value > 0");
+        HFT_THROW(std::invalid_argument("HawkesProcess::set_mark_expectation requires value > 0"));
     }
     mark_expectation_ = value;
 }
 
 EventStream HawkesProcess::simulate(double horizon, std::uint64_t seed) const {
     if (!(horizon >= 0.0)) {
-        throw std::invalid_argument("HawkesProcess::simulate requires horizon >= 0");
+        HFT_THROW(std::invalid_argument("HawkesProcess::simulate requires horizon >= 0"));
     }
     std::mt19937_64 rng(seed);
     std::exponential_distribution<double> expo(1.0);
@@ -401,7 +403,7 @@ double HawkesProcess::spectral_radius() const {
 
 HawkesProcess::StabilityReport HawkesProcess::check_stability(double tolerance) const {
     if (!(tolerance >= 0.0)) {
-        throw std::invalid_argument("HawkesProcess::check_stability requires tolerance >= 0");
+        HFT_THROW(std::invalid_argument("HawkesProcess::check_stability requires tolerance >= 0"));
     }
     const double rho = branching_ratio();
     const double spectral = spectral_radius();

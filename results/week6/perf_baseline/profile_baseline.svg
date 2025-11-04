@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no"?>
+<svg version="1.1" width="1200.00" height="62.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect x="0" y="0" width="1200.00" height="62.00" fill="#ffffff"/>
+<g class="frame"><rect x="2.00" y="42.00" width="1106.96" height="18.00" rx="2" ry="2" fill="#b4997e" stroke="#333333" stroke-width="0.5"><title>SimulatorCore::run (10583.90 us)</title></rect>
+<text x="6.00" y="56.00" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#000000">SimulatorCore::run</text>
+</g>
+<g class="frame"><rect x="2.00" y="22.00" width="199.29" height="18.00" rx="2" ry="2" fill="#e39d9a" stroke="#333333" stroke-width="0.5"><title>flush_ready (1905.48 us)</title></rect>
+<text x="6.00" y="36.00" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#000000">flush_ready</text>
+</g>
+<g class="frame"><rect x="2.00" y="2.00" width="25.10" height="18.00" rx="2" ry="2" fill="#c99298" stroke="#333333" stroke-width="0.5"><title>OrderBook::match (239.98 us)</title></rect>
+</g>
+<g class="frame"><rect x="27.10" y="2.00" width="24.46" height="18.00" rx="2" ry="2" fill="#c3959c" stroke="#333333" stroke-width="0.5"><title>ExecutionEngine::record_execution (233.89 us)</title></rect>
+</g>
+<g class="frame"><rect x="51.56" y="2.00" width="10.89" height="18.00" rx="2" ry="2" fill="#c17fce" stroke="#333333" stroke-width="0.5"><title>OrderBook::addLimitOrder (104.08 us)</title></rect>
+</g>
+<g class="frame"><rect x="201.29" y="22.00" width="71.34" height="18.00" rx="2" ry="2" fill="#e7b962" stroke="#333333" stroke-width="0.5"><title>hawkes_sample_next (682.14 us)</title></rect>
+<text x="205.29" y="36.00" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#000000">hawke...</text>
+</g>
+<g class="frame"><rect x="272.64" y="22.00" width="4.28" height="18.00" rx="2" ry="2" fill="#b689c4" stroke="#333333" stroke-width="0.5"><title>latency_queue_push (40.94 us)</title></rect>
+</g>
+<g class="frame"><rect x="1108.96" y="42.00" width="59.40" height="18.00" rx="2" ry="2" fill="#d0829e" stroke="#333333" stroke-width="0.5"><title>Hawkes::sample_next (567.94 us)</title></rect>
+<text x="1112.96" y="56.00" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#000000">Hawk...</text>
+</g>
+<g class="frame"><rect x="1168.36" y="42.00" width="13.01" height="18.00" rx="2" ry="2" fill="#c99298" stroke="#333333" stroke-width="0.5"><title>OrderBook::match (124.39 us)</title></rect>
+</g>
+<g class="frame"><rect x="1181.37" y="42.00" width="12.13" height="18.00" rx="2" ry="2" fill="#c3959c" stroke="#333333" stroke-width="0.5"><title>ExecutionEngine::record_execution (115.93 us)</title></rect>
+</g>
+<g class="frame"><rect x="1193.50" y="42.00" width="4.50" height="18.00" rx="2" ry="2" fill="#c58063" stroke="#333333" stroke-width="0.5"><title>Hawkes::draw_dimension (43.06 us)</title></rect>
+</g>
+</svg>

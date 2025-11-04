@@ -11,26 +11,30 @@ endif()
 
 find_package(ZLIB REQUIRED)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(HFT_WARNING_FLAGS -Wall -Wextra -Wpedantic)
-set(HFT_OPTIMIZATION_FLAGS -O3 -march=native -flto -fno-rtti)
+set(HFT_OPTIMIZATION_FLAGS -O3 -march=native -fno-exceptions -fno-rtti -DNDEBUG)
 
 function(hft_apply_compile_flags target)
     target_compile_options(${target} PRIVATE ${HFT_WARNING_FLAGS} ${HFT_OPTIMIZATION_FLAGS})
-    target_link_options(${target} PRIVATE -flto)
 endfunction()
 
 add_library(hft_core STATIC
     src/OrderBook.cpp
+    src/event_engine.cpp
     src/execution_engine.cpp
+    src/logger.cpp
+    src/matching_engine.cpp
     src/order_flow/OrderFlow.cpp
     src/order_flow/hawkes_mle.cpp
     src/hawkes_core.cpp
+    src/engine_runtime.cpp
     src/simulator_core.cpp
     src/perf/Profiler.cpp
+    src/thread_utils.cpp
 )
 target_include_directories(hft_core PUBLIC ${CMAKE_SOURCE_DIR}/src)
 hft_apply_compile_flags(hft_core)
@@ -96,6 +100,16 @@ add_executable(perf_benchmark src/perf/Benchmark.cpp)
 target_link_libraries(perf_benchmark PRIVATE hft_core)
 target_include_directories(perf_benchmark PRIVATE ${CMAKE_SOURCE_DIR}/src)
 hft_apply_compile_flags(perf_benchmark)
+
+add_executable(parallel_benchmark src/perf/ParallelBenchmark.cpp)
+target_link_libraries(parallel_benchmark PRIVATE hft_core)
+target_include_directories(parallel_benchmark PRIVATE ${CMAKE_SOURCE_DIR}/src)
+hft_apply_compile_flags(parallel_benchmark)
+
+add_executable(stress_test src/perf/StressTest.cpp)
+target_link_libraries(stress_test PRIVATE hft_core)
+target_include_directories(stress_test PRIVATE ${CMAKE_SOURCE_DIR}/src)
+hft_apply_compile_flags(stress_test)
 
 if(ENABLE_DOCS)
     find_package(Doxygen REQUIRED)

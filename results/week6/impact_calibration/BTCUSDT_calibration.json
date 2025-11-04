@@ -1,0 +1,37 @@
+{
+  "symbol": "BTCUSDT",
+  "input_path": "data/runs/processed/BTCUSDT-trades-2025-09-20-clean.csv.gz",
+  "sample_count": 740446,
+  "liquidity_regression_count": 8287,
+  "settings": {
+    "lookback_trades": 5,
+    "lookahead_trades": 5,
+    "depth_window_ms": 60000,
+    "min_abs_qty": 1e-05,
+    "min_depth": 0.001,
+    "min_positive_residual": 1e-08,
+    "min_relative_size": 0.001,
+    "max_samples": null,
+    "sample_seed": null
+  },
+  "parameters": {
+    "eta": 4.84757911282e-07,
+    "gamma": 1.72284318845e-08,
+    "kappa": 4.35974509893e-05,
+    "delta": 1
+  },
+  "metrics": {
+    "baseline": {
+      "rmse": 1.9666734629e-06,
+      "mae": 8.08054476682e-07,
+      "r2": 3.84211473747e-08,
+      "mse": 3.86780450967e-12
+    },
+    "extended": {
+      "rmse": 2.21400014423e-06,
+      "mae": 9.16353199501e-07,
+      "r2": -0.267333040766,
+      "mse": 4.90179663867e-12
+    }
+  }
+}

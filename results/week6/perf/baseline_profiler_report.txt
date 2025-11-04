@@ -1,0 +1,12 @@
+Path,Total(us),Share(%),Avg(us),Min(us),Max(us),Samples
+SimulatorCore::run,6984.5840,71.9646,6984.5840,6984.5840,6984.5840,1
+SimulatorCore::run;flush_ready,1244.2830,12.8203,0.5595,0.0000,44.2920,2224
+SimulatorCore::run;hawkes_sample_next,416.9000,4.2955,0.1875,0.0840,1.2080,2223
+Hawkes::sample_next,302.7060,3.1189,0.1362,0.0830,0.9580,2223
+SimulatorCore::run;flush_ready;ExecutionEngine::record_execution,223.3880,2.3016,0.1005,0.0410,22.2910,2222
+SimulatorCore::run;flush_ready;OrderBook::match,187.1520,1.9283,0.0842,0.0410,1.2500,2222
+ExecutionEngine::record_execution,109.8490,1.1318,0.0494,0.0000,22.2090,2222
+SimulatorCore::run;flush_ready;OrderBook::addLimitOrder,81.6310,0.8411,0.0367,0.0000,6.1660,2222
+OrderBook::match,72.0650,0.7425,0.0324,0.0000,1.1660,2222
+Hawkes::draw_dimension,42.0630,0.4334,0.0189,0.0000,0.1670,2223
+SimulatorCore::run;latency_queue_push,40.9570,0.4220,0.0184,0.0000,0.0830,2223

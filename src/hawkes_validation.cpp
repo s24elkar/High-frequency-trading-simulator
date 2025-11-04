@@ -12,6 +12,8 @@
 #include <tuple>
 #include <vector>
 
+#include "error.hpp"
+
 namespace {
 
 using order_flow::EventStream;
@@ -87,7 +89,7 @@ void ensure_directory(const std::filesystem::path& path) {
     std::error_code ec;
     std::filesystem::create_directories(path, ec);
     if (ec) {
-        throw std::runtime_error("Failed to create directory: " + path.string());
+        HFT_THROW(std::runtime_error("Failed to create directory: " + path.string()));
     }
 }
 
@@ -118,7 +120,7 @@ void write_summary_csv(
     const std::vector<ReplicateRow>& rows) {
     std::ofstream out(path);
     if (!out) {
-        throw std::runtime_error("Unable to open summary CSV: " + path.string());
+        HFT_THROW(std::runtime_error("Unable to open summary CSV: " + path.string()));
     }
     out << "replicate,seed,simulated_events,retained_events,converged,mu_hat,alpha_hat,beta_hat,log_likelihood,gradient_norm,branching_ratio,iterations\n";
     out << std::setprecision(10);
@@ -145,7 +147,7 @@ void write_metadata(
     double dropout_rate) {
     std::ofstream out(path);
     if (!out) {
-        throw std::runtime_error("Unable to write metadata: " + path.string());
+        HFT_THROW(std::runtime_error("Unable to write metadata: " + path.string()));
     }
     out << "{\n"
         << "  \"label\": \"" << scenario.label << "\",\n"
@@ -229,32 +231,27 @@ void run_scenario(
 } // namespace
 
 int main(int argc, char** argv) {
-    try {
-        const Options options = parse_arguments(argc, argv);
-        const std::filesystem::path output_root(options.output_dir);
-        ensure_directory(output_root);
+    const Options options = parse_arguments(argc, argv);
+    const std::filesystem::path output_root(options.output_dir);
+    ensure_directory(output_root);
 
-        std::vector<Scenario> scenarios = default_scenarios();
-        if (!options.scenario_filter.empty()) {
-            std::vector<Scenario> filtered;
-            for (const auto& scenario : scenarios) {
-                if (scenario.label == options.scenario_filter) {
-                    filtered.push_back(scenario);
-                }
-            }
-            if (filtered.empty()) {
-                std::cerr << "No scenario matched filter: " << options.scenario_filter << '\n';
-                return 1;
-            }
-            scenarios = std::move(filtered);
-        }
-
+    std::vector<Scenario> scenarios = default_scenarios();
+    if (!options.scenario_filter.empty()) {
+        std::vector<Scenario> filtered;
         for (const auto& scenario : scenarios) {
-            run_scenario(scenario, options, output_root);
+            if (scenario.label == options.scenario_filter) {
+                filtered.push_back(scenario);
+            }
         }
-    } catch (const std::exception& ex) {
-        std::cerr << "hawkes_validation failed: " << ex.what() << '\n';
-        return 1;
+        if (filtered.empty()) {
+            std::cerr << "No scenario matched filter: " << options.scenario_filter << '\n';
+            return 1;
+        }
+        scenarios = std::move(filtered);
+    }
+
+    for (const auto& scenario : scenarios) {
+        run_scenario(scenario, options, output_root);
     }
     return 0;
 }

@@ -4,6 +4,7 @@
 #include "latency_model.hpp"
 #include "OrderBook.hpp"
 #include "execution_cost.hpp"
+#include "memory_pool.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -30,7 +31,7 @@ struct SimulationConfig {
 
 struct IntensitySample {
     double time{};
-    std::vector<double> lambda;
+    IntensityBuffer lambda;
 };
 
 struct ArrivalRecord {

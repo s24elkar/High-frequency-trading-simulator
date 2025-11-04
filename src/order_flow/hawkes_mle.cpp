@@ -7,6 +7,8 @@
 #include <numeric>
 #include <stdexcept>
 
+#include "error.hpp"
+
 namespace order_flow::calibration {
 
 namespace {
@@ -339,7 +341,7 @@ HawkesMLEResult fit_exponential_hawkes_mle(
     double horizon,
     const HawkesMLEConfig& config) {
     if (!(std::isfinite(horizon) && horizon >= 0.0)) {
-        throw std::invalid_argument("horizon must be non-negative and finite");
+        HFT_THROW(std::invalid_argument("horizon must be non-negative and finite"));
     }
 
     double resolved_horizon = horizon;
@@ -347,7 +349,7 @@ HawkesMLEResult fit_exponential_hawkes_mle(
         resolved_horizon = events.empty() ? 0.0 : events.data().back().time;
     }
     if (!events.empty() && resolved_horizon + 1e-12 < events.data().back().time) {
-        throw std::invalid_argument("horizon must be greater than or equal to the last event time");
+        HFT_THROW(std::invalid_argument("horizon must be greater than or equal to the last event time"));
     }
 
     HawkesParameters initial{};
@@ -378,7 +380,7 @@ HawkesMLEResult fit_exponential_hawkes_mle(
 
     Evaluation current = evaluate_theta(events, resolved_horizon, config, theta_initial);
     if (!current.valid) {
-        throw std::runtime_error("Initial parameters yield invalid likelihood");
+        HFT_THROW(std::runtime_error("Initial parameters yield invalid likelihood"));
     }
 
     Vector3 theta = theta_initial;

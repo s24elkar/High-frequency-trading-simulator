@@ -1,11 +1,19 @@
 #include "hawkes_engine.hpp"
 
+#include "error.hpp"
 #include "perf/Profiler.hpp"
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <limits>
 #include <stdexcept>
+
+#if defined(__GNUC__) || defined(__clang__)
+#define HFT_PREFETCH(addr) __builtin_prefetch(addr, 0, 1)
+#else
+#define HFT_PREFETCH(addr) (void)0
+#endif
 
 namespace simulator {
 
@@ -20,9 +28,10 @@ std::vector<double> flatten_matrix(const ExponentialHawkesProcess::Matrix& matri
     }
     const std::size_t rows = matrix.size();
     const std::size_t cols = matrix.front().size();
-    flat.reserve(rows * cols);
+    flat.resize(rows * cols);
+    double* dest = flat.data();
     for (const auto& row : matrix) {
-        flat.insert(flat.end(), row.begin(), row.end());
+        dest = std::copy(row.begin(), row.end(), dest);
     }
     return flat;
 }
@@ -51,15 +60,15 @@ void ExponentialHawkesProcess::validate_parameters(const Matrix& alpha,
                                                    const Matrix& beta) const {
     const std::size_t d = dim_;
     if (d == 0) {
-        throw std::invalid_argument("ExponentialHawkesProcess requires non-empty mu vector");
+        HFT_THROW(std::invalid_argument("ExponentialHawkesProcess requires non-empty mu vector"));
     }
     const auto check_matrix = [&](const Matrix& M, const char* label) {
         if (M.size() != d) {
-            throw std::invalid_argument(std::string(label) + " matrix has incompatible row count");
+            HFT_THROW(std::invalid_argument(std::string(label) + " matrix has incompatible row count"));
         }
         for (const auto& row : M) {
             if (row.size() != d) {
-                throw std::invalid_argument(std::string(label) + " matrix has incompatible column count");
+                HFT_THROW(std::invalid_argument(std::string(label) + " matrix has incompatible column count"));
             }
         }
     };
@@ -68,20 +77,20 @@ void ExponentialHawkesProcess::validate_parameters(const Matrix& alpha,
 
     for (double mu_value : mu_) {
         if (!std::isfinite(mu_value) || mu_value < 0.0) {
-            throw std::invalid_argument("mu components must be finite and non-negative");
+            HFT_THROW(std::invalid_argument("mu components must be finite and non-negative"));
         }
     }
     for (const auto& row : alpha) {
         for (double v : row) {
             if (!std::isfinite(v) || v < 0.0) {
-                throw std::invalid_argument("alpha coefficients must be finite and non-negative");
+                HFT_THROW(std::invalid_argument("alpha coefficients must be finite and non-negative"));
             }
         }
     }
     for (const auto& row : beta) {
         for (double v : row) {
             if (!std::isfinite(v) || v <= 0.0) {
-                throw std::invalid_argument("beta coefficients must be finite and strictly positive");
+                HFT_THROW(std::invalid_argument("beta coefficients must be finite and strictly positive"));
             }
         }
     }
@@ -121,18 +130,36 @@ void ExponentialHawkesProcess::decay_state(double dt) {
         return;
     }
     const std::size_t d = dim_;
+    double* excitation_ptr = excitation_.data();
+    double* lambda_ptr = lambda_.data();
+    const double* mu_ptr = mu_.data();
+    const double* beta_ptr = beta_flat_.data();
+
     for (std::size_t i = 0; i < d; ++i) {
-        double lambda_i = mu_[i];
-        for (std::size_t j = 0; j < d; ++j) {
-            const std::size_t idx = index(i, j);
-            double& state = excitation_[idx];
-            if (std::abs(state) > kEpsilon) {
-                const double b = beta_flat_[idx];
-                state *= std::exp(-b * dt);
-            }
-            lambda_i += state;
+        double lambda_i = mu_ptr[i];
+        double* row_excitation = excitation_ptr + i * d;
+        const double* row_beta = beta_ptr + i * d;
+#if defined(__GNUC__) || defined(__clang__)
+        if (i + 1 < d) {
+            HFT_PREFETCH(excitation_ptr + (i + 1) * d);
+            HFT_PREFETCH(beta_ptr + (i + 1) * d);
         }
-        lambda_[i] = std::max(lambda_i, 0.0);
+#endif
+        for (std::size_t j = 0; j < d; ++j) {
+#if defined(__GNUC__) || defined(__clang__)
+            if (j + 4 < d) {
+                HFT_PREFETCH(row_excitation + j + 4);
+                HFT_PREFETCH(row_beta + j + 4);
+            }
+#endif
+            double state = row_excitation[j];
+            if (state > kEpsilon || state < -kEpsilon) {
+                state *= std::exp(-row_beta[j] * dt);
+                row_excitation[j] = state;
+            }
+            lambda_i += row_excitation[j];
+        }
+        lambda_ptr[i] = (lambda_i > 0.0) ? lambda_i : 0.0;
     }
 }
 
@@ -140,7 +167,7 @@ std::size_t ExponentialHawkesProcess::draw_dimension(double lambda_sum,
                                                      std::mt19937_64& rng) const {
     HFT_PROFILE_SCOPE("Hawkes::draw_dimension");
     if (!(lambda_sum > 0.0)) {
-        throw std::logic_error("draw_dimension called with non-positive intensity sum");
+        HFT_THROW(std::logic_error("draw_dimension called with non-positive intensity sum"));
     }
     std::uniform_real_distribution<double> unif(0.0, 1.0);
     const double threshold = unif(rng) * lambda_sum;
@@ -162,29 +189,53 @@ HawkesEvent ExponentialHawkesProcess::sample_next(std::mt19937_64& rng) {
 
     double lambda_star = total_intensity();
     if (!(lambda_star > 0.0)) {
-        throw std::runtime_error("total intensity is non-positive; cannot sample next event");
+        HFT_THROW(std::runtime_error("total intensity is non-positive; cannot sample next event"));
     }
 
+    const std::size_t matrix_size = d * d;
     while (true) {
-        std::copy(excitation_.begin(), excitation_.end(), candidate_excitation_.begin());
+        std::memcpy(candidate_excitation_.data(), excitation_.data(), matrix_size * sizeof(double));
         expo.param(std::exponential_distribution<double>::param_type(lambda_star));
         const double wait = expo(rng);
         const double candidate_time = time_ + wait;
 
         double lambda_sum_candidate = 0.0;
+        double* candidate_exc_ptr = candidate_excitation_.data();
+        double* candidate_lambda_ptr = candidate_lambda_.data();
+        const double* mu_ptr = mu_.data();
+        const double* beta_ptr = beta_flat_.data();
+
         for (std::size_t i = 0; i < d; ++i) {
-            double lambda_i = mu_[i];
-            for (std::size_t j = 0; j < d; ++j) {
-                const std::size_t idx = index(i, j);
-                double state = candidate_excitation_[idx];
-                if (std::abs(state) > kEpsilon) {
-                    state *= std::exp(-beta_flat_[idx] * wait);
-                }
-                candidate_excitation_[idx] = state;
-                lambda_i += state;
+            double lambda_i = mu_ptr[i];
+            double* row_excitation = candidate_exc_ptr + i * d;
+            const double* row_beta = beta_ptr + i * d;
+#if defined(__GNUC__) || defined(__clang__)
+            if (i + 1 < d) {
+                HFT_PREFETCH(candidate_exc_ptr + (i + 1) * d);
+                HFT_PREFETCH(beta_ptr + (i + 1) * d);
             }
-            candidate_lambda_[i] = std::max(lambda_i, 0.0);
-            lambda_sum_candidate += candidate_lambda_[i];
+#endif
+            for (std::size_t j = 0; j < d; ++j) {
+#if defined(__GNUC__) || defined(__clang__)
+                if (j + 4 < d) {
+                    HFT_PREFETCH(row_excitation + j + 4);
+                    HFT_PREFETCH(row_beta + j + 4);
+                }
+#endif
+                double state = row_excitation[j];
+                if (state > kEpsilon || state < -kEpsilon) {
+                    state *= std::exp(-row_beta[j] * wait);
+                    row_excitation[j] = state;
+                    lambda_i += state;
+                } else {
+                    lambda_i += state;
+                }
+            }
+            if (lambda_i < 0.0) {
+                lambda_i = 0.0;
+            }
+            candidate_lambda_ptr[i] = lambda_i;
+            lambda_sum_candidate += lambda_i;
         }
 
         const double acceptance = lambda_sum_candidate / lambda_star;
@@ -206,19 +257,33 @@ HawkesEvent ExponentialHawkesProcess::sample_next(std::mt19937_64& rng) {
             const double mark = mark_sampler_(rng);
 
             double post_sum = 0.0;
+            double* excitation_ptr = excitation_.data();
+            double* lambda_ptr = lambda_.data();
+            const double* alpha_ptr = alpha_flat_.data();
             for (std::size_t i = 0; i < d; ++i) {
-                const std::size_t idx = index(i, dim);
-                const double jump = alpha_flat_[idx] * mark;
-                excitation_[idx] += jump;
-                lambda_[i] = std::max(lambda_[i] + jump, 0.0);
-                post_sum += lambda_[i];
+                const std::size_t offset = i * d + dim;
+#if defined(__GNUC__) || defined(__clang__)
+                if (i + 1 < d) {
+                    HFT_PREFETCH(excitation_ptr + (i + 1) * d + dim);
+                    HFT_PREFETCH(alpha_ptr + (i + 1) * d + dim);
+                }
+#endif
+                const double jump = alpha_ptr[offset] * mark;
+                const double updated_excitation = excitation_ptr[offset] + jump;
+                excitation_ptr[offset] = updated_excitation;
+                double updated_lambda = lambda_ptr[i] + jump;
+                if (updated_lambda < 0.0) {
+                    updated_lambda = 0.0;
+                }
+                lambda_ptr[i] = updated_lambda;
+                post_sum += updated_lambda;
             }
 
             return HawkesEvent{
                 time_,
                 dim,
                 post_sum,
-                lambda_[dim]
+                lambda_ptr[dim]
             };
         }
 
@@ -234,3 +299,5 @@ HawkesEvent ExponentialHawkesProcess::sample_next(std::mt19937_64& rng) {
 }
 
 } // namespace simulator
+
+#undef HFT_PREFETCH

@@ -1,0 +1,16 @@
+{
+  "horizon_seconds": 60.0,
+  "simulation": {
+    "events": 2222,
+    "mean_intensity": 37.03333333333333,
+    "mean_interarrival": 0.02696401392606934,
+    "var_interarrival": 0.00400381493152455
+  },
+  "empirical": {
+    "events": 2127,
+    "mean_intensity": 35.45,
+    "mean_interarrival": 0.027728598306679213,
+    "var_interarrival": 0.011852772531149084
+  },
+  "intensity_percent_difference": 4.466384579219544
+}
