@@ -10,6 +10,7 @@ if(HFT_ENABLE_TESTS)
 endif()
 
 find_package(ZLIB REQUIRED)
+find_package(Threads REQUIRED)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -99,6 +100,11 @@ hft_apply_compile_flags(impact_calibration)
 
 add_executable(pnl_analysis src/pnl_analysis.cpp)
 hft_apply_compile_flags(pnl_analysis)
+
+add_executable(week8_integration src/week8_system_integration.cpp)
+target_include_directories(week8_integration PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(week8_integration PRIVATE Threads::Threads)
+hft_apply_compile_flags(week8_integration)
 
 add_executable(perf_benchmark src/perf/Benchmark.cpp)
 target_link_libraries(perf_benchmark PRIVATE hft_core)

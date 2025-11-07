@@ -1,0 +1,4 @@
+scenario,event_rate_hz,event_count,avg_order_latency_us,event_throughput_eps,cpu_percent,memory_mb
+baseline,1500.000,1200,249.263,2235.152,34.765,4.125
+high_load,3200.000,2500,320.183,4695.726,67.789,4.125
+stress,5500.000,4000,375.873,7256.735,71.450,4.125
