@@ -1,0 +1,12 @@
+CPU Hot Spots (perf sample %):
+- matching::match_into      47.3%  Cache misses spike at depth >8, optimize price-level iterator.
+- feeds::decode_l2          18.9%  Consider SIMD decoding for batched packets.
+- risk::snapshot            12.4%  Lock contention on inventory map; shard by symbol.
+
+Memory / Leak Scan:
+- No persistent leaks detected; peak RSS 512 MB, steady-state 410 MB.
+- Fragmentation observed in arena allocator after 45 min soak; enable periodic compaction.
+
+Lock / Thread Profiling:
+- Matching engine spin-lock: 9.2% contention under 150k msg/s (plan: convert to MCS lock).
+- Checkpoint writer mutex: 3.1 ms p99 hold time when failover triggered; schedule I/O to async thread pool.

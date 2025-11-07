@@ -1,0 +1,4 @@
+scenario,description,message_rate_per_s,recovery_time_ms,dropped_messages,order_state_accuracy_pct,state_drift_bp
+network_disconnect,Drop primary feed connection for 750 ms while replaying 120k msg/s,120000.0,755.18,33,99.8577,0.5381
+mq_overflow,Overflow inter-process queue while bursting 150k msg/s,150000.0,1067.41,44,99.8921,0.3695
+cpu_io_bottleneck,Pin matching engine to saturate CPU and throttle disk checkpoints,110000.0,757.83,32,99.8729,0.4646
