@@ -1,0 +1,4 @@
+strategy,runs,avg_realized_pnl,avg_strategy_alpha,avg_execution_slippage,avg_execution_impact,avg_inventory_carry,identity_error
+mean_reversion,162,-1900.318465,-1829.606947,49.376098,12.313516,9.021904,0.000000
+trend_following,162,781.571616,860.217245,57.236446,12.794514,8.614670,-0.000000
+ALL,324,-559.373424,-484.694851,53.306272,12.554015,8.818287,0.000000

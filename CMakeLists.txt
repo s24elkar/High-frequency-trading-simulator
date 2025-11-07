@@ -97,6 +97,9 @@ target_link_libraries(impact_calibration PRIVATE hft_core ZLIB::ZLIB)
 target_include_directories(impact_calibration PRIVATE ${CMAKE_SOURCE_DIR}/src)
 hft_apply_compile_flags(impact_calibration)
 
+add_executable(pnl_analysis src/pnl_analysis.cpp)
+hft_apply_compile_flags(pnl_analysis)
+
 add_executable(perf_benchmark src/perf/Benchmark.cpp)
 target_link_libraries(perf_benchmark PRIVATE hft_core)
 target_include_directories(perf_benchmark PRIVATE ${CMAKE_SOURCE_DIR}/src)
