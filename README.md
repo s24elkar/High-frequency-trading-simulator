@@ -43,6 +43,8 @@ A practical sandbox for market microstructure research. Explore how clustered or
 
 ## Table of Contents
 - [Quick Start](#quick-start)
+- [Architecture & Data Flow](#architecture--data-flow)
+- [Illustrated Analytics](#illustrated-analytics)
 - [Interactive Streamlit App](#interactive-streamlit-app)
 - [Documentation](#documentation)
 - [Research Benchmarks](#research-benchmarks)
@@ -55,6 +57,48 @@ A practical sandbox for market microstructure research. Explore how clustered or
 
 ## Quick Start
 Need more context? The step-by-step guide in `docs/USAGE.md` covers the full workflow end to end.
+
+## Architecture & Data Flow
+
+<p align="center">
+  <img src="docs/images/timeline_exponential.png" width="720" alt="Event timeline illustration" />
+</p>
+
+The simulator stitches together four stages, mirroring the reference architecture described by Cartea et al. (2015) and Gatheral & Schied (2013):
+
+1. **Hawkes-driven order flow** – calibrated exponential/power-law kernels generate clustered market/limit orders. Timeline plots (above) illustrate self-excitation during liquidity shocks.
+2. **Deterministic matching engine** – the C++17 order book enforces price–time priority and keeps price levels in lock-free queues to reduce cache thrash during bursts.
+3. **Risk, PnL, and backtesting services** – Python orchestrators replay fills, compute realised/unrealised PnL, and stream metrics to dashboards.
+4. **Visualization & research surfaces** – notebooks and Streamlit panels expose the same artefacts for exploratory analysis or reporting.
+
+### How data moves through the stack
+
+| Stage | Input | Output | Notes |
+| --- | --- | --- | --- |
+| Feed ingestion | Hawkes samples / recorded CSV | Normalised events in shared memory | Supports Binance, LOBSTER, and synthetic datasets. |
+| Matching | Feed events, strategy orders | Executions, book snapshots | Deterministic, unit-tested (`tests/python/test_order_types.py`). |
+| Risk engine | Executions, snapshots | Inventory, PnL, alerts | Snapshots logged under `logs/` for dashboards. |
+| Analytics | Risk snapshots, raw fills | Plots, CSVs, Streamlit widgets | Artefacts saved in `results/week*/`. |
+
+A single `cmake --build` step compiles both the matching engine and Hawkes bridges; scripts under `python/scripts/` then orchestrate batch experiments and nightly reports.
+
+## Illustrated Analytics
+
+<p align="center">
+  <img src="docs/images/exponential_kernel_hawkes_intensity.png" width="360" alt="Exponential Hawkes intensity" />
+  <img src="docs/images/arrivals_acf_bins_0.5.png" width="360" alt="Arrivals ACF bins" />
+</p>
+
+- **Intensity tracking** – exponential kernels adapt quickly to surges, while power-law kernels retain memory. The figures above (auto-generated via `python/demo.py`) help compare how different λ choices affect self-excitation, echoing Bouchaud et al. (2009) on supply/demand digestion.
+- **Autocorrelation diagnostics** – arrivals ACFs quantify clustering. Values closer to zero after a few bins imply well-calibrated decay; persistent autocorrelation suggests the need for heavier tails or regime switching.
+
+<p align="center">
+  <img src="docs/images/hawkes_rescale_qq.png" width="360" alt="Rescale QQ" />
+  <img src="docs/images/qq_ks_btcusdt.png" width="360" alt="QQ/KS Binance BTCUSDT" />
+</p>
+
+- **Goodness-of-fit** – rescaled QQ and KS plots (stored in `docs/images/`) validate that simulated arrivals match empirical quantiles from Binance BTCUSDT replays. Deviations at the tails highlight where adaptive intensity or exogenous shocks should be introduced.
+- **Ready-to-use assets** – these plots are referenced by reports in `docs/week7_*` and `docs/week8_*`, making it easy to embed them in presentations or papers without regenerating graphics manually.
 
 ### Copy & Paste Quickstart
 ```bash
