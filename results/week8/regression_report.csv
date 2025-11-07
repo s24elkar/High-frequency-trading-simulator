@@ -1,0 +1,5 @@
+test_suite,baseline_latency_us,current_latency_us,delta_pct,status
+unit_core,35.2,34.9,-0.852,pass
+integration_market_loop,58.5,54.1,-7.521,pass
+oms_end_to_end,420.0,368.3,-12.31,pass
+failover_replay,810.0,792.6,-2.148,pass
