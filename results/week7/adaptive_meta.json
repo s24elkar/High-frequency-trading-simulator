@@ -1,0 +1,16 @@
+[
+  {
+    "dataset": "binance_futures",
+    "avg_lag_steps": 5.0,
+    "p95_lag_steps": 5.0,
+    "total_trades": 941.0,
+    "fill_rate": 0.4705
+  },
+  {
+    "dataset": "nasdaq_micro",
+    "avg_lag_steps": 5.0,
+    "p95_lag_steps": 5.0,
+    "total_trades": 1292.0,
+    "fill_rate": 0.646
+  }
+]

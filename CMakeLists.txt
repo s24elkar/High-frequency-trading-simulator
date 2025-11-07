@@ -25,6 +25,7 @@ endfunction()
 add_library(hft_core STATIC
     src/OrderBook.cpp
     src/event_engine.cpp
+    src/adaptive_engine.cpp
     src/execution_engine.cpp
     src/logger.cpp
     src/matching_engine.cpp

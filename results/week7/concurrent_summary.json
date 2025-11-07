@@ -1,0 +1,31 @@
+{
+  "mean_reversion": {
+    "realized_pnl": 1510.2590075408727,
+    "return_volatility": 5.033052266015343,
+    "sharpe": 4.257529122300811,
+    "max_drawdown": 223.51114304256262,
+    "trade_count": 3433.3333333333335,
+    "fill_rate": 0.7021185329068916,
+    "avg_latency_ms": 3.5095241470735963,
+    "liquidity_pressure": 4.587111408978732,
+    "inventory_volatility": 10.157917154073843,
+    "inventory_turnover": 3.528547237676103
+  },
+  "trend_following": {
+    "realized_pnl": -2097.5675749633306,
+    "return_volatility": 4.76477306167703,
+    "sharpe": -6.2275935912747356,
+    "max_drawdown": 2181.013315906876,
+    "trade_count": 3512.0,
+    "fill_rate": 0.7025405081016203,
+    "avg_latency_ms": 3.5589299867684026,
+    "liquidity_pressure": 1.4195449254626527,
+    "inventory_volatility": 9.151984072660614,
+    "inventory_turnover": 2.8390898509253053
+  },
+  "market": {
+    "price_volatility": 0.5318651586965486,
+    "mean_net_flow": 0.0002971456387573568,
+    "net_flow_volatility": 4.931671266620758
+  }
+}
