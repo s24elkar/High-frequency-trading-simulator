@@ -1,0 +1,6 @@
+{"ts": 1762522016.907922, "batch": 1, "produced": 989, "consumed": 956, "backlog": 33, "avg_latency_ms": 0.6333751192306563, "max_latency_ms": 1.1400752146151814}
+{"ts": 1762522016.9597678, "batch": 2, "produced": 1112, "consumed": 1037, "backlog": 108, "avg_latency_ms": 1.371485863640894, "max_latency_ms": 2.4686745545536093}
+{"ts": 1762522017.011636, "batch": 3, "produced": 811, "consumed": 763, "backlog": 156, "avg_latency_ms": 3.534752535722145, "max_latency_ms": 6.362554564299861}
+{"ts": 1762522017.0639162, "batch": 4, "produced": 860, "consumed": 823, "backlog": 193, "avg_latency_ms": 2.3116963134810278, "max_latency_ms": 4.16105336426585}
+{"ts": 1762522017.1163776, "batch": 5, "produced": 811, "consumed": 789, "backlog": 215, "avg_latency_ms": 1.4200607694957557, "max_latency_ms": 2.5561093850923604}
+{"ts": 1762522017.1680932, "batch": 6, "produced": 977, "consumed": 933, "backlog": 259, "avg_latency_ms": 2.0749189845843268, "max_latency_ms": 3.7348541722517883}

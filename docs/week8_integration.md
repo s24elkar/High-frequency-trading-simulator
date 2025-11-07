@@ -61,3 +61,19 @@ Observations:
    - `/logs/week8/integration_test.log`
 
 These, together with this document, complete the Phase I integration deliverables.
+
+## Real-time validation & OMS checks
+
+- **Real-time loop metrics (`results/week8/realtime_loop_metrics.csv`)** – baseline runs stay within the 100 µs SLA (avg 54.8 µs, p99 98.2 µs), while jittered and lossy testbeds highlight tail inflation (p99 up to 119.8 µs, 276 breaches). These distributions effectively serve as latency histograms: the lognormal core is tight, but packet loss plus jitter adds a high-latency tail that now masks 8–9% of the budget.
+- **Network resilience** – injected jitter (±25 µs) and packet-loss up to 0.4% caused only 13 dropped events thanks to queue replays, but tail latency breached the budget. Remediation plan: add adaptive batching for bursts and leverage priority queues for retransmits.
+- **OMS validation (`results/week8/oms_validation.csv`)** – entry latency averages 216 µs (p99 425 µs) in baseline, climbing to 341 / 650 µs under stress. Cancel paths are faster (180 / 328 µs baseline). Trade confirmation accuracy remains ≥99.9% and position drift stays under 1.5 bps. Bottleneck: confirmation fan-out during stress saturates the in-memory queue; to remediate, rate-limit cancel bursts and shard confirmation writers.
+
+## PnL streaming telemetry
+
+- `logs/week8/pnl_stream.log` captures six high-frequency batches pumped across the in-memory bus (Redis Streams analogue). Average end-to-end latency stayed between 0.6–3.5 ms with gradual backlog growth (33 → 259 messages) as throughput exceeded consumer capacity. Dashboard widgets kept pace because backlog was bounded and max latency stayed below 6.4 ms; the remediation plan is to auto-scale consumers once backlog exceeds 200 messages for >3 consecutive batches.
+
+## Reproduction (Phase II)
+
+1. Build and run the integration binary as above for core performance numbers.
+2. Execute the real-time validation harness: `python3 python/scripts/run_week8_realtime_validation.py`
+   - Produces `/results/week8/realtime_loop_metrics.csv`, `/results/week8/oms_validation.csv`, and `/logs/week8/pnl_stream.log`.
